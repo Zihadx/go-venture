@@ -1,15 +1,14 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-// Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
-
-// Import Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-// import required modules
-import { Pagination, Navigation } from "swiper/modules";
+import { Pagination, Navigation, Autoplay } from "swiper/modules";
+
+import { IconButton } from "@mui/material";
+import { LocationOn } from "@mui/icons-material";
 
 const Banner = () => {
   const [banners, setBanners] = useState([]);
@@ -46,7 +45,11 @@ const Banner = () => {
         loop={true}
         pagination={{ clickable: true }}
         navigation={true}
-        modules={[Pagination, Navigation]}
+        modules={[Pagination, Navigation, Autoplay]}
+        autoplay={{
+          delay: 5000,
+          disableOnInteraction: false,
+        }}
         className="w-full h-full"
         ref={swiperRef}
       >
@@ -68,15 +71,33 @@ const Banner = () => {
         className="absolute top-0 left-0 w-full h-full z-10 "
         style={{ pointerEvents: "none" }}
       >
-
-       <div className="w-full h-full text-white bg-gradient-custom bg-opacity-50 px-20 flex items-center justify-start">
+        <div className="w-full h-full text-white bg-gradient-custom bg-opacity-50 px-20 flex items-center justify-start">
           {banners.length > 0 && banners[activeIndex] && (
-            <div>
-              <h2 className="text-4xl font-bold">
-                {banners[activeIndex].title}
-              </h2>
-              <p className="text-xl">{banners[activeIndex].description}</p>
-              <p className="text-xl">{banners[activeIndex].locations}</p>
+            <div className="text-white w-1/3">
+              <div className="space-y-4">
+                <h2 className="text-3xl md:text-5xl font-semibold">
+                  {banners[activeIndex].title}
+                </h2>
+                <p className="text-sm">{banners[activeIndex].description}</p>
+              </div>
+              <div className="mt-10 flex items-center">
+                <p>
+                  <IconButton
+                    size="large"
+                    edge="start"
+                    color="inherit"
+                    aria-label="facebook"
+                  >
+                    <LocationOn />
+                  </IconButton>
+                </p>
+                <p className="text-xs">
+                  {banners[activeIndex].locations.city} |{" "}
+                  <span className="font-semibold">
+                    {banners[activeIndex].locations.country}
+                  </span>
+                </p>
+              </div>
             </div>
           )}
         </div>

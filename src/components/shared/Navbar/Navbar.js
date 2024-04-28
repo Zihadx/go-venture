@@ -66,7 +66,7 @@ function Navbar() {
   return (
     <>
       <NavbarPart1 />
-      <AppBar position="static" className="bg-white shadow-none">
+      <AppBar position="static" className=" bg-transparent shadow-none z-10 absolute">
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             <Box sx={{ display: "flex", alignItems: "center", flexGrow: 1 }}>
@@ -88,7 +88,7 @@ function Navbar() {
                 <Box sx={{ display: "flex" }}>
                   {NavItems.map((item) => (
                     <Link key={item.route} href={item.pathname} passHref>
-                      <Button className="text-[#2095ae]" sx={{ ml: 2 }}>
+                      <Button className="text-white" sx={{ ml: 2 }}>
                         {item.route}
                       </Button>
                     </Link>

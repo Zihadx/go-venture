@@ -4,35 +4,50 @@
       "id": 1,
       "title": "Explore Ancient Greece",
       "description": "Discover the rich history and stunning architecture of ancient Greek ruins across Athens, Delphi, and more.",
-      "locations": "Tokyo, Japan",
+      "locations": {
+        "city": "Athens",
+        "country": "Greece"
+      },
       "image": "https://i.ibb.co/ThJ0Hmf/modern-amphitheater-usa-1.jpg"
     },
     {
       "id": 2,
       "title": "Island Hopping in the Caribbean",
       "description": "Experience the ultimate relaxation with crystal clear waters and vibrant nightlife in the Caribbean islands.",
-      "locations": "Jamaica, Indonesia",
+      "locations": {
+        "city": "Kingston",
+        "country": "Jamaica"
+      },
       "image": "https://i.ibb.co/ThJ0Hmf/modern-amphitheater-usa-1.jpg"
     },
     {
       "id": 3,
       "title": "Adventure in the Rockies",
       "description": "Hike, ski, and explore the vast wilderness of the Rocky Mountains in this thrilling adventure tour.",
-      "locations": "Tokyo, Japan",
+      "locations": {
+        "city": "Kathmandu",
+        "country": "Nepal"
+      },
       "image": "https://i.ibb.co/ThJ0Hmf/modern-amphitheater-usa-1.jpg"
     },
     {
       "id": 4,
       "title": "Cultural Journey Through Japan",
       "description": "Immerse yourself in the traditions and modern wonders of Japan with visits to Tokyo, Kyoto, and Osaka.",
-      "locations": "Tokyo, Japan",
+      "locations": {
+        "city": "Cox' Bazar",
+        "country": "Bangladesh"
+      },
       "image": "https://i.ibb.co/ThJ0Hmf/modern-amphitheater-usa-1.jpg"
     },
     {
       "id": 5,
       "title": "Safari Adventure in Kenya",
       "description": "Encounter Africa’s wildlife up close on a thrilling safari through Kenya’s national parks and reserves.",
-      "locations": "Tokyo, Japan",
+      "locations": {
+        "city": "Tokyo",
+        "country": "Japan"
+      },
       "image": "https://i.ibb.co/ThJ0Hmf/modern-amphitheater-usa-1.jpg"
     }
   ]
