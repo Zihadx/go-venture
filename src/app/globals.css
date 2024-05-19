@@ -5,3 +5,16 @@
 /* body {
     font-family: 'Georgia', serif;
   } */
+
+@layer components {
+  /* --------------button design---------- */
+  .button-primary {
+    @apply bg-gradient-to-br from-[#2095ae] to-[#023f4e] hover:from-[#023f4e] hover:to-[#2095ae] text-white font-semibold py-2 px-4 rounded-md shadow-md transition-all duration-300 ease-in-out;
+  }
+
+
+  /* --------------button design---------- */
+  .custom-container{
+    @apply px-4 md:px-8 lg:px-24
+  }
+}

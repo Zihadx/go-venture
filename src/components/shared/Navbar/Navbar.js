@@ -8,7 +8,6 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
-import logo from "@/assets/logo/logo.png";
 import Image from "next/image";
 import SearchIcon from "@mui/icons-material/Search";
 import Link from "next/link";
@@ -21,6 +20,10 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { makeStyles } from "@mui/styles";
 import { motion } from "framer-motion";
 import NavbarPart1 from "./NavbarPart1";
+
+import logo from "@/assets/logo/logo.png";
+import logo1 from "@/assets/logo/logo-1.png";
+import logo2 from "@/assets/logo/logo-2.png";
 
 const useStyles = makeStyles((theme) => ({
   searchIcon: {
@@ -66,7 +69,7 @@ function Navbar() {
   return (
     <>
       <NavbarPart1 />
-      <AppBar position="static" className=" bg-transparent shadow-none z-10 absolute">
+      <AppBar position="static" className=" bg-transparent shadow-none z-20 absolute md:px-16">
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             <Box sx={{ display: "flex", alignItems: "center", flexGrow: 1 }}>
@@ -82,13 +85,13 @@ function Navbar() {
                 </IconButton>
               )}
               <Box sx={{ flexGrow: 1 }}>
-                <Image src={logo} className="w-[200px] h-18 py-2" alt="logo" />
+                <Image src={logo2} className="w-[200px] h-18 py-2" alt="logo2" />
               </Box>
               {!isMobile && (
                 <Box sx={{ display: "flex" }}>
                   {NavItems.map((item) => (
                     <Link key={item.route} href={item.pathname} passHref>
-                      <Button className="text-white" sx={{ ml: 2 }}>
+                    <Button className="text-white" sx={{ ml: 2 }}>
                         {item.route}
                       </Button>
                     </Link>
