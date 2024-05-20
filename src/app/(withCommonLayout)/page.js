@@ -1,17 +1,30 @@
 import Banner from "@/components/Banner/Banner";
 import BlogsPage from "@/components/Blogs/Blogs";
 import CountryPage from "@/components/Country/Country";
-import AboutUsPage from "@/components/Destinations/AboutUs/AboutUs";
+import AboutUsPage from "@/components/AboutUs/AboutUs";
 import DestinationsPage from "@/components/Destinations/Destinations";
 import ServicesPage from "@/components/Destinations/Services/Services";
 import JoinUsPage from "@/components/JoinUs/JoinUs";
 
 const HomePage = async () => {
-  const res = await fetch("http://localhost:5000/api/v1/countries", {
+  const countriesRes = await fetch("http://localhost:5000/api/v1/countries", {
     cache: "no-cache",
   });
-  const countries = await res.json();
-  console.log(countries);
+  const hotelsRes = await fetch("http://localhost:5000/api/v1/hotels", {
+    cache: "no-cache",
+  });
+  const destinationsRes = await fetch("http://localhost:5000/api/v1/destinations", {
+    cache: "no-cache",
+  });
+
+  const countries = await countriesRes.json();
+  const destinations = await destinationsRes.json();
+  const hotels = await hotelsRes.json()
+
+
+ 
+
+
 
   return (
     <div>
@@ -19,7 +32,7 @@ const HomePage = async () => {
       <ServicesPage />
       <CountryPage countries={countries} />
       <JoinUsPage/>
-      <DestinationsPage />
+      <DestinationsPage destinations={destinations}/>
       <AboutUsPage />
       <BlogsPage />
     </div>

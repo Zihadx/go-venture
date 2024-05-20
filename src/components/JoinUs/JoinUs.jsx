@@ -61,9 +61,9 @@ const JoinUsPage = () => {
           <Image
             src={planeImage}
             alt="planeImage"
-            width={300}
-            height={300}
-            className="object-contain opacity-100 md:opacity-10 lg:opacity-100 mt-10"
+            width={350}
+            height={350}
+            className="object-contain opacity-100 md:opacity-10 lg:opacity-100 mt-16"
           />
         </div>
       </div>

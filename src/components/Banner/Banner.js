@@ -65,7 +65,7 @@ const Banner = () => {
                 alt={banner.title}
                 layout="fill"
                 objectFit="cover"
-                className="select-none pointer-events-none"
+                className="select-none pointer-events-none "
               />
             </div>
           </SwiperSlide>

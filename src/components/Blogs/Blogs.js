@@ -2,7 +2,7 @@ import React from 'react';
 
 const BlogsPage = () => {
     return (
-        <div>
+        <div className='custom-container'>
             <h1>Blogs Page</h1>
         </div>
     );
