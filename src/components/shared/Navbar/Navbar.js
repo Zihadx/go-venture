@@ -85,7 +85,7 @@ function Navbar() {
                 </IconButton>
               )}
               <Box sx={{ flexGrow: 1 }}>
-                <Image src={logo2} className="w-[200px] h-18 py-2" alt="logo2" />
+                <Image src={logo2} className=" w-[200px] h-18 py-2" alt="logo2" />
               </Box>
               {!isMobile && (
                 <Box sx={{ display: "flex" }}>

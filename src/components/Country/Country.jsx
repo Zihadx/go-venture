@@ -20,9 +20,9 @@ const CountryPage = ({ countries }) => {
         </p>
       </div>
 
-      {/* Country cards */}
+      {/*----------- Country cards----------- */}
       <div className="md:flex justify-between gap-6 mt-10">
-        {/* Big card */}
+        {/* ---------Big card--------- */}
         <div className="w-full md:w-2/5 mb-6 md:mb-0">
           {countries.data.slice(0, 1).map((country) => (
             <CountyBigCard key={country._id} country={country} />
@@ -31,12 +31,12 @@ const CountryPage = ({ countries }) => {
 
         {/* Small cards */}
         <div className="w-full md:w-3/5 grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* First three small cards */}
+          {/* -----------First three small cards ------------*/}
           {countries.data.slice(1, showAll ? 5 : 4).map((country, index) => (
             <CountrySmallCard key={country._id} country={country} />
           ))}
 
-          {/* "See more" button */}
+          {/* ----------"See more" button -------*/}
           {!showAll && countries.data.length > 4 && (
             <div>
               <CountryButton showAll={showAll} setShowAll={setShowAll} />
@@ -45,7 +45,7 @@ const CountryPage = ({ countries }) => {
         </div>
       </div>
 
-      {/* Show all countries */}
+      {/*------------ Show all countries ------------*/}
       {showAll && (
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
           {countries.data.slice(5).map((country) => (
