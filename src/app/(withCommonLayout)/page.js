@@ -3,7 +3,7 @@ import BlogsPage from "@/components/Blogs/Blogs";
 import CountryPage from "@/components/Country/Country";
 import AboutUsPage from "@/components/AboutUs/AboutUs";
 import DestinationsPage from "@/components/Destinations/Destinations";
-import ServicesPage from "@/components/Destinations/Services/Services";
+import ServicesPage from "@/components/Services/Services";
 import JoinUsPage from "@/components/JoinUs/JoinUs";
 
 const HomePage = async () => {

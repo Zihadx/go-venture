@@ -23,4 +23,9 @@
     left: 6px;
     padding: 2px;
     border-radius: 50px;
+    position: absolute;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

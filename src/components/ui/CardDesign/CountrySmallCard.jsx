@@ -18,8 +18,6 @@ const CountrySmallCard = ({ country }) => {
             {country.title}
           </h1>
         </div>
-
-        <div className="absolute bottom-0 left-0 w-full bg-[#2095ae] border-b-4 border-[#2095ae] transition-all duration-700 transform scale-x-0 origin-left group-hover:scale-x-100"></div>
       </div>
     </div>
   );

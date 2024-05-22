@@ -28,7 +28,7 @@ const DestinationsPage = ({ destinations }) => {
         </Button>
       </div>
       <p className=" mt-6 border border-t-0 border-gray-300" />
-{/* ------destinations big card ----- */}
+      {/* ------destinations big card ----- */}
       <div className="flex-row md:flex justify-between items-center gap-4 mt-10">
         {destinations.data.slice(0, 1).map((destination) => (
           <DestinationsBigCard
@@ -37,9 +37,11 @@ const DestinationsPage = ({ destinations }) => {
           />
         ))}
       </div>
-{/* ------destinations small card ----- */}
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-10">
+      {/* ------destinations small card ----- */}
+      <h1 className=" mt-10 text-lg font-medium">
+        Perfect Retreats for Your Next Vacation
+      </h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-6">
         {destinations.data
           .slice(1, destinations.data.length)
           .map((destination) => (
