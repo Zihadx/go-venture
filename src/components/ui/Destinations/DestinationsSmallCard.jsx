@@ -86,7 +86,7 @@ const DestinationsSmallCard = ({ destination }) => {
             {" "}
             ${destination.packagePrice}/Person
           </h1>
-          <Link href={`/all-destinations/${destination._id}` } className="relative flex items-center justify-center gap-2 bg-primary text-white font-medium py-2 px-6 rounded-r-md lg:w-1/2 w-full ">
+          <Link href={`/all-destinations/${destination._id}` } className="relative flex items-center justify-center gap-2 bg-primary text-white font-medium py-2 px-6 md:px-4 lg:px-6 rounded-r-md lg:w-1/2 w-full ">
           <button>
             <span
               className="absolute left-0 inset-y-0 bg-slate-100"

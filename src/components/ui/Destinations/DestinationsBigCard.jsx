@@ -11,13 +11,13 @@ import Image from "next/image";
 const DestinationsBigCard = ({ destination }) => {
   return (
     <div className="w-full flex-row lg:flex justify-between items-center gap-10">
-      <div className="lg:w-1/2 rounded-tr-[100px] relative rounded-bl-[100px] group">
+      <div className="lg:w-1/2 rounded-tr-[100px] rounded-bl-[100px]">
         <Image
           alt={destination.image[0]}
           src={destination.image[0]}
           width={500}
           height={500}
-          className="h-[400px] w-full rounded-sm rounded-tr-[100px] rounded-bl-[100px] group-hover:transform group-hover:scale-x-105 transition duration-700 ease-in-out"
+          className="h-[400px] w-full rounded-sm rounded-tr-[100px] rounded-bl-[100px]"
         />
       </div>
       <div className="lg:w-1/2 space-y-4 mt-8 lg:mt-0">
