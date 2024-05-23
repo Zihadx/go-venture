@@ -1,4 +1,14 @@
-import { Box, Grid } from "@mui/material";
+import DestinationsBookingForm from "@/utils/DestinationDetails/BookingForm";
+import DestinationMaps from "@/utils/DestinationDetails/DestinationMaps";
+import DestinationReviewsSection from "@/utils/DestinationDetails/DestinationReviews";
+import FAQsection from "@/utils/DestinationDetails/FAQsection";
+import ImageLayout from "@/utils/DestinationDetails/ImageLayout";
+import {
+  AlarmOnOutlined,
+  CalendarMonthOutlined,
+  LocationOnOutlined,
+  MonetizationOnOutlined,
+} from "@mui/icons-material";
 import Image from "next/image";
 
 const DestinationsDetailsPage = async ({ params }) => {
@@ -8,6 +18,11 @@ const DestinationsDetailsPage = async ({ params }) => {
   const destination = await res.json();
   const destinationData = destination.data;
   console.log(destinationData);
+
+  const startDate = new Date(destinationData.startDate).toLocaleDateString(
+    "en-CA"
+  );
+  const endDate = new Date(destinationData.endDate).toLocaleDateString("en-CA");
   return (
     <div>
       <div className="relative w-full mb-10">
@@ -30,45 +45,69 @@ const DestinationsDetailsPage = async ({ params }) => {
         </div>
       </div>
 
-      <div className="flex-row lg:flex justify-between items-baseline gap-2 custom-container">
+      <div className="flex-row lg:flex justify-between items-baseline gap-6 custom-container mb-8">
         <div className="lg:w-2/3 w-full overflow-y-auto">
+          {/* -------image layout start ------- */}
+          <ImageLayout destinationData={destinationData} />
+          {/* -------image layout end ------- */}
 
-            {/* -------image layout start ------- */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 p-4">
-            {destinationData.image.length > 0 && (
-              <div className="col-span-12 lg:col-span-8">
-                <Image
-                  src={destinationData.image[0]}
-                  alt={destinationData.image[0]}
-                  width={400}
-                  height={400}
-                  className="w-full h-64 object-cover rounded-lg"
-                />
-              </div>
-            )}
+          <h1 className="text-2xl font-bold mt-6">{destinationData.title}</h1>
+          <p className="text-sm mt-2">
+            <span className="mr-3">
+              <LocationOnOutlined sx={{ fontSize: 20 }} />
+            </span>
+            {destinationData.locations.city},{" "}
+            {destinationData.locations.country.countryId}
+          </p>
 
-            {destinationData.image.slice(1).map((img, index) => (
-              <div
-                key={index}
-                className={
-                  index < 2 ? "col-span-4" : "col-span-4 lg:col-span-8"
-                }
-              >
-                <Image
-                  src={img}
-                  alt={`Image ${index + 2}`}
-                  width={400}
-                  height={400}
-                  className="w-full h-64 object-cover rounded-lg"
-                />
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mt-6">
+            <div className="flex items-center">
+              <AlarmOnOutlined className="mr-3 text-primary text-3xl" />
+              <div>
+                <p>Duration</p>
+                <p>{destinationData.durationDays} Days</p>
               </div>
-            ))}
+            </div>
+
+            <div className="flex items-center">
+              <MonetizationOnOutlined className="mr-3 text-primary text-3xl" />
+              <div>
+                <p className="w-full">Package Price</p>
+                <p>${destinationData.packagePrice} | Person</p>
+              </div>
+            </div>
+
+            <div className="flex items-center">
+              <CalendarMonthOutlined className="mr-3 text-primary text-3xl" />
+              <div>
+                <p className="w-full">Start Date</p>
+                <p>{startDate}</p>
+              </div>
+            </div>
+            <div className="flex items-center">
+              <CalendarMonthOutlined className="mr-3 text-primary text-3xl" />
+              <div>
+                <p className="w-full">End Date</p>
+                <p>{endDate}</p>
+              </div>
+            </div>
           </div>
-             {/* -------image layout end ------- */}
-             
+          <div>
+            <p className="my-6">{destinationData.description}</p>
+
+            <FAQsection />
+          </div>
+          <div className="mt-6">
+            <h1 className="text-2xl font-bold mb-4">Customer Experience</h1>
+
+            <DestinationReviewsSection destinationData={destinationData} />
+          </div>
         </div>
-        <div className="lg:w-1/3 w-full lg:sticky top-0 bg-red-400">
-          Booking
+        <div className="lg:w-1/3 w-full h-full lg:sticky self-start top-0">
+          <div>
+            <h1 className="text-2xl font-bold mb-4 text-center">Book Your Adventure</h1>
+            <DestinationsBookingForm destinationData={destinationData} />
+          </div>
         </div>
       </div>
     </div>
