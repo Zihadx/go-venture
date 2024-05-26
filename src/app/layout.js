@@ -1,6 +1,6 @@
-import { Inter } from "next/font/google";
+import { Voces } from "next/font/google";
 import "./globals.css"; 
-const inter = Inter({ subsets: ["latin"] });
+const voces = Voces({ subsets: ["latin-ext"], weight: '400'});
 
 export const metadata = {
   title: "Go-Venture",
@@ -9,7 +9,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" data-theme= "light" className={inter.className}>
+    <html lang="en" data-theme= "light" className={voces.className}>
       <body >
         <div className="min-h-screen w-full">{children}
         </div>

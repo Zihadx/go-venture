@@ -1,15 +1,16 @@
 "use client"
 import CountryButton from "./CountryButton";
 
-import CountyBigCard from "@/components/ui/CardDesign/CountyBigCard";
-import CountrySmallCard from "@/components/ui/CardDesign/CountrySmallCard";
+import CountyBigCard from "@/components/ui/CardDesign/CountryCard/CountyBigCard";
+
 import { useState } from "react";
+import CountrySmallCard from "../ui/CardDesign/CountryCard/CountrySmallCard";
 
 const CountryPage = ({ countries }) => {
   const [showAll, setShowAll] = useState(false);
 
   return (
-    <div className="my-16 custom-container">
+    <div className="mt-20 custom-container">
       {/* Content */}
       <div className="w-full md:w-1/2 text-center mx-auto space-y-4">
         <h1 className="text-4xl font-semibold">Global Escapes</h1>

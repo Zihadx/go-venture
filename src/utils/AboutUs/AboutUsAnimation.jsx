@@ -17,17 +17,17 @@ const AboutUsAnimation = () => {
   ];
 
   return (
-    <div className="mt-6">
+    <div className="mt-10">
       <div
         ref={ref}
         className="flex flex-col lg:flex-row justify-center lg:justify-around items-center gap-10 shadow-md border p-4 rounded-lg bg-white"
       >
         {stats.map((stat, index) => (
           <Box key={index} className="text-center mb-4 lg:mb-0">
-            <Typography variant="h3" className="text-primary">
+            <Typography className="text-primary text-3xl font-bold">
               {inView && <CountUp start={0} end={stat.value} duration={1} />}+
             </Typography>
-            <Typography variant="h6" className="text-gray-600">
+            <Typography className="text-gray-600 text-xl">
               {stat.label}
             </Typography>
           </Box>

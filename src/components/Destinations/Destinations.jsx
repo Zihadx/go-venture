@@ -58,7 +58,7 @@ const DestinationsPage = ({ destinations }) => {
         color="primary"
         className=" bg-primary text-white"
       >
-        Show All <span className="font-bold mx-2">{destinations.data.length}+</span> Destinations
+        View All <span className="font-bold mx-2">{destinations.data.length}+</span> Destinations
       </Button>
       </Link>
     </div>

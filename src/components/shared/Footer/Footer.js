@@ -10,7 +10,8 @@ import { FaPaypal, FaStripe, FaCcMastercard, FaCcVisa } from "react-icons/fa";
 const Footer = () => {
   const currentYear = new Date().getFullYear();
   return (
-    <Box
+   <div className="mt-20">
+     <Box
       className="w-full h-full items-center bg-[#17233e]"
       style={{
         width: "100%",
@@ -171,6 +172,7 @@ const Footer = () => {
         </div>
       </div>
     </Box>
+   </div>
   );
 };
 
