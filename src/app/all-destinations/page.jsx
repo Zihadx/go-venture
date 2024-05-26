@@ -1,6 +1,7 @@
 import DestinationsSmallCard from "@/components/ui/Destinations/DestinationsSmallCard";
 import Image from "next/image";
 import bannerImage from "@/assets/All-image/all-destinations-banner2.jpg";
+import DestinationFilter from "@/utils/AllDestinations/Filter";
 
 const allDestinationsPage = async () => {
   const res = await fetch("http://localhost:5000/api/v1/destinations");
@@ -22,18 +23,23 @@ const allDestinationsPage = async () => {
               Explore the Unseen Wonders of Our Planet
             </h1>
             <p className="text-white text-md mt-4">
-              Find your next adventure. Discover the world&apos;s most stunning and unseen destinations.
+              Find your next adventure. Discover the world&apos;s most stunning
+              and unseen destinations.
             </p>
           </div>
         </div>
       </div>
 
-      <div className="flex-row lg:flex justify-between items-baseline gap-2 custom-container">
-        <div className="lg:w-1/3 w-full lg:sticky top-0">
-          <h1 className="text-4xl bg-red-200">Filter-- TO-DO</h1>
-          <h1 className="text-4xl bg-red-200 my-10">-- TO-DO --</h1>
+      {/*--------All Destinations --------- */}
+      <div className="flex-row lg:flex justify-between items-baseline gap-10 custom-container mb-10">
+
+         {/*-------- Destinations Filtering --------- */}
+        <div className="lg:w-1/3 w-full lg:sticky top-0 self-start mb-4">
+          <DestinationFilter  destinations={destinations}/>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 relative lg:w-2/3 w-full overflow-y-auto mb-10">
+
+        {/*--------All Destinations  --------- */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 relative lg:w-2/3 w-full overflow-y-auto">
           {destinations.data.map((destination) => (
             <DestinationsSmallCard
               key={destination._id}

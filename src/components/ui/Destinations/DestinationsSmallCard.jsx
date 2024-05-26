@@ -7,7 +7,7 @@ import "swiper/css/navigation";
 import { Pagination, Navigation } from "swiper/modules";
 import Image from "next/image";
 import "./SmallCard.css";
-import { FavoriteBorder, HistoryOutlined, LocationOnOutlined } from "@mui/icons-material";
+import { FavoriteBorder, FavoriteBorderOutlined, HistoryOutlined, LocationOnOutlined } from "@mui/icons-material";
 import { Rating } from "@mui/material";
 import Link from "next/link";
 
@@ -38,13 +38,12 @@ const DestinationsSmallCard = ({ destination }) => {
       </div>
       <div className="absolute top-[5px] right-[5px] z-10">
         <div>
-          <h1
-            title="Add To Favorite List"
-            className=" text-pink-700 font-bold bg-slate-300 
-          bg-opacity-70 p-1 rounded-full"
-          >
-            <FavoriteBorder sx={{ fontSize: 25 }} />
-          </h1>
+        <button title="Add To Favorite List" className="group">
+            <FavoriteBorderOutlined
+              className="text-white bg-gray-950 bg-opacity-50 p-1 rounded-full"
+              style={{ fontSize: 30 }}
+            />
+          </button>
         </div>
       </div>
 

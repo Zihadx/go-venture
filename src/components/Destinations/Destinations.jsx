@@ -1,10 +1,11 @@
 import { Button } from "@mui/material";
 import DestinationsBigCard from "../ui/Destinations/DestinationsBigCard";
 import DestinationsSmallCard from "../ui/Destinations/DestinationsSmallCard";
+import Link from "next/link";
 
 const DestinationsPage = ({ destinations }) => {
   return (
-    <div className="custom-container my-16">
+    <div className="custom-container mt-20">
       <div className="w-full md:w-1/2 text-center mx-auto space-y-4">
         <h1 className="text-4xl font-semibold">Discover Your Next Adventure</h1>
         <p>
@@ -43,7 +44,7 @@ const DestinationsPage = ({ destinations }) => {
       </h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-6">
         {destinations.data
-          .slice(1, destinations.data.length)
+          .slice(1, 4)
           .map((destination) => (
             <DestinationsSmallCard
               key={destination._id}
@@ -51,6 +52,15 @@ const DestinationsPage = ({ destinations }) => {
             />
           ))}
       </div>
+      <Link href={'/all-destinations'} className="flex justify-center items-center mt-6">
+      <Button
+        variant="contained"
+        color="primary"
+        className=" bg-primary text-white"
+      >
+        Show All <span className="font-bold mx-2">{destinations.data.length}+</span> Destinations
+      </Button>
+      </Link>
     </div>
   );
 };

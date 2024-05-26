@@ -1,16 +1,22 @@
-"use client"
-import { useState, useEffect } from 'react';
-import TextField from '@mui/material/TextField';
-import MenuItem from '@mui/material/MenuItem';
-import Button from '@mui/material/Button';
-import { FavoriteBorderOutlined, HeartBrokenOutlined, ViewAgendaOutlined, ViewArray, VisibilityOutlined } from '@mui/icons-material';
-import { FaEye } from 'react-icons/fa';
+"use client";
+import { useState, useEffect } from "react";
+import TextField from "@mui/material/TextField";
+import MenuItem from "@mui/material/MenuItem";
+import Button from "@mui/material/Button";
+import {
+  FavoriteBorderOutlined,
+  HeartBrokenOutlined,
+  ViewAgendaOutlined,
+  ViewArray,
+  VisibilityOutlined,
+} from "@mui/icons-material";
+import { FaEye } from "react-icons/fa";
 
 const DestinationsBookingForm = ({ destinationData }) => {
   const [adultSeats, setAdultSeats] = useState(1);
   const [childSeats, setChildSeats] = useState(0);
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [message, setMessage] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [message, setMessage] = useState("");
   const [totalPrice, setTotalPrice] = useState(0);
 
   const pricePerSeat = destinationData.packagePrice;
@@ -28,7 +34,9 @@ const DestinationsBookingForm = ({ destinationData }) => {
 
   return (
     <div className="max-w-sm h-full mx-auto p-4 border rounded-lg">
-      <div className="text-lg font-semibold mb-4 text-center"><h1>Price: ${pricePerSeat.toFixed(2)}</h1></div>
+      <div className="text-lg font-semibold mb-4 text-center">
+        <h1>Price: ${pricePerSeat.toFixed(2)}</h1>
+      </div>
       <div className="mb-4">
         <TextField
           label="Booking Date"
@@ -37,7 +45,7 @@ const DestinationsBookingForm = ({ destinationData }) => {
           InputLabelProps={{ shrink: true }}
           className="mb-4"
         />
-        <div className='flex justify-between items-center gap-2'>
+        <div className="flex justify-between items-center gap-2">
           <TextField
             label="Adult"
             select
@@ -85,30 +93,36 @@ const DestinationsBookingForm = ({ destinationData }) => {
           className="mb-4"
         />
       </div>
-      <div className="text-lg font-semibold my-6">Total (Include 5% vat): ${totalPrice}</div>
+      <div className="text-lg font-semibold my-6">
+        Total (Include 5% vat): ${totalPrice}
+      </div>
       <Button
         variant="contained"
         color="primary"
         fullWidth
-        onClick={() => alert('Booking Proceeded')}
+        onClick={() => alert("Booking Proceeded")}
         className="mb-4 bg-primary text-white"
       >
         Proceed Booking
       </Button>
       <div className="flex justify-between items-center mt-3">
-        <div className='flex items-center gap-2'>
-        <h1 className="text-gray-500">Save to Wish List </h1>
-        <button
-            title="Add To Favorite List"
-            className=" text-pink-700 font-bold bg-slate-300 
-          bg-opacity-30 p-1 rounded-full"
-          >
-            <FavoriteBorderOutlined sx={{ fontSize: 25 }} />
+        <div className="flex items-center gap-2">
+          <h1 className="text-gray-500">Save to Wish List </h1>
+          <button title="Add To Favorite List" className="group">
+            <FavoriteBorderOutlined
+              className="text-white bg-gray-950 bg-opacity-50 p-1 rounded-full"
+              style={{ fontSize: 30 }}
+            />
           </button>
         </div>
 
-
-        <span className="text-gray-500 flex items-center gap-2"> <span ><VisibilityOutlined/></span> 3771</span>
+        <span className="text-gray-500 flex items-center gap-2">
+          {" "}
+          <span>
+            <VisibilityOutlined />
+          </span>{" "}
+          3771
+        </span>
       </div>
     </div>
   );
