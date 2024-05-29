@@ -3,6 +3,7 @@ import { ArrowRightAltOutlined } from "@mui/icons-material";
 import { Button } from "@mui/material";
 import Image from "next/image";
 import joinUsImage from "@/assets/All-image/joinUs.png";
+// import joinUsAnimation from "@/assets/All-image/joinUs.mp4";
 import planeImage from "@/assets/All-image/plane.png";
 
 const JoinUsPage = () => {
@@ -49,21 +50,23 @@ const JoinUsPage = () => {
         </div>
       </div>
       <div className="mt-8 md:mt-0 flex relative">
-        <Image
-          src={joinUsImage}
-          alt="signUpImage"
+      <video
+          src="/joinUs.mp4"
           width={400}
           height={400}
-          className="lg:h-[550px] rounded-t-full mx-auto"
-        ></Image>
+          className="lg:h-[550px] rounded-t-full mx-auto w-full"
+          autoPlay
+          loop
+         muted
+        ></video>
 
-        <div className="absolute top-1/2 -translate-y-1/2  transform -translate-x-64">
+        <div className="absolute top-1/2 -translate-y-1/2  transform -translate-x-80 w-full lg:w-[400px]">
           <Image
             src={planeImage}
             alt="planeImage"
-            width={350}
-            height={350}
-            className="object-contain opacity-100 md:opacity-10 lg:opacity-100 mt-16"
+            width={550}
+            height={550}
+            className="object-contain opacity-100 md:opacity-10 lg:opacity-100 mt-20"
           />
         </div>
       </div>

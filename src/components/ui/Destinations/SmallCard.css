@@ -8,6 +8,7 @@
 }
 
 .swiper-button-next::after, .swiper-button-prev::after {
+    color: white; 
     font-size: 10px; 
     font: bold;
     opacity: 0;

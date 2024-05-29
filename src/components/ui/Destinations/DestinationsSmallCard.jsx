@@ -7,7 +7,7 @@ import "swiper/css/navigation";
 import { Pagination, Navigation } from "swiper/modules";
 import Image from "next/image";
 import "./SmallCard.css";
-import { FavoriteBorder, FavoriteBorderOutlined, HistoryOutlined, LocationOnOutlined } from "@mui/icons-material";
+import { FavoriteBorderOutlined, HistoryOutlined, LocationOnOutlined } from "@mui/icons-material";
 import { Rating } from "@mui/material";
 import Link from "next/link";
 

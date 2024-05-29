@@ -9,9 +9,7 @@ const DestinationsPage = ({ destinations }) => {
       <div className="w-full md:w-1/2 text-center mx-auto space-y-4">
         <h1 className="text-4xl font-semibold">Discover Your Next Adventure</h1>
         <p>
-          Explore curated destinations with Go-Venture&apos;s. Whether for
-          adventure, relaxation, or culture, we have the perfect spot for you.
-          Start your journey today.
+          Explore curated destinations with Go-Venture&apos;s. Whether for adventure, relaxation, or culture, we have the perfect spot for you. Start your journey today.
         </p>
       </div>
       <div className="flex justify-center items-center mt-10 mb-4 gap-8">
@@ -43,23 +41,26 @@ const DestinationsPage = ({ destinations }) => {
         Perfect Retreats for Your Next Vacation
       </h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-6">
-        {destinations.data
-          .slice(1, 4)
-          .map((destination) => (
-            <DestinationsSmallCard
-              key={destination._id}
-              destination={destination}
-            />
-          ))}
+        {destinations.data.slice(1, 4).map((destination) => (
+          <DestinationsSmallCard
+            key={destination._id}
+            destination={destination}
+          />
+        ))}
       </div>
-      <Link href={'/all-destinations'} className="flex justify-center items-center mt-6">
-      <Button
-        variant="contained"
-        color="primary"
-        className=" bg-primary text-white"
+      <Link
+        href={"/all-destinations"}
+        className="flex justify-center items-center mt-6"
       >
-        View All <span className="font-bold mx-2">{destinations.data.length}+</span> Destinations
-      </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          className=" bg-primary text-white"
+        >
+          View All{" "}
+          <span className="font-bold mx-2">{destinations.data.length}+</span>{" "}
+          Destinations
+        </Button>
       </Link>
     </div>
   );
