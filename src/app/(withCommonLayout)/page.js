@@ -7,6 +7,7 @@ import JoinUsPage from "@/components/JoinUs/JoinUs";
 import BlogsPage from "@/components/Blogs/Blogs";
 import HotDeals from "@/components/Hot-Deals/HotDeals";
 import SpecialOffer from "@/components/SpecialOffer/SpecialOffer";
+import MobileApps from "@/components/MobileApps/MobileApps";
 
 const HomePage = async () => {
   const countriesRes = await fetch("http://localhost:5000/api/v1/countries", {
@@ -54,6 +55,7 @@ const HomePage = async () => {
         specialOfferData={specialOfferData}
         destinations={destinations}
       />
+      <MobileApps/>
       <HotDeals hotDealData={hotDealData} destinations={destinations} />
       <BlogsPage blogs={blogs} />
     </div>
