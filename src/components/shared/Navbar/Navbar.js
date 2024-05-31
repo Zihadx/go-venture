@@ -1,5 +1,6 @@
 "use client";
-import * as React from "react";
+
+import React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -45,11 +46,9 @@ const useStyles = makeStyles((theme) => ({
 
 const NavItems = [
   { route: "Home", pathname: "/" },
-  { route: "Categories", pathname: "/categories" },
-  { route: "Pages", pathname: "/pages" },
+  { route: "Destinations", pathname: "/all-destinations" },
+  { route: "News", pathname: "/all-blogs" },
   { route: "Dashboard", pathname: "/dashboard" },
-  { route: "News", pathname: "/news" },
-  { route: "Contact", pathname: "/contact" },
 ];
 
 function Navbar() {
@@ -101,17 +100,18 @@ function Navbar() {
             </Box>
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <motion.div
-                initial={{ opacity: 0, x: "100%" }}
+                initial={{ opacity: 0, y: "-100%" }}
                 animate={{
                   opacity: isSearchOpen ? 1 : 0,
-                  x: isSearchOpen ? 0 : "100%",
+                  y: isSearchOpen ? 0 : "-100%",
                 }}
                 transition={{ duration: 0.3 }}
                 className={isSearchOpen ? "relative text-black ml-2" : "hidden"}
+                style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", marginTop: '20px' }}
               >
                 <input
                   type="text"
-                  className={`border border-gray-300 rounded-md py-2 pl-10 pr-4 block ${classes.input}`}
+                  className={`border border-gray-300 rounded-md py-2 pl-10 pr-4 w-full block ${classes.input}`}
                   placeholder="Search..."
                 />
                 <SearchIcon className={classes.searchIcon} />

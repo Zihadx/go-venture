@@ -25,7 +25,7 @@ const Banner = () => {
       })
       .catch((error) => console.error("Failed to fetch banners:", error));
   }, []);
-  console.log("Current state of banners:", banners);
+  // console.log("Current state of banners:", banners);
 
   // Update active index on slide change
   const updateActiveIndex = () => {

@@ -1,10 +1,12 @@
-"use client"
+"use client";
 import CountryButton from "./CountryButton";
 
 import CountyBigCard from "@/components/ui/CardDesign/CountryCard/CountyBigCard";
 
 import { useState } from "react";
 import CountrySmallCard from "../ui/CardDesign/CountryCard/CountrySmallCard";
+
+import mapImage from "@/assets/All-image/map.png";
 
 const CountryPage = ({ countries }) => {
   const [showAll, setShowAll] = useState(false);
@@ -30,19 +32,31 @@ const CountryPage = ({ countries }) => {
           ))}
         </div>
 
-        {/* Small cards */}
+        {/* --------Small cards --------------*/}
         <div className="w-full md:w-3/5 grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* -----------First three small cards ------------*/}
           {countries.data.slice(1, showAll ? 5 : 4).map((country, index) => (
             <CountrySmallCard key={country._id} country={country} />
           ))}
 
-          {/* ----------"See more" button -------*/}
-          {!showAll && countries.data.length > 4 && (
-            <div>
-              <CountryButton showAll={showAll} setShowAll={setShowAll} />
-            </div>
-          )}
+          <>
+            {/* ----------"See more" button -------*/}
+            {!showAll && countries.data.length > 4 && (
+              <div className="relative">
+
+                <div
+                  className="absolute inset-0 bg-cover bg-center opacity-25"
+                  style={{
+                    backgroundImage: "url('https://i.ibb.co/98wyXBv/map.png')",
+                  }}
+                ></div>
+
+                <div className="relative z-10 flex items-center justify-center h-full">
+                  <CountryButton showAll={showAll} setShowAll={setShowAll} />
+                </div>
+              </div>
+            )}
+          </>
         </div>
       </div>
 

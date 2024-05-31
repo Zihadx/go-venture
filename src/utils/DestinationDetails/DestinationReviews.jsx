@@ -10,7 +10,7 @@ const DestinationReviewsSection = ({ destinationData }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    console.log({ rating, review });
+    // console.log({ rating, review });
   };
   return (
     <div className=" mt-6 bg-white rounded-lg">

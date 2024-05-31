@@ -6,7 +6,7 @@ import DestinationFilter from "@/utils/AllDestinations/Filter";
 const allDestinationsPage = async () => {
   const res = await fetch("http://localhost:5000/api/v1/destinations");
   const destinations = await res.json();
-  console.log(destinations);
+  // console.log(destinations);
   return (
     <div>
       <div className="relative w-full mb-10">

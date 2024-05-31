@@ -7,7 +7,7 @@ import BlogsCard from "@/components/ui/CardDesign/BlogsCard/BlogsCard";
 const AllBlogsPage = async() => {
     const res = await fetch("http://localhost:5000/api/v1/blogs");
     const blogs = await res.json();
-    console.log(blogs);
+    // console.log(blogs);
     return (
       <div>
         <div className="relative w-full mb-10">

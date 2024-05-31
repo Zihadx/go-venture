@@ -17,8 +17,8 @@ const DestinationsDetailsPage = async ({ params }) => {
   );
   const destination = await res.json();
   const destinationData = destination.data;
-  console.log(destinationData);
-  console.log(params);
+  // console.log(destinationData);
+  // console.log(params);
   const startDate = new Date(destinationData.startDate).toLocaleDateString(
     "en-CA"
   );

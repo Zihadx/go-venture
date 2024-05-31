@@ -9,6 +9,7 @@ import Image from "next/image";
 import googleStore from "@/assets/App-logo/google-store.png";
 import appStore from "@/assets/App-logo/apple-store.png";
 import AppAnimation from "@/utils/MobileApp/AppAnimation";
+import appImage from '@/assets/All-image/appSection.jpg'
 
 const MobileApps = () => {
   return (
@@ -69,13 +70,13 @@ const MobileApps = () => {
           </Box>
 
           {/* Right side */}
-          <Box className="lg:w-1/2 w-full relative flex justify-end h-full">
+          <Box className="lg:w-1/2 w-full relative flex justify-end h-full mt-8 lg:mt-0">
             <Image
-              src="https://i.ibb.co/5hhnVzf/maldives-6.jpg"
+              src={appImage}
               alt="Phone Mockup"
               width={600}
               height={600}
-              className="object-contain rounded-l-full"
+              className="rounded-l-full h-80 w-full"
             />
             <Box className="absolute z-10 bottom-0 right-0">
               <AppAnimation />

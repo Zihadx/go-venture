@@ -18,9 +18,9 @@ import {
   
   const SpecialOfferCard = ({ destination, specialOffer }) => {
     return (
-      <div className="rounded-lg shadow-sm hover:shadow-lg overflow-hidden flex border">
+      <div className="rounded-lg shadow-sm hover:shadow-lg overflow-hidden flex-row lg:flex border">
         {/* image --- */}
-        <div className="relative w-1/2">
+        <div className="relative lg:w-1/2 w-full">
           <Image
             className="w-full h-full object-cover"
             src={destination.coverImage}
@@ -35,8 +35,8 @@ import {
         </div>
   
         {/* content ---------- */}
-        <div className="flex flex-col justify-between p-4 w-1/2">
-            
+        <div className="flex flex-col justify-between p-4 lg:w-1/2 w-full">
+
           <CardContent className="flex flex-col justify-between flex-grow space-y-4">
             <Typography variant="h6" className="text-gray-800">
               {destination.title}

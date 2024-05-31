@@ -32,7 +32,7 @@ const FAQsection = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto mt-10">
+    <div className="mt-10">
       <h2 className="text-2xl font-bold mb-4">Questions & Answers:</h2>
       <div className="space-y-4">
         {faqs.map((faq, index) => (

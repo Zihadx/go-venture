@@ -13,7 +13,7 @@ import Link from "next/link";
 
 const HotDealsCard = ({ hotDeal, destination }) => {
   return (
-    <Card className="max-w-sm rounded overflow-hidden shadow-lg relative mt-10">
+    <Card className="rounded overflow-hidden shadow-lg relative mt-10">
       <Box className="absolute top-0 left-0 bg-yellow-700 text-white px-2 py-1 rounded-br-lg ">
         20% OFF
       </Box>
