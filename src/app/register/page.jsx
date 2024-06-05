@@ -13,11 +13,12 @@ const Register = () => {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = (value) => {
+    console.log(value);
   };
 
   return (
