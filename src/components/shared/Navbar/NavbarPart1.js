@@ -13,6 +13,8 @@ import Select from "@mui/material/Select";
 import { Facebook, Instagram, LinkedIn, Twitter } from "@mui/icons-material";
 import { IconButton, Typography } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import CurrencyLanguageSelect from "./CurrencyLanguageSelect";
+import Link from "next/link";
 
 const NavbarPart1 = () => {
   const [language, setLanguage] = React.useState("English"); // Set 'English' as the default language
@@ -27,7 +29,7 @@ const NavbarPart1 = () => {
   }
 
   return (
-    <AppBar position="static" className="bg-[#2095ae]">
+    <AppBar position="static" className="bg-[#2095ae] px-16">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Box className=" w-full flex items-center">
@@ -68,25 +70,17 @@ const NavbarPart1 = () => {
             </Typography>
             <Typography className="text-sm">goventure@gmail.com</Typography>
           </Box>
-          <Box className="w-full flex justify-end text-white">
-            <Button className="text-white">Login</Button>
-            <Button className="text-white">Sign up</Button>
 
-            <FormControl
+          <Box className="w-full flex justify-end text-white">
+            {/* <FormControl
               sx={{ m: 1, minWidth: 120, border: "none" }}
               size="small"
             >
-              <Select
-                value={language}
-                onChange={handleChange}
-                variant="standard"
-                className="border-none text-white"
-              >
-                <MenuItem value="English">English</MenuItem>
-                <MenuItem value="Bengali">Bengali</MenuItem>
-                <MenuItem value="Arabic">Arabic</MenuItem>
-              </Select>
-            </FormControl>
+              <CurrencyLanguageSelect />
+            </FormControl> */}
+            <Link href='/login'>
+            <Button className="text-white">Login</Button>
+            </Link>
           </Box>
         </Toolbar>
       </Container>

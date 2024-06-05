@@ -91,9 +91,12 @@ const DestinationReviewsSection = ({ destinationData }) => {
             onChange={(e) => setReview(e.target.value)}
             required
             sx={{
-              "& .MuiOutlinedInput-root": {
-                "&.Mui-focused fieldset": {
-                  borderColor: "#2095ae",
+              '& .MuiOutlinedInput-root': {
+                '&.Mui-focused fieldset': {
+                  borderColor: '#2095ae',
+                },
+                '& input': {
+                  color: '#2095ae', 
                 },
               },
             }}

@@ -34,8 +34,10 @@ const allDestinationsPage = async () => {
       <div className="flex-row lg:flex justify-between items-baseline gap-10 custom-container mb-10">
 
          {/*-------- Destinations Filtering --------- */}
-        <div className="lg:w-1/3 w-full lg:sticky top-0 self-start mb-4">
+        <div className="lg:w-1/3 w-full lg:sticky top-0 self-start mb-4 bottom-auto">
           <DestinationFilter  destinations={destinations}/>
+         
+
         </div>
 
         {/*--------All Destinations  --------- */}
