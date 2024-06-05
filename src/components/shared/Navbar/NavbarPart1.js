@@ -5,8 +5,8 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
-import { Facebook, Instagram, LinkedIn, Twitter } from "@mui/icons-material";
-import { IconButton, Typography, Menu, MenuItem } from "@mui/material";
+import { AccountCircleOutlined, Facebook, Instagram, LinkedIn, Twitter } from "@mui/icons-material";
+import { IconButton, Typography, Menu, MenuItem, Divider, Avatar } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Image from "next/image";
 import Link from "next/link";
@@ -33,19 +33,41 @@ const NavbarPart1 = ({ session }) => {
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Box className="w-full flex items-center">
-            <IconButton size="large" edge="start" color="inherit" aria-label="facebook">
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="facebook"
+            >
               <Facebook />
             </IconButton>
-            <IconButton size="large" edge="start" color="inherit" aria-label="twitter">
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="twitter"
+            >
               <Twitter />
             </IconButton>
-            <IconButton size="large" edge="start" color="inherit" aria-label="instagram">
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="instagram"
+            >
               <Instagram />
             </IconButton>
-            <IconButton size="large" edge="start" color="inherit" aria-label="linkedin">
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="linkedin"
+            >
               <LinkedIn />
             </IconButton>
-            <Typography className="mx-5 px-2 text-sm border-l-2 border-r-2">+011 234 567 89</Typography>
+            <Typography className="mx-5 px-2 text-sm border-l-2 border-r-2">
+              +011 234 567 89
+            </Typography>
             <Typography className="text-sm">goventure@gmail.com</Typography>
           </Box>
 
@@ -61,13 +83,37 @@ const NavbarPart1 = ({ session }) => {
                     className="rounded-full"
                   />
                 </IconButton>
-                <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
-                  <MenuItem onClick={() => signOut()}>Logout</MenuItem>
+                <Menu
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleMenuClose}
+                >
+                  <Box className=" flex flex-col justify-center items-center p-4 w-full">
+                    <Typography variant="h6">{session.user.name}</Typography>
+                    <Button
+                      className="bg-primary"
+                      variant="contained"
+                      color="primary"
+                    >
+                      View Profile
+                    </Button>
+                  </Box>
+                  <Divider />
+                  <MenuItem onClick={() => signOut()}>
+                    <Button
+                      className="bg-primary my-4"
+                      variant="contained"
+                      color="primary"
+                    >
+                      Log out
+                    </Button>
+                  </MenuItem>
                 </Menu>
               </>
             ) : (
-              <Link href="/login" passHref>
-                <Button className="text-white">Login</Button>
+              <Link href="/login" className="px-4 group flex justify-center items-center gap-2">
+                <AccountCircleOutlined />
+                <Typography variant="p" className="text-white group-hover:text-blue-300">Login</Typography>
               </Link>
             )}
           </Box>

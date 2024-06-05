@@ -153,7 +153,7 @@ const Navbar = ({ session }) => {
               padding: 2,
             }}
           >
-            {session ? (
+            {session?.user ? (
               <>
                 <Image
                   src={session.user.image}
@@ -199,7 +199,7 @@ const Navbar = ({ session }) => {
           <Divider />
           <Box />
           <Box sx={{ display: "flex", justifyContent: "start", padding: 2 }}>
-            {session ? (
+            {session?.user ? (
               <Button
                 onClick={() => signOut()}
                 className="text-white bg-primary p-2 rounded-md"

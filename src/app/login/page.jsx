@@ -107,6 +107,7 @@ const Login = () => {
             variant="contained"
             color="error"
             startIcon={<FaGoogle />}
+            onClick={()=> signIn ("google", {callbackUrl: "http://localhost:3000"})}
           >
             Google
           </Button>
@@ -119,9 +120,9 @@ const Login = () => {
             Facebook
           </Button>
           <Button
-            className="bg-purple-700"
+            className="bg-slate-700"
             variant="contained"
-            color="secondary"
+            color="primary"
             startIcon={<FaGithub />}
 
             onClick={()=> signIn ("github", {callbackUrl: "http://localhost:3000"})}
