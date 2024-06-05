@@ -4,11 +4,13 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import { FaFacebook, FaTwitter, FaGoogle } from "react-icons/fa";
+import { FaFacebook, FaTwitter, FaGoogle, FaGithub } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import Link from "next/link";
 import treeImage from "@/assets/All-image/tree.png";
 import Image from "next/image";
+
+import {signIn} from "next-auth/react"
 
 const Login = () => {
   const {
@@ -120,9 +122,11 @@ const Login = () => {
             className="bg-purple-700"
             variant="contained"
             color="secondary"
-            startIcon={<FaTwitter />}
+            startIcon={<FaGithub />}
+
+            onClick={()=> signIn ("github", {callbackUrl: "http://localhost:3000"})}
           >
-            Twitter
+            Github
           </Button>
         </div>
         <div className="text-center">
