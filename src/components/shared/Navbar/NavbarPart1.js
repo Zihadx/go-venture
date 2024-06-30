@@ -5,8 +5,22 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
-import { AccountCircleOutlined, Facebook, Instagram, LinkedIn, Twitter } from "@mui/icons-material";
-import { IconButton, Typography, Menu, MenuItem, Divider, Avatar } from "@mui/material";
+import {
+  AccountCircleOutlined,
+  Facebook,
+  Instagram,
+  LinkedIn,
+  LogoutOutlined,
+  Twitter,
+} from "@mui/icons-material";
+import {
+  IconButton,
+  Typography,
+  Menu,
+  MenuItem,
+  Divider,
+  Avatar,
+} from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Image from "next/image";
 import Link from "next/link";
@@ -88,32 +102,81 @@ const NavbarPart1 = ({ session }) => {
                   open={Boolean(anchorEl)}
                   onClose={handleMenuClose}
                 >
-                  <Box className=" flex flex-col justify-center items-center p-4 w-full">
-                    <Typography variant="h6">{session.user.name}</Typography>
+                  <Box className=" flex flex-col justify-center items-center px-6 py-2 w-full">
+                    <Image
+                      src={session.user.image}
+                      alt={session.user.name}
+                      width={72}
+                      height={72}
+                      className="rounded-full"
+                    />
+                    <Typography variant="h6" className="font-semibold">
+                      {session.user.name}
+                    </Typography>
                     <Button
-                      className="bg-primary"
+                      className="bg-primary mt-4"
                       variant="contained"
                       color="primary"
+                      size="small"
                     >
                       View Profile
                     </Button>
                   </Box>
                   <Divider />
-                  <MenuItem onClick={() => signOut()}>
-                    <Button
-                      className="bg-primary my-4"
-                      variant="contained"
-                      color="primary"
+                  <Box className="px-6 py-2 w-full">
+                    <Link href="/">
+                      <Typography className="hover:text-primary">
+                        Settings
+                      </Typography>
+                    </Link>
+                    <Link href="/">
+                      <Typography className="hover:text-primary">
+                        Helps
+                      </Typography>
+                    </Link>
+                    <Link href="/">
+                      <Typography className="hover:text-primary">
+                        Feedback
+                      </Typography>
+                    </Link>
+                    <Link href="/">
+                      <Typography className="hover:text-primary">
+                        Bookings
+                      </Typography>
+                    </Link>
+                    <Link href="/">
+                      <Typography className="hover:text-primary">
+                        Feedback
+                      </Typography>
+                    </Link>
+                    <Link href="/">
+                      <Typography className="hover:text-primary">
+                        Guide
+                      </Typography>
+                    </Link>
+
+                    <Typography
+                      onClick={() => signOut()}
+                      className="text-primary flex items-center gap-1 cursor-pointer mt-2"
+                      size="small"
                     >
-                      Log out
-                    </Button>
-                  </MenuItem>
+                      Logout <LogoutOutlined fontSize="small" className="" />
+                    </Typography>
+                  </Box>
                 </Menu>
               </>
             ) : (
-              <Link href="/login" className="px-4 group flex justify-center items-center gap-2">
+              <Link
+                href="/login"
+                className="px-4 group flex justify-center items-center gap-2"
+              >
                 <AccountCircleOutlined />
-                <Typography variant="p" className="text-white group-hover:text-blue-300">Login</Typography>
+                <Typography
+                  variant="p"
+                  className="text-white group-hover:text-blue-300"
+                >
+                  Login
+                </Typography>
               </Link>
             )}
           </Box>

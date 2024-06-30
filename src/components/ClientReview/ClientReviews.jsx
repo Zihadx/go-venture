@@ -18,7 +18,7 @@ const testimonials = [
   {
     userImage: "https://i.ibb.co/CBSJbcN/IMG-20240329-141614.jpg",
     feedback:
-      "The trip was absolutely amazing! The guides were knowledgeable and the itinerary was well-planned.",
+      "I had a wonderful time exploring the local culture and cuisine. The service was top-notch.",
     username: "Adnin",
     rating: 5,
     title: "Great Experience",
@@ -28,7 +28,7 @@ const testimonials = [
   {
     userImage: "https://i.ibb.co/TtNS9Pd/IMG-20240115-214145-1.jpg",
     feedback:
-      "I had a wonderful time exploring the local culture and cuisine. The service was top-notch and very accommodating.",
+      "I had a wonderful time exploring the local culture and cuisine. The service was top-notch.",
     username: "Zihad",
     rating: 4,
     title: "Memorable Journey",
@@ -38,7 +38,7 @@ const testimonials = [
   {
     userImage: "https://i.ibb.co/CBSJbcN/IMG-20240329-141614.jpg",
     feedback:
-      "An unforgettable adventure! Everything was perfectly organized and the destinations were breathtaking.",
+      "I had a wonderful time exploring the local culture and cuisine. The service was top-notch.",
     username: "Minha",
     rating: 5,
     title: "Unforgettable Adventure",

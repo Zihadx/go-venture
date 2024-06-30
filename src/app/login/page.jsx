@@ -4,7 +4,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import { FaFacebook, FaTwitter, FaGoogle, FaGithub } from "react-icons/fa";
+import { FaFacebook, FaGoogle, FaGithub } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import Link from "next/link";
 import treeImage from "@/assets/All-image/tree.png";
@@ -116,6 +116,7 @@ const Login = () => {
             variant="contained"
             color="primary"
             startIcon={<FaFacebook />}
+            onClick={()=> signIn ("facebook", {callbackUrl: "http://localhost:3000"})}
           >
             Facebook
           </Button>
