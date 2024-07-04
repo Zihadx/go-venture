@@ -8,7 +8,7 @@ import React from "react";
 
 const ServicesPage = () => {
   return (
-    <div className="custom-container my-16">
+    <div className="custom-container my-10">
       <div className="w-full md:w-1/2 mx-auto text-center">
         <h1 className="text-4xl font-semibold">Why Choose Go-Venture&apos;s tour</h1>
         <p>

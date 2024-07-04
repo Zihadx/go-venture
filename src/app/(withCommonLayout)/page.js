@@ -9,6 +9,7 @@ import HotDeals from "@/components/Hot-Deals/HotDeals";
 import SpecialOffer from "@/components/SpecialOffer/SpecialOffer";
 import MobileApps from "@/components/MobileApps/MobileApps";
 import ClientReviewsSection from "@/components/ClientReview/ClientReviews";
+import SearchBar from "@/components/SearchBar/SearchBar";
 
 const HomePage = async () => {
   const countriesRes = await fetch("http://localhost:5000/api/v1/countries", {
@@ -47,6 +48,7 @@ const HomePage = async () => {
   return (
     <div>
       <Banner />
+      <SearchBar/>
       <ServicesPage />
       <CountryPage countries={countries} />
       <JoinUsPage />

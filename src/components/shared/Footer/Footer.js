@@ -17,7 +17,7 @@ const Footer = () => {
         width: "100%",
         minHeight: "300px",
         color: "white",
-        backgroundImage: "url(https://i.ibb.co/Bq7g3HF/galaxy-2150186-min.png)",
+        backgroundImage: "url(https://i.ibb.co/0V8YLqy/footer.jpg)",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",

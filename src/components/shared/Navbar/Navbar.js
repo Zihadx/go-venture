@@ -47,7 +47,7 @@ const Navbar = ({ session }) => {
 
   return (
     <>
-      <NavbarPart1 session={session} />
+      
       <AppBar
         position="static"
         className="bg-transparent shadow-none z-20 absolute md:px-16"

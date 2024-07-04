@@ -2,53 +2,55 @@
   "api": [
     {
       "id": 1,
-      "title": "Explore Ancient Greece",
-      "description": "Discover the rich history and stunning architecture of ancient Greek ruins across Athens, Delphi, and more.",
+      "title": "Historical Journey Through China",
+      "description": "Embark on a captivating journey through China's rich history, focusing on the stunning landscapes of Guilin. Explore the iconic karst mountains, serene rivers, and cultural heritage of this ancient city.",
       "locations": {
-        "city": "Athens",
-        "country": "Greece"
+        "city": "Guilin",
+        "country": "China"
       },
-      "image": "https://i.ibb.co/ThJ0Hmf/modern-amphitheater-usa-1.jpg"
+      "image": "https://i.ibb.co/GnWHBcg/Guilin1.jpg"
     },
     {
       "id": 2,
-      "title": "Island Hopping in the Caribbean",
-      "description": "Experience the ultimate relaxation with crystal clear waters and vibrant nightlife in the Caribbean islands.",
-      "locations": {
-        "city": "Kingston",
-        "country": "Jamaica"
-      },
-      "image": "https://i.ibb.co/ThJ0Hmf/modern-amphitheater-usa-1.jpg"
-    },
-    {
-      "id": 3,
-      "title": "Adventure in the Rockies",
-      "description": "Hike, ski, and explore the vast wilderness of the Rocky Mountains in this thrilling adventure tour.",
-      "locations": {
-        "city": "Kathmandu",
-        "country": "Nepal"
-      },
-      "image": "https://i.ibb.co/ThJ0Hmf/modern-amphitheater-usa-1.jpg"
-    },
-    {
-      "id": 4,
-      "title": "Cultural Journey Through Japan",
-      "description": "Immerse yourself in the traditions and modern wonders of Japan with visits to Tokyo, Kyoto, and Osaka.",
-      "locations": {
-        "city": "Cox' Bazar",
-        "country": "Bangladesh"
-      },
-      "image": "https://i.ibb.co/ThJ0Hmf/modern-amphitheater-usa-1.jpg"
-    },
-    {
-      "id": 5,
-      "title": "Safari Adventure in Kenya",
-      "description": "Encounter Africa’s wildlife up close on a thrilling safari through Kenya’s national parks and reserves.",
+      "title": "Safari Adventure in Japan",
+      "description": "Encounter Japan’s unique wildlife and natural beauty up close on an exhilarating safari. Explore the diverse landscapes and national parks of Japan, from Tokyo to the serene countryside.",
       "locations": {
         "city": "Tokyo",
         "country": "Japan"
       },
-      "image": "https://i.ibb.co/ThJ0Hmf/modern-amphitheater-usa-1.jpg"
+      "image": "https://i.ibb.co/0rLykrb/japan-b.jpg"
+    },
+    {
+      "id": 3,
+      "title": "Serene Beauty of Ocho Rios Beach",
+      "description": "Experience the serene beauty of Ocho Rios Beach in Jamaica. Enjoy clear blue waters, a pristine beach, and a clear sky, perfect for a tropical getaway.",
+      "locations": {
+        "city": "Ocho Rios",
+        "country": "Jamaica"
+      },
+      "image": "https://i.ibb.co/q9jVCJy/jamaica-2.jpg"
+    },
+    {
+      "id": 4,
+      "title": "Maldives Beach Adventure",
+      "description": "Discover the beauty of the Maldives with a perfect blend of hiking, skiing, and beach exploration. Enjoy the serene landscapes and vibrant marine life of this island paradise.",
+      "locations": {
+        "city": "Male",
+        "country": "Maldives"
+      },
+      "image": "https://i.ibb.co/6vCX4Jz/maldives.jpg"
+    },
+    {
+      "id": 5,
+      "title": "Cultural Journey Through Bangladesh",
+      "description": "Immerse yourself in the rich traditions and modern wonders of Bangladesh. Visit the breathtaking Sundarbans, explore the vibrant city of Khulna, and experience the unique culture of this fascinating country.",
+      "locations": {
+        "city": "Khulna",
+        "country": "Bangladesh"
+      },
+      "image": "https://i.ibb.co/547Tq2h/The-Sundarbans-bangladesh-1.jpg"
     }
   ]
 }
+
+

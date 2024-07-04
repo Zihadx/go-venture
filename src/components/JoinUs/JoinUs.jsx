@@ -3,6 +3,7 @@ import { ArrowRightAltOutlined } from "@mui/icons-material";
 import { Button } from "@mui/material";
 import Image from "next/image";
 import planeImage from "@/assets/All-image/plane.png";
+import Link from "next/link";
 
 const JoinUsPage = () => {
   return (
@@ -44,20 +45,25 @@ const JoinUsPage = () => {
                 deals on travel. Sign up today and start saving!
               </small>
               <div className="flex items-center gap-2">
-                <Button
-                  variant="outlined"
-                  size="small"
-                  className="bg-primary text-white hover:text-primary  hover:border-primary border hover:border w-28"
-                >
-                  Sign in <ArrowRightAltOutlined />
-                </Button>
-                <Button
-                  variant="outlined"
-                  size="small"
-                  className=" text-primary hover:bg-primary hover:text-white w-28"
-                >
-                  Register <ArrowRightAltOutlined />
-                </Button>
+                <Link href="/login">
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    className="bg-primary text-white hover:text-primary  hover:border-primary border hover:border w-28"
+                  >
+                    Sign in <ArrowRightAltOutlined />
+                  </Button>
+                </Link>
+
+                <Link href="/register">
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    className=" text-primary hover:bg-primary hover:text-white w-28"
+                  >
+                    Register <ArrowRightAltOutlined />
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>

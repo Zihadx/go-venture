@@ -18,7 +18,7 @@ const AllBlogsPage = async() => {
             alt="Banner"
             className="object-cover w-full h-[400px]"
           />
-          <div className="absolute inset-0 bg-gray-950 bg-opacity-50 flex items-center justify-center text-center">
+          <div className="absolute inset-0 bg-primary bg-opacity-60 flex items-center justify-center text-center">
             <div className="lg:w-1/2 w-full text-center">
               <h1 className="text-white text-2xl md:text-3xl lg:text-4xl font-semibold">
                 Blogs Page:  TO-DO
