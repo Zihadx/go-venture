@@ -73,6 +73,7 @@ const DestinationReviewsSection = ({ destinationData }) => {
         <div className="mb-4">
           <label className="block text-gray-700 mb-2">Your Rating</label>
           <Rating
+            className="text-orange-500"
             name="rating"
             value={rating}
             onChange={(event, newValue) => {

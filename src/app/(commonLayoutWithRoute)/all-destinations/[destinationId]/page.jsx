@@ -4,7 +4,6 @@ import FAQsection from "@/utils/DestinationDetails/FAQsection";
 import {
   AlarmOnOutlined,
   CalendarMonthOutlined,
-  CheckCircle,
   LocationOnOutlined,
   MonetizationOnOutlined,
   Verified,
@@ -178,7 +177,7 @@ const DestinationsDetailsPage = async ({ params }) => {
             </p>
           </div>
 
-          {/* Attractions -----------------*/}
+          {/* ----Attractions -----------------*/}
           <div className="my-6 flex gap-6">
             <h1 className="text-2xl font-bold">Attractions:</h1>
             <div>
@@ -193,9 +192,9 @@ const DestinationsDetailsPage = async ({ params }) => {
             </div>
           </div>
 
-          {/* FAQ sections ---------------- */}
+          {/* ----FAQ sections ---------------- */}
           <FAQsection />
-          {/* Reviews sections ---------------- */}
+          {/* ----Reviews sections ---------------- */}
           <div className="mt-6">
             <h1 className="text-2xl font-bold mb-4">Customer Experience</h1>
 
@@ -203,9 +202,9 @@ const DestinationsDetailsPage = async ({ params }) => {
           </div>
         </div>
         {/* Booking sections ---------------- */}
-        <div className="lg:w-1/3 w-full h-full lg:sticky self-start top-0">
+        <div className="lg:w-1/3 w-full h-full lg:sticky self-start top-0 overflow-y-scroll md:h-screen scrollbar-hide">
           <div>
-            <h1 className="text-2xl font-bold mb-4 text-center">
+            <h1 className="text-2xl font-bold mb-4 mt-8 md:mt-0 text-center">
               Book Your Adventure
             </h1>
             <DestinationsBookingForm destinationData={destinationData} />

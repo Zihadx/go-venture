@@ -2,7 +2,7 @@
 import React from "react";
 import { useForm, Controller } from "react-hook-form";
 import { Select, MenuItem, Button, InputLabel, FormControl, TextField } from "@mui/material";
-import { Search, LocationOn, Event, Person } from "@mui/icons-material";
+import { Search, LocationOn, Event, Person, SailingOutlined } from "@mui/icons-material";
 
 const SearchBar = () => {
   const {
@@ -66,13 +66,13 @@ const SearchBar = () => {
                 </Select>
               )}
             />
-            {errors.destination && <span className="text-red-500">This field is required</span>}
+            {errors.destination && <span className="text-red-400 text-sm">This field is required</span>}
           </FormControl>
         </div>
 
         {/* ---------Activity --------------*/}
         <div className="flex items-center w-full">
-          <Event className="text-orange-500" />
+          <SailingOutlined className="text-orange-500" />
           <FormControl className="ml-2 w-full" sx={{ minWidth: 150 }} size="small">
             <InputLabel id="activity-label">All Activity</InputLabel>
             <Controller
@@ -95,7 +95,7 @@ const SearchBar = () => {
                 </Select>
               )}
             />
-            {errors.activity && <span className="text-red-500">This field is required</span>}
+            {errors.activity && <span className="text-red-400 text-sm">This field is required</span>}
           </FormControl>
         </div>
 
@@ -152,7 +152,7 @@ const SearchBar = () => {
                 </Select>
               )}
             />
-            {errors.guests && <span className="text-red-500">This field is required</span>}
+            {errors.guests && <span className="text-red-400 text-sm">This field is required</span>}
           </FormControl>
         </div>
 

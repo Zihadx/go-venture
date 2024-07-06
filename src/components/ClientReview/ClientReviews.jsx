@@ -141,6 +141,7 @@ const ClientReviewsSection = () => {
 
                       <Box>
                         <Rating
+                          className="text-orange-500"
                           name="half-rating-read"
                           defaultValue={testimonial.rating}
                           precision={0.25}

@@ -3,7 +3,7 @@ import { LocationCity, LocationOnOutlined } from "@mui/icons-material";
 import Image from "next/image";
 
 const DestinationsByCountryPage = async ({ params }) => {
-  const { countryId} = params;
+  const { countryId } = params;
   //  ---------------country details------------
   const countryRes = await fetch(
     `http://localhost:5000/api/v1/countries/${countryId}`
@@ -11,7 +11,7 @@ const DestinationsByCountryPage = async ({ params }) => {
   const countriesData = await countryRes.json();
   console.log(countriesData);
 
-  //  ---------------Destinations details by country------------
+  //  ----------Destinations details by country--------
   const destinationRes = await fetch(
     `http://localhost:5000/api/v1/countries/${countryId}/destinations`
   );
@@ -37,12 +37,19 @@ const DestinationsByCountryPage = async ({ params }) => {
             <p className="text-white text-md mt-4">
               {countriesData.data.descriptions}
             </p>
-            <h1 className="text-xl text-white"> <LocationOnOutlined /> {countriesData.data.name}</h1>
+            <h1 className="text-xl text-white">
+              {" "}
+              <LocationOnOutlined /> {countriesData.data.name}
+            </h1>
           </div>
         </div>
       </div>
 
       <div className="custom-container">
+        <h1 className="text-2xl font-bold my-5">
+          {destinationData.length} Destinations found in{" "}
+          {countriesData.data.name}
+        </h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {destinationData?.map((destination) => (
             <DestinationsSmallCard

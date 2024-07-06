@@ -20,9 +20,10 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { motion, AnimatePresence } from "framer-motion";
 import NavbarPart1 from "./NavbarPart1";
 import SearchIcon from "@mui/icons-material/Search";
-import logo2 from "@/assets/logo/logo-2.png";
+import logo from "@/assets/logo/logo.png";
 import { signOut } from "next-auth/react";
 import { Avatar, Typography } from "@mui/material";
+import { LogoutOutlined } from "@mui/icons-material";
 
 const NavItems = [
   { route: "Home", pathname: "/" },
@@ -47,10 +48,9 @@ const Navbar = ({ session }) => {
 
   return (
     <>
-      
       <AppBar
         position="static"
-        className="bg-transparent shadow-none z-20 absolute md:px-16"
+        className="bg-transparent shadow-none z-20 absolute lg:px-[58px]"
       >
         <Container maxWidth="xl">
           <Toolbar disableGutters>
@@ -67,11 +67,16 @@ const Navbar = ({ session }) => {
                 </IconButton>
               )}
               <Box sx={{ flexGrow: 1 }}>
-                <Image
-                  src={logo2}
-                  className="w-[200px] h-18 py-2"
-                  alt="logo2"
-                />
+                <Link href='/' className="flex items-center gap-1">
+                  <Image
+                    src={logo}
+                    className="w-[60px] h-[65px] py-2"
+                    alt="logo2"
+                  />
+                  <h1 className="text-2xl font-semibold">
+                    <span className="text-orange-500">Go V</span>entures
+                  </h1>
+                </Link>
               </Box>
               {!isMobile && (
                 <Box sx={{ display: "flex" }}>
@@ -125,6 +130,8 @@ const Navbar = ({ session }) => {
           )}
         </AnimatePresence>
       </AppBar>
+
+      {/*---------- Menu bar for mobile screen---------- */}
 
       <Drawer anchor="right" open={isDrawerOpen} onClose={handleDrawerToggle}>
         <Box
@@ -191,23 +198,52 @@ const Navbar = ({ session }) => {
             {NavItems.map((item) => (
               <Link key={item.route} href={item.pathname}>
                 <ListItem component="a">
-                  <ListItemText primary={item.route} />
+                  <ListItemText
+                    primary={item.route}
+                    className="hover:text-primary"
+                  />
                 </ListItem>
               </Link>
             ))}
           </List>
           <Divider />
           <Box />
+
+          <Box
+            sx={{
+              paddingLeft: 2,
+              marginTop: 2,
+            }}
+          >
+            <Link href="/">
+              <Typography className="hover:text-primary">Settings</Typography>
+            </Link>
+            <Link href="/">
+              <Typography className="hover:text-primary">Helps</Typography>
+            </Link>
+            <Link href="/">
+              <Typography className="hover:text-primary">Feedback</Typography>
+            </Link>
+            <Link href="/">
+              <Typography className="hover:text-primary">Bookings</Typography>
+            </Link>
+            <Link href="/">
+              <Typography className="hover:text-primary">Feedback</Typography>
+            </Link>
+            <Link href="/">
+              <Typography className="hover:text-primary">Guide</Typography>
+            </Link>
+          </Box>
+
           <Box sx={{ display: "flex", justifyContent: "start", padding: 2 }}>
             {session?.user ? (
-              <Button
+              <Typography
                 onClick={() => signOut()}
-                className="text-white bg-primary p-2 rounded-md"
-                variant="contained"
-                color="primary"
+                className="text-primary flex items-center gap-1 cursor-pointer mt-2"
+                size="small"
               >
-                Log out
-              </Button>
+                Logout <LogoutOutlined fontSize="small" className="" />
+              </Typography>
             ) : (
               " "
             )}

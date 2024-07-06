@@ -42,6 +42,7 @@ const HotDealsCard = ({ hotDeal, destination }) => {
 
         <Box className="flex items-center gap-4">
           <Rating
+            className="text-orange-500"
             name="half-rating-read"
             defaultValue={destination.ratingAverage}
             precision={0.25}

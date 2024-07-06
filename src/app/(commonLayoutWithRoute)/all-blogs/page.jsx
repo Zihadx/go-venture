@@ -31,16 +31,16 @@ const AllBlogsPage = async() => {
           </div>
         </div>
   
-        {/*--------All Destinations --------- */}
+        {/*--------All Blogs --------- */}
         <div className="flex-row lg:flex justify-between items-baseline gap-10 custom-container mb-10">
   
-           {/*-------- Destinations Filtering --------- */}
+           {/*-------- Blogs Filtering --------- */}
           <div className="lg:w-1/3 w-full lg:sticky top-0 self-start mb-4">
             {/* <DestinationFilter  destinations={destinations}/> */}
             <h1 className="bg-red-400">Filter</h1>
           </div>
   
-          {/*--------All Destinations  --------- */}
+          {/*--------All Blogs  --------- */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 relative lg:w-2/3 w-full overflow-y-auto">
             {blogs.data.map((blog) => (
               <BlogsCard

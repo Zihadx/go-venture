@@ -75,7 +75,7 @@ const Banner = () => {
         className="absolute top-0 left-0 w-full h-full z-10 "
         style={{ pointerEvents: "none" }}
       >
-        <div className="w-full h-full text-white bg-gradient-custom bg-opacity-70 px-12 md:px-24 flex items-center justify-start">
+        <div className="w-full h-full text-white bg-gradient-custom bg-opacity-70 px-4 md:px-8 lg:px-20 flex items-center justify-start">
           {banners.length > 0 && banners[activeIndex] && (
             <div className="text-[#D2ECF2z] md:w-1/3 w-full">
               <div className="space-y-4">
