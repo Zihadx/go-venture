@@ -1,44 +1,52 @@
 
 
-const HomePage = async () => {
-  const countriesRes = await fetch("http://localhost:5000/api/v1/countries", {
-    cache: "no-cache",
-  });
-
-  const hotelsRes = await fetch("http://localhost:5000/api/v1/hotels", {
-    cache: "no-cache",
-  });
-
-  const destinationsRes = await fetch(
-    "http://localhost:5000/api/v1/destinations",
-    {
-      cache: "no-cache",
-    }
-  );
-
-  const blogsRes = await fetch("http://localhost:5000/api/v1/blogs", {
-    cache: "no-cache",
-  });
-  const offerRes = await fetch("http://localhost:5000/api/v1/offers", {
-    cache: "no-cache",
-  });
-
-  const countries = await countriesRes.json();
-  const destinations = await destinationsRes.json();
-  const hotels = await hotelsRes.json();
-  const blogs = await blogsRes.json();
-
-  const offerData = await offerRes.json();
-  const hotDealData = offerData.data.filter((deal) => deal.type === "Hot Deal");
-  const specialOfferData = offerData.data.filter(
-    (deal) => deal.type === "Special Offer"
-  );
-
+const DashboardPage = () => {
   return (
     <div>
-     <h1>Hi dashboard.............</h1>
+      <h1>Hello, Dashboard Page!</h1>
     </div>
   );
 };
 
-export default HomePage;
+export default DashboardPage;
+
+
+
+
+
+
+
+
+// import AdminHome from "@/components/Dashboard/Admin/Home";
+// import DashNavbar from "@/components/Dashboard/DashNavbar/DashNavbar";
+// import { Divider } from "@mui/material";
+// import Link from "next/link";
+// import React from "react";
+// import Layout from "./layout";
+
+// const DashboardPage = () => {
+//   return (
+//     <Layout>
+//       <div className="flex justify-between">
+//       <div className="w-2/12 p-4 border h-full lg:sticky top-0 self-start overflow-y-scroll md:h-screen scrollbar-hide">
+//       <Link href='/dashboard/admin/destinationsManagement' className="block py-2 px-4 text-gray-600 hover:bg-gray-200">Management</Link>
+//         <h1 className="h-[1500px]">Sidebar</h1>
+//         <h1>Sidebar</h1>
+//       </div>
+//       <div className="w-full">
+//         <DashNavbar />
+//         <Divider />
+//         <div className="p-4 mt-12 bg-red-100">
+//           <h1 className="h-[1400px]">Content</h1>
+//         </div>
+       
+//         <div className="border-t mt-5">
+//           <h1 className="text-center h-10 ">Footer--</h1>
+//         </div>
+//       </div>
+//     </div>
+//     </Layout>
+//   );
+// };
+
+// export default DashboardPage;
