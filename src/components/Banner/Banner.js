@@ -12,33 +12,30 @@ import { IconButton } from "@mui/material";
 import {LocationOn } from "@mui/icons-material";
 
 const Banner = () => {
-  const [banners, setBanners] = useState([]);
+  const [allBanners, setBanners] = useState([]);
 
   const [activeIndex, setActiveIndex] = useState(0);
   const swiperRef = useRef(null);
 
   useEffect(() => {
-    fetch("http://localhost:7000/api")
+    fetch("https://go-venture-server.vercel.app/api/v1/banners")
       .then((response) => response.json())
       .then((data) => {
-        setBanners(data);
+        console.log(data)
+        setBanners(data.data);
       })
-      .catch((error) => console.error("Failed to fetch banners:", error));
+      .catch((error) => console.error("Failed to fetch allBanners:", error));
   }, []);
-  // console.log("Current state of banners:", banners);
 
-  // Update active index on slide change
+  //------ Update active index on slide change--------
   const updateActiveIndex = () => {
     if (swiperRef.current && swiperRef.current.swiper) {
       const newIndex = swiperRef.current.swiper.realIndex;
-      if (newIndex < banners.length) {
+      if (newIndex < allBanners.length) {
         setActiveIndex(newIndex);
       }
     }
   };
-
-
-  
 
   return (
     <div className="relative max-w-full" style={{ height: "600px" }}>
@@ -57,8 +54,8 @@ const Banner = () => {
         className="w-full h-full"
         ref={swiperRef}
       >
-        {banners.map((banner, index) => (
-          <SwiperSlide key={index} className="h-full">
+        {allBanners.map((banner) => (
+          <SwiperSlide key={allBanners._d} className="h-full">
             <div className="w-full h-full">
               <Image
                 src={banner.image}
@@ -69,6 +66,7 @@ const Banner = () => {
               />
             </div>
           </SwiperSlide>
+          
         ))}
       </Swiper>
       <div
@@ -76,13 +74,13 @@ const Banner = () => {
         style={{ pointerEvents: "none" }}
       >
         <div className="w-full h-full text-white bg-gradient-custom bg-opacity-70 px-4 md:px-8 lg:px-20 flex items-center justify-start">
-          {banners.length > 0 && banners[activeIndex] && (
+          {allBanners.length > 0 && allBanners[activeIndex] && (
             <div className="text-[#D2ECF2z] md:w-1/3 w-full">
               <div className="space-y-4">
                 <h2 className="text-3xl md:text-4xl font-semibold">
-                  {banners[activeIndex].title}
+                  {allBanners[activeIndex].title}
                 </h2>
-                <p className="text-sm ">{banners[activeIndex].description}</p>
+                <p className="text-sm ">{allBanners[activeIndex].description}</p>
               </div>
               <div className="mt-10 flex items-center">
                 <p className="text-[#dc834e]">
@@ -97,10 +95,10 @@ const Banner = () => {
                 </p>
                 <p className="text-xs">
                   
-                  {banners[activeIndex].locations.city}
+                  {allBanners[activeIndex].locations.city}
                   <span className="mx-2 text-xs">|</span>
                   <span className="font-semibold">
-                    {banners[activeIndex].locations.country}
+                    {allBanners[activeIndex].locations.country}
                   </span>
                 </p>
               </div>
