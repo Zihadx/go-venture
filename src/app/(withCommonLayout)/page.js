@@ -12,27 +12,39 @@ import ClientReviewsSection from "@/components/ClientReview/ClientReviews";
 import SearchBar from "@/components/SearchBar/SearchBar";
 
 const HomePage = async () => {
-  const countriesRes = await fetch("http://localhost:5000/api/v1/countries", {
-    cache: "no-cache",
-  });
-
-  const hotelsRes = await fetch("http://localhost:5000/api/v1/hotels", {
-    cache: "no-cache",
-  });
-
-  const destinationsRes = await fetch(
-    "http://localhost:5000/api/v1/destinations",
+  const countriesRes = await fetch(
+    "https://go-venture-server.vercel.app/api/v1/countries",
     {
       cache: "no-cache",
     }
   );
 
-  const blogsRes = await fetch("http://localhost:5000/api/v1/blogs", {
-    cache: "no-cache",
-  });
-  const offerRes = await fetch("http://localhost:5000/api/v1/offers", {
-    cache: "no-cache",
-  });
+  const hotelsRes = await fetch(
+    "https://go-venture-server.vercel.app/api/v1/hotels",
+    {
+      cache: "no-cache",
+    }
+  );
+
+  const destinationsRes = await fetch(
+    "https://go-venture-server.vercel.app/api/v1/destinations",
+    {
+      cache: "no-cache",
+    }
+  );
+
+  const blogsRes = await fetch(
+    "https://go-venture-server.vercel.app/api/v1/blogs",
+    {
+      cache: "no-cache",
+    }
+  );
+  const offerRes = await fetch(
+    "https://go-venture-server.vercel.app/api/v1/offers",
+    {
+      cache: "no-cache",
+    }
+  );
 
   const countries = await countriesRes.json();
   const destinations = await destinationsRes.json();
@@ -48,7 +60,7 @@ const HomePage = async () => {
   return (
     <div>
       <Banner />
-      <SearchBar/>
+      <SearchBar />
       <ServicesPage />
       <CountryPage countries={countries} />
       <JoinUsPage />
@@ -58,9 +70,9 @@ const HomePage = async () => {
         specialOfferData={specialOfferData}
         destinations={destinations}
       />
-      <MobileApps/>
+      <MobileApps />
       <HotDeals hotDealData={hotDealData} destinations={destinations} />
-      <ClientReviewsSection/>
+      <ClientReviewsSection />
       <BlogsPage blogs={blogs} />
     </div>
   );

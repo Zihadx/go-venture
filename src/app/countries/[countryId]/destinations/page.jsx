@@ -6,14 +6,14 @@ const DestinationsByCountryPage = async ({ params }) => {
   const { countryId } = params;
   //  ---------------country details------------
   const countryRes = await fetch(
-    `http://localhost:5000/api/v1/countries/${countryId}`
+    `https://go-venture-server.vercel.app/api/v1/countries/${countryId}`
   );
   const countriesData = await countryRes.json();
   console.log(countriesData);
 
   //  ----------Destinations details by country--------
   const destinationRes = await fetch(
-    `http://localhost:5000/api/v1/countries/${countryId}/destinations`
+    `https://go-venture-server.vercel.app/api/v1/countries/${countryId}/destinations`
   );
   const destinationData = await destinationRes.json();
 
