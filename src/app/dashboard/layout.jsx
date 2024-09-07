@@ -2,10 +2,12 @@
 import React, { useState } from "react";
 import DashFooter from "@/components/Dashboard/DashFooter/DashFooter";
 import DashNavbar from "@/components/Dashboard/DashNavbar/DashNavbar";
-import Sidebar from "@/components/Dashboard/layout/Sidebar";
+
 import MenuIcon from '@mui/icons-material/Menu';
 import IconButton from '@mui/material/IconButton';
 import Drawer from '@mui/material/Drawer';
+import Sidebar from "@/components/Dashboard/layout/SideBar";
+
 
 const DashboardLayout = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
