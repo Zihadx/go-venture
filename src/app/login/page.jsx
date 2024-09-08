@@ -78,6 +78,7 @@ const Login = () => {
           />
           <div className="flex justify-between items-center mb-4">
             <FormControlLabel
+            className="w-full"
               control={<Checkbox color="primary" />}
               label="Remember me"
               sx={{
@@ -86,7 +87,7 @@ const Login = () => {
                 },
               }}
             />
-            <a href="#" className="text-sm text-primary">
+            <a href="#" className="text-sm text-primary w-full">
               Forgot your password?
             </a>
           </div>
@@ -101,13 +102,13 @@ const Login = () => {
           </Button>
         </form>
         <div className="text-center my-4">Or Login With</div>
-        <div className="flex justify-around mb-4">
+        <div className="flex justify-around gap-1 mb-4">
           <Button
             className="bg-pink-700"
             variant="contained"
             color="error"
             startIcon={<FaGoogle />}
-            onClick={()=> signIn ("google", {callbackUrl: "http://localhost:3000"})}
+            onClick={()=> signIn ("google", {callbackUrl: "https://go-venture.vercel.app"})}
           >
             Google
           </Button>
@@ -116,7 +117,7 @@ const Login = () => {
             variant="contained"
             color="primary"
             startIcon={<FaFacebook />}
-            onClick={()=> signIn ("facebook", {callbackUrl: "http://localhost:3000"})}
+            onClick={()=> signIn ("facebook", {callbackUrl: "https://go-venture.vercel.app"})}
           >
             Facebook
           </Button>
@@ -126,7 +127,7 @@ const Login = () => {
             color="primary"
             startIcon={<FaGithub />}
 
-            onClick={()=> signIn ("github", {callbackUrl: "http://localhost:3000"})}
+            onClick={()=> signIn ("github", {callbackUrl: "https://go-venture.vercel.app"})}
           >
             Github
           </Button>
