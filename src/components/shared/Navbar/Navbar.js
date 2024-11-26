@@ -24,6 +24,12 @@ import logo from "@/assets/logo/logo.png";
 import { signOut } from "next-auth/react";
 import { Avatar, Typography } from "@mui/material";
 import { LogoutOutlined } from "@mui/icons-material";
+import {
+  getUserInfo,
+  isLoggingIn,
+  removeUserInfo,
+} from "@/services/auth.service";
+import { useRouter } from "next/navigation";
 
 const NavItems = [
   { route: "Home", pathname: "/" },
@@ -33,6 +39,27 @@ const NavItems = [
 ];
 
 const Navbar = ({ session }) => {
+  const userInfo = getUserInfo();
+  const router = useRouter()
+  console.log(userInfo);
+  // console.log(isLoggingIn())
+
+  const handleLogOut = async () => {
+    try {
+      removeUserInfo();
+
+      await signOut({
+        redirect: false,
+        callbackUrl: "/",
+      });
+      router.refresh();
+
+      console.log("Logged out successfully");
+    } catch (error) {
+      console.error("Error logging out", error);
+    }
+  };
+
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
   const [isSearchOpen, setIsSearchOpen] = React.useState(false);
   const isMobile = useMediaQuery("(max-width:960px)");
@@ -67,7 +94,7 @@ const Navbar = ({ session }) => {
                 </IconButton>
               )}
               <Box sx={{ flexGrow: 1 }}>
-                <Link href='/' className="flex items-center gap-1">
+                <Link href="/" className="flex items-center gap-1">
                   <Image
                     src={logo}
                     className="w-[60px] h-[65px] py-2"
@@ -160,16 +187,18 @@ const Navbar = ({ session }) => {
               padding: 2,
             }}
           >
-            {session?.user ? (
+            {userInfo?.email || session?.user ? (
               <>
                 <Image
-                  src={session.user.image}
-                  alt={session.user.name}
+                  src={userInfo?.image || session?.user?.image}
+                  alt={userInfo?.name || session?.user?.name}
                   width={100}
                   height={100}
                   className="h-20 w-20 rounded-full"
                 />
-                <Typography variant="h6">{session.user.name}</Typography>
+                <Typography variant="h6">
+                  {userInfo?.name || session?.user.name}
+                </Typography>
                 <Button
                   className="bg-primary"
                   variant="contained"
@@ -235,10 +264,12 @@ const Navbar = ({ session }) => {
             </Link>
           </Box>
 
+          {/*---------- logOut button ------------ */}
+
           <Box sx={{ display: "flex", justifyContent: "start", padding: 2 }}>
-            {session?.user ? (
+            {userInfo?.name || session?.user ? (
               <Typography
-                onClick={() => signOut()}
+                onClick={handleLogOut}
                 className="text-primary flex items-center gap-1 cursor-pointer mt-2"
                 size="small"
               >

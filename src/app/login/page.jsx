@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
@@ -10,17 +10,37 @@ import Link from "next/link";
 import treeImage from "@/assets/All-image/tree.png";
 import Image from "next/image";
 
-import {signIn} from "next-auth/react"
+import { signIn } from "next-auth/react";
+import { userLogin } from "@/services/actions/userLogin";
+import { storUserInfo } from "@/services/auth.service";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { Box, Typography } from "@mui/material";
 
 const Login = () => {
+  const router = useRouter();
+  const [error, setError] = useState("");
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (values) => {
+    try {
+      const res = await userLogin(values);
+      console.log(res);
+      if (res?.data.accessToken) {
+        toast.success(res?.message);
+        storUserInfo({ accessToken: res?.data.accessToken });
+        router.push("/");
+      } else {
+        setError(res.message)
+      }
+    } catch (err) {
+      console.error(err.message);
+    }
   };
 
   return (
@@ -29,6 +49,18 @@ const Login = () => {
         <h1 className="text-2xl font-bold text-center mb-6">
           Go Venture&apos;s
         </h1>
+        {error && (
+          <Box>
+            <Typography
+              sx={{
+                color: "red",
+                textAlign: "center",
+              }}
+            >
+              {error}
+            </Typography>
+          </Box>
+        )}
         <form onSubmit={handleSubmit(onSubmit)}>
           <TextField
             {...register("email", { required: "Email is required" })}
@@ -78,7 +110,7 @@ const Login = () => {
           />
           <div className="flex justify-between items-center mb-4">
             <FormControlLabel
-            className="w-full"
+              className="w-full"
               control={<Checkbox color="primary" />}
               label="Remember me"
               sx={{
@@ -101,6 +133,8 @@ const Login = () => {
             Login
           </Button>
         </form>
+
+        {/*--------- social login ----------- */}
         <div className="text-center my-4">Or Login With</div>
         <div className="flex justify-around gap-1 mb-4">
           <Button
@@ -108,7 +142,9 @@ const Login = () => {
             variant="contained"
             color="error"
             startIcon={<FaGoogle />}
-            onClick={()=> signIn ("google", {callbackUrl: "https://go-venture.vercel.app"})}
+            onClick={() =>
+              signIn("google", { callbackUrl: "https://go-venture.vercel.app" })
+            }
           >
             Google
           </Button>
@@ -117,7 +153,11 @@ const Login = () => {
             variant="contained"
             color="primary"
             startIcon={<FaFacebook />}
-            onClick={()=> signIn ("facebook", {callbackUrl: "https://go-venture.vercel.app"})}
+            onClick={() =>
+              signIn("facebook", {
+                callbackUrl: "https://go-venture.vercel.app",
+              })
+            }
           >
             Facebook
           </Button>
@@ -126,12 +166,16 @@ const Login = () => {
             variant="contained"
             color="primary"
             startIcon={<FaGithub />}
-
-            onClick={()=> signIn ("github", {callbackUrl: "https://go-venture.vercel.app"})}
+            onClick={() =>
+              signIn("github", { callbackUrl: "https://go-venture.vercel.app" })
+            }
           >
             Github
           </Button>
         </div>
+
+        {/*---------- others content --------- */}
+
         <div className="text-center">
           Don&apos;t have an account?{" "}
           <Link href="/register" className="text-primary">

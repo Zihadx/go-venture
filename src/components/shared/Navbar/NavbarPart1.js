@@ -25,8 +25,15 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import Image from "next/image";
 import Link from "next/link";
 import { signOut, signIn } from "next-auth/react";
+import { getUserInfo, removeUserInfo } from "@/services/auth.service";
+import { useRouter } from "next/navigation";
 
 const NavbarPart1 = ({ session }) => {
+  const userInfo = getUserInfo();
+  console.log(userInfo);
+
+  const router = useRouter();
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const isLargeScreen = useMediaQuery("(min-width: 960px)");
 
@@ -41,6 +48,22 @@ const NavbarPart1 = ({ session }) => {
   if (!isLargeScreen) {
     return null;
   }
+
+  const handleLogOut = async () => {
+    try {
+      removeUserInfo();
+
+      await signOut({
+        redirect: false,
+        callbackUrl: "/",
+      });
+      router.refresh();
+
+      console.log("Logged out successfully");
+    } catch (error) {
+      console.error("Error logging out", error);
+    }
+  };
 
   return (
     <AppBar position="static" className="bg-[#2095ae] px-16">
@@ -86,16 +109,20 @@ const NavbarPart1 = ({ session }) => {
           </Box>
 
           <Box className="w-full flex justify-end text-white">
-            {session ? (
+            {session || userInfo ? (
               <>
                 <IconButton onClick={handleMenuClick} color="inherit">
-                  <Image
-                    src={session.user.image}
-                    alt={session.user.name}
-                    width={40}
-                    height={40}
-                    className="rounded-full"
-                  />
+                  {userInfo?.image || session?.user?.image ? (
+                    <Image
+                      src={userInfo?.image || session?.user?.image}
+                      alt={userInfo?.name || session?.user?.name}
+                      width={40}
+                      height={40}
+                      className="rounded-full"
+                    />
+                  ) : (
+                    <AccountCircleOutlined />
+                  )}
                 </IconButton>
                 <Menu
                   anchorEl={anchorEl}
@@ -103,16 +130,24 @@ const NavbarPart1 = ({ session }) => {
                   onClose={handleMenuClose}
                 >
                   <Box className=" flex flex-col justify-center items-center px-6 py-2 w-full">
-                    <Image
-                      src={session.user.image}
-                      alt={session.user.name}
-                      width={72}
-                      height={72}
-                      className="rounded-full"
-                    />
+                    {userInfo?.image || session?.user?.image ? (
+                      <Image
+                        src={userInfo?.image || session?.user?.image}
+                        alt={userInfo?.name || session?.user?.name}
+                        width={72}
+                        height={72}
+                        className="rounded-full"
+                      />
+                    ) : (
+                      <Avatar />
+                    )}
                     <Typography variant="h6" className="font-semibold">
-                      {session.user.name}
+                      {userInfo?.name || session?.user?.name}
                     </Typography>
+                    <Typography variant="h6" className="font-semibold">
+                      {userInfo?.email || session?.user?.email}
+                    </Typography>
+
                     <Button
                       className="bg-primary mt-4"
                       variant="contained"
@@ -146,17 +181,12 @@ const NavbarPart1 = ({ session }) => {
                     </Link>
                     <Link href="/">
                       <Typography className="hover:text-primary">
-                        Feedback
-                      </Typography>
-                    </Link>
-                    <Link href="/">
-                      <Typography className="hover:text-primary">
                         Guide
                       </Typography>
                     </Link>
 
                     <Typography
-                      onClick={() => signOut()}
+                      onClick={handleLogOut}
                       className="text-primary flex items-center gap-1 cursor-pointer mt-2"
                       size="small"
                     >

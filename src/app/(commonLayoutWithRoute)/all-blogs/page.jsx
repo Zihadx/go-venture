@@ -36,7 +36,8 @@ const AllBlogsPage = async () => {
         {/*-------- Blogs Filtering --------- */}
         <div className="lg:w-1/3 w-full lg:sticky top-0 self-start mb-4">
           {/* <DestinationFilter  destinations={destinations}/> */}
-          <h1 className="bg-red-400">Filter</h1>
+          <h1 className="bg-red-400 text-center p-2 text-2xl">Filter</h1>
+          <h1 className="bg-green-400 mt-4 text-center p-2 text-2xl">To-Do</h1>
         </div>
 
         {/*--------All Blogs  --------- */}

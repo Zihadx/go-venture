@@ -3,7 +3,7 @@ import Link from "next/link";
 
 const CountyBigCard = ({ country }) => {
   return (
-    <Link href={`/countries/${country.id}/destinations`}>
+    // <Link href={`/countries/${country.id}/destinations`}>
       <div
         key={country.id}
         className="card w-full shadow-xl relative overflow-hidden group rounded-md"
@@ -25,7 +25,7 @@ const CountyBigCard = ({ country }) => {
           </div>
         </div>
       </div>
-    </Link>
+    // </Link>
   );
 };
 

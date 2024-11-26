@@ -3,7 +3,7 @@ import Link from "next/link";
 
 const CountrySmallCard = ({ country }) => {
   return (
-    <Link href={`/countries/${country.id}/destinations`}>
+    // <Link href={`/countries/${country.id}/destinations`}>
       <div key={country.id} className="relative">
         <div className="card w-full shadow-xl relative overflow-hidden group rounded-md">
           <Image
@@ -22,7 +22,7 @@ const CountrySmallCard = ({ country }) => {
           </div>
         </div>
       </div>
-    </Link>
+    // </Link>
   );
 };
 
