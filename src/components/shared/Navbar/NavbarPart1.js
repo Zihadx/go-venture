@@ -17,7 +17,6 @@ import {
   IconButton,
   Typography,
   Menu,
-  MenuItem,
   Divider,
   Avatar,
 } from "@mui/material";
@@ -28,9 +27,10 @@ import { signOut, signIn } from "next-auth/react";
 import { getUserInfo, removeUserInfo } from "@/services/auth.service";
 import { useRouter } from "next/navigation";
 
+
 const NavbarPart1 = ({ session }) => {
   const userInfo = getUserInfo();
-  console.log(userInfo);
+  // console.log(userInfo);
 
   const router = useRouter();
 
@@ -59,7 +59,7 @@ const NavbarPart1 = ({ session }) => {
       });
       router.refresh();
 
-      console.log("Logged out successfully");
+      // console.log("Logged out successfully");
     } catch (error) {
       console.error("Error logging out", error);
     }
@@ -121,7 +121,7 @@ const NavbarPart1 = ({ session }) => {
                       className="rounded-full"
                     />
                   ) : (
-                    <AccountCircleOutlined />
+                    <Avatar />
                   )}
                 </IconButton>
                 <Menu
@@ -139,12 +139,14 @@ const NavbarPart1 = ({ session }) => {
                         className="rounded-full"
                       />
                     ) : (
+
                       <Avatar />
+
                     )}
                     <Typography variant="h6" className="font-semibold">
                       {userInfo?.name || session?.user?.name}
                     </Typography>
-                    <Typography variant="h6" className="font-semibold">
+                    <Typography variant="p" className="font-normal text-sm">
                       {userInfo?.email || session?.user?.email}
                     </Typography>
 

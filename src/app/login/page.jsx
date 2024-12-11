@@ -17,6 +17,29 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Box, Typography } from "@mui/material";
 
+const inputStyles = {
+  "& .MuiInputLabel-root": {
+    color: "#2095ae",
+  },
+  "& .MuiInputLabel-root.Mui-focused": {
+    color: "#2095ae",
+  },
+  "& .MuiOutlinedInput-root": {
+    "&.Mui-focused fieldset": {
+      borderColor: "#2095ae", 
+    },
+    "& input": {
+      color: "#2095ae",
+    },
+  },
+};
+
+const checkboxStyles = {
+  checkedColor: {
+    color: "#2095ae",
+  },
+};
+
 const Login = () => {
   const router = useRouter();
   const [error, setError] = useState("");
@@ -30,25 +53,27 @@ const Login = () => {
   const onSubmit = async (values) => {
     try {
       const res = await userLogin(values);
-      console.log(res);
+      // console.log(res);
       if (res?.data.accessToken) {
         toast.success(res?.message);
         storUserInfo({ accessToken: res?.data.accessToken });
         router.push("/");
       } else {
-        setError(res.message)
+        toast.error(res?.message);
       }
     } catch (err) {
-      console.error(err.message);
+      const errorMessage = err?.message
+        ? JSON.parse(err.message)?.message
+        : "An unexpected error occurred.";
+      // console.log(errorMessage);
+      toast.error(errorMessage);
     }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen">
       <div className="bg-white p-8 rounded-md shadow-md w-full max-w-md relative overflow-hidden border">
-        <h1 className="text-2xl font-bold text-center mb-6">
-          Go Venture&apos;s
-        </h1>
+        <h1 className="text-xl font-bold text-center mb-4">Welcome Back!</h1>
         {error && (
           <Box>
             <Typography
@@ -71,19 +96,7 @@ const Login = () => {
             variant="outlined"
             error={!!errors.email}
             helperText={errors.email ? errors.email.message : ""}
-            sx={{
-              "& .MuiInputLabel-root": {
-                color: "#2095ae",
-              },
-              "& .MuiOutlinedInput-root": {
-                "&.Mui-focused fieldset": {
-                  borderColor: "#2095ae",
-                },
-                "& input": {
-                  color: "#2095ae",
-                },
-              },
-            }}
+            sx={inputStyles}
           />
           <TextField
             {...register("password", { required: "Password is required" })}
@@ -94,19 +107,7 @@ const Login = () => {
             variant="outlined"
             error={!!errors.password}
             helperText={errors.password ? errors.password.message : ""}
-            sx={{
-              "& .MuiInputLabel-root": {
-                color: "#2095ae",
-              },
-              "& .MuiOutlinedInput-root": {
-                "&.Mui-focused fieldset": {
-                  borderColor: "#2095ae",
-                },
-                "& input": {
-                  color: "#2095ae",
-                },
-              },
-            }}
+            sx={inputStyles}
           />
           <div className="flex justify-between items-center mb-4">
             <FormControlLabel
@@ -114,9 +115,7 @@ const Login = () => {
               control={<Checkbox color="primary" />}
               label="Remember me"
               sx={{
-                "& .MuiCheckbox-colorPrimary.Mui-checked": {
-                  color: "#2095ae",
-                },
+                "& .MuiCheckbox-colorPrimary.Mui-checked": checkboxStyles.checkedColor,
               }}
             />
             <a href="#" className="text-sm text-primary w-full">
@@ -183,7 +182,7 @@ const Login = () => {
           </Link>
         </div>
 
-        <div className="rounded-full absolute -top-24 -left-40">
+        <div className="rounded-full absolute -top-24 -left-40 pointer-events-none">
           <Image
             src={treeImage}
             alt="treeImage"
