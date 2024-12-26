@@ -7,7 +7,7 @@ import {
 } from "@/utils/localStorage/local.storage";
 
 export const storUserInfo = ({ accessToken }) => {
-  console.log(accessToken);
+  // console.log(accessToken);
   return setToLocalStorage(authKey, accessToken);
 };
 
@@ -16,7 +16,7 @@ export const getUserInfo = () => {
   // console.log(authToken)
   if (authToken) {
     const decodeData = decodedToken(authToken);
-    console.log(decodeData);
+    // console.log(decodeData);
     return {
       ...decodeData,
       role: decodeData?.role.toLowerCase(),

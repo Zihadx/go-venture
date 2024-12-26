@@ -19,7 +19,7 @@ const AllDestinationsPage = () => {
     const fetchDestinations = async () => {
       try {
         const res = await fetch(
-          "https://go-venture-server.vercel.app/api/v1/destinations"
+            `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/destinations`
         );
         const data = await res.json();
         if (Array.isArray(data.data)) {

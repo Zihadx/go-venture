@@ -18,7 +18,7 @@ const Banner = () => {
   const swiperRef = useRef(null);
 
   useEffect(() => {
-    fetch("https://go-venture-server.vercel.app/api/v1/banners")
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/banners`)
       .then((response) => response.json())
       .then((data) => {
         console.log(data)

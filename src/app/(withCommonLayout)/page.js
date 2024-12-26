@@ -13,34 +13,35 @@ import SearchBar from "@/components/SearchBar/SearchBar";
 
 const HomePage = async () => {
   const countriesRes = await fetch(
-    "https://go-venture-server.vercel.app/api/v1/countries",
+    `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/countries`,
+
     {
       cache: "no-cache",
     }
   );
 
   const hotelsRes = await fetch(
-    "https://go-venture-server.vercel.app/api/v1/hotels",
+    `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/hotels`,
     {
       cache: "no-cache",
     }
   );
 
   const destinationsRes = await fetch(
-    "https://go-venture-server.vercel.app/api/v1/destinations",
+    `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/destinations`,
     {
       cache: "no-cache",
     }
   );
 
   const blogsRes = await fetch(
-    "https://go-venture-server.vercel.app/api/v1/blogs",
+    `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/blogs`,
     {
       cache: "no-cache",
     }
   );
   const offerRes = await fetch(
-    "https://go-venture-server.vercel.app/api/v1/offers",
+    `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/offers`,
     {
       cache: "no-cache",
     }

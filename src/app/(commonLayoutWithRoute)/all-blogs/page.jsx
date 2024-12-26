@@ -5,7 +5,8 @@ import DestinationFilter from "@/utils/AllDestinations/Filter";
 import BlogsCard from "@/components/ui/CardDesign/BlogsCard/BlogsCard";
 
 const AllBlogsPage = async () => {
-  const res = await fetch("https://go-venture-server.vercel.app/api/v1/blogs");
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/blogs`);
+
   const blogs = await res.json();
   // console.log(blogs);
   return (

@@ -12,8 +12,10 @@ import Image from "next/image";
 
 const DestinationsDetailsPage = async ({ params }) => {
   const res = await fetch(
-    `https://go-venture-server.vercel.app/api/v1/destinations/${params.destinationId}`
+    `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/destinations/${params.destinationId}`
   );
+  
+
   const destination = await res.json();
   const destinationData = destination.data;
   // console.log(destinationData);
