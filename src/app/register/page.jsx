@@ -75,7 +75,7 @@ const Register = () => {
       }
     } catch (err) {
       const errorMessage = err?.message ? JSON.parse(err.message)?.message : "An unexpected error occurred.";
-      // console.log(errorMessage);
+      console.log(errorMessage);
       toast.error(errorMessage);
     }
   };

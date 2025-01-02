@@ -15,15 +15,15 @@ import logo from '@/assets/logo/logo.png';
 
 const Sidebar = ({ isOpen }) => {
   const menuItems = [
-    { text: 'Dashboard', icon: <DashboardIcon />, link: '/dashboard/admin' },
+    { text: 'Dashboard', icon: <DashboardIcon />, link: '/dashboard' },
     { text: 'Manage Users', icon: <PeopleIcon />, link: '/dashboard/admin/users' },
     { text: 'Manage Bookings', icon: <BookIcon />, link: '/dashboard/admin/bookings' },
     { text: 'Manage Tours', icon: <TourIcon />, link: '/dashboard/admin/tours' },
     { text: 'Manage Reviews', icon: <ReviewsIcon />, link: '/dashboard/admin/reviews' },
     { text: 'Manage Payments', icon: <PaymentIcon />, link: '/dashboard/admin/payments' },
-    { text: 'Settings', icon: <SettingsIcon />, link: '/dashboard/admin/settings' },
-    { text: 'Reports', icon: <ReportIcon />, link: '/dashboard/admin/reports' },
-    { text: 'Support', icon: <SupportIcon />, link: '/dashboard/admin/support' },
+    { text: 'Settings', icon: <SettingsIcon />, link: '/dashboard' },
+    { text: 'Reports', icon: <ReportIcon />, link: '/dashboard' },
+    { text: 'Support', icon: <SupportIcon />, link: '/dashboard' },
   ];
 
   return (
