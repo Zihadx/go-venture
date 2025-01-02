@@ -29,7 +29,7 @@ const AdminHome = () => {
                     <CheckCircleOutline style={{ fontSize: '40px' }}/>
                 </div>
                 <div>
-                <h1 className='font-bold text-3xl'>7,463</h1>
+                <h1 className='font-bold text-3xl'>67</h1>
                 <p>Check In</p>
                 </div>
             </div>
@@ -39,7 +39,7 @@ const AdminHome = () => {
                     <LogoutSharp style={{ fontSize: '40px' }}/>
                 </div>
                 <div>
-                <h1 className='font-bold text-3xl'>7,463</h1>
+                <h1 className='font-bold text-3xl'>45</h1>
                 <p>Check Out</p>
                 </div>
             </div>

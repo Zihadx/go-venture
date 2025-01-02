@@ -12,6 +12,7 @@ import {
   isToday,
   isSameMonth,
 } from "date-fns";
+import { ArrowLeftSharp, ArrowRightSharp } from "@mui/icons-material";
 
 const Calendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -54,14 +55,14 @@ const Calendar = () => {
           onClick={handlePrevMonth}
           className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg"
         >
-          &laquo;
+          <ArrowLeftSharp style={{ fontSize: '40px' }}/>
         </button>
         <h2 className="text-xl font-bold">{format(currentDate, "MMMM yyyy")}</h2>
         <button
           onClick={handleNextMonth}
           className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg"
         >
-          &raquo;
+          <ArrowRightSharp  style={{ fontSize: '40px' }}/>
         </button>
       </div>
 
