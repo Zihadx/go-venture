@@ -1,9 +1,13 @@
+import Calender from "@/components/Dashboard/Admin/Home/Calender/Calender";
+import AdminHome from "@/components/Dashboard/Admin/Home/Home/Home";
 
 
 const DashboardPage = () => {
   return (
     <div>
       <h1>Hello, Dashboard Page!</h1>
+      <AdminHome/>
+      <Calender/>
     </div>
   );
 };

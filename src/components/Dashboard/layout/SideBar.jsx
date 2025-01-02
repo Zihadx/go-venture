@@ -28,10 +28,12 @@ const Sidebar = ({ isOpen }) => {
 
   return (
     <div className="p-4">
+      <Link href="/">
       <div className="flex items-center mb-4">
         <Image src={logo} alt="Logo" width={40} height={40} className="mr-2" />
         <h1 className={`text-xl font-bold ${isOpen ? 'block' : 'hidden'}`}>Go Ventures</h1>
       </div>
+      </Link>
       <List>
         {menuItems.map((item, index) => (
           <Link href={item.link} key={index}>
