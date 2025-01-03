@@ -1,4 +1,5 @@
 import Calender from "@/components/Dashboard/Admin/Home/Calender/Calender";
+import GraphLayout from "@/components/Dashboard/Admin/Home/GraphLayout/GraphLayout";
 import AdminHome from "@/components/Dashboard/Admin/Home/Home/Home";
 
 
@@ -6,7 +7,10 @@ const DashboardPage = () => {
   return (
     <div>
       <AdminHome/>
+      <div className="flex justify-between gap-6 mt-10">
       <Calender/>
+      <GraphLayout/>
+      </div>
     </div>
   );
 };
