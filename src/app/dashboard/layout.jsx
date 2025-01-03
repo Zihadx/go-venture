@@ -24,7 +24,7 @@ const DashboardLayout = ({ children }) => {
   return (
     <div className="flex min-h-screen">
       {/*------Sidebar for large screens-----*/}
-      <div className={`hidden md:block lg:sticky top-0 self-start overflow-y-scroll md:h-screen scrollbar-hide transition-all duration-300 ${sidebarOpen ? 'w-1/5' : 'w-20'}`}>
+      <div className={`hidden md:block lg:sticky top-0 self-start overflow-y-scroll md:h-screen scrollbar-hide transition-all duration-300 ${sidebarOpen ? 'w-1/3' : 'w-20'}`}>
         <div className=" border-r h-full">
           
           <Sidebar isOpen={sidebarOpen} />

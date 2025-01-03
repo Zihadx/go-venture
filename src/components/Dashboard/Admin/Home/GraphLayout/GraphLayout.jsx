@@ -24,7 +24,7 @@ const GraphLayout = () => {
       bar: {
         horizontal: false,
         columnWidth: '40%', // Slimmer bars for a sleeker look
-        endingShape: 'flat', // Flat edges for a unique design
+        borderRadius: 15,
       },
     },
     dataLabels: {
@@ -110,7 +110,7 @@ const GraphLayout = () => {
   ]);
 
   return (
-    <div className="w-full md:w-1/2 p-4 bg-white shadow-lg rounded-lg">
+    <div className="w-full md:w-1/2 p-4 bg-white shadow-lg rounded-lg relative z-10 overflow-hidden">
       <Chart options={chartOptions} series={chartSeries} type="bar" height="450" />
     </div>
   );
