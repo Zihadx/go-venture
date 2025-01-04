@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import dynamic from "next/dynamic";
+import { ArrowBack, ArrowForward } from "@mui/icons-material";
 
 // Dynamically import ApexCharts to avoid SSR issues
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
@@ -120,9 +121,9 @@ const GraphLayout = () => {
   ]);
 
   // Dynamic progress bar values
-  const availableRooms = 683;
-  const soldOutRooms = 167;
-  const totalRooms = availableRooms + soldOutRooms;
+  const availableTours = 683;
+  const soldOutTours = 167;
+  const totalTours = availableTours + soldOutTours;
 
   return (
     <div className="w-full md:w-1/2">
@@ -138,28 +139,67 @@ const GraphLayout = () => {
       <div className="mt-10 flex justify-between items-center gap-4">
         <div className="bg-green-900 p-8 text-white space-y-4 rounded-xl w-full">
           <div className="flex justify-between items-center">
-            <p className="font-semibold text-sm">Available Room Today</p>
-            <h1 className="text-2xl font-semibold">{availableRooms}</h1>
+            <p className="font-semibold text-sm">Available Tour Today</p>
+            <h1 className="text-2xl font-semibold">{availableTours}</h1>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-4">
             <div
               className="bg-blue-600 h-4 rounded-full"
-              style={{ width: `${(availableRooms / totalRooms) * 100}%` }}
+              style={{ width: `${(availableTours / totalTours) * 100}%` }}
             ></div>
           </div>
         </div>
 
         <div className="bg-green-900 p-8 text-white space-y-4 rounded-xl w-full">
           <div className="flex justify-between items-center">
-            <p className="font-semibold text-sm">Sold Out Room Today</p>
-            <h1 className="text-2xl font-semibold">{soldOutRooms}</h1>
+            <p className="font-semibold text-sm">Sold Out Tour Today</p>
+            <h1 className="text-2xl font-semibold">{soldOutTours}</h1>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-4">
             <div
               className="bg-red-600 h-4 rounded-full"
-              style={{ width: `${(soldOutRooms / totalRooms) * 100}%` }}
+              style={{ width: `${(soldOutTours / totalTours) * 100}%` }}
             ></div>
           </div>
+        </div>
+      </div>
+
+      <div className="mt-10 shadow-md p-4 md:p-8 rounded-md">
+        <div className="flex justify-around items-center gap-8">
+          <div className=" space-y-4 text-center">
+            <h1 className="text-3xl font-semibold">657</h1>
+            <p>Total Concierge</p>
+          </div>
+          <div className=" space-y-4 text-center">
+            <h1 className="text-3xl font-semibold">2,342</h1>
+            <p>Total Tourist</p>
+          </div>
+        </div>
+
+        <div className="flex justify-around items-center gap-8 mt-10">
+          <div className=" space-y-4 text-center">
+            <h1 className="text-3xl font-semibold">57</h1>
+            <p>Total Destinations</p>
+          </div>
+          <div className=" space-y-4 text-center">
+            <h1 className="text-3xl font-semibold">42K</h1>
+            <p>Total Transaction</p>
+          </div>
+        </div>
+
+        <div className="flex justify-between items-center gap-5 mt-10">
+          <div>
+            <h1 className="font-semibold">
+              Let Travl Generate Your Annualy Report Easily
+            </h1>
+            <p className="text-sm">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+              eiusmod tempor incididunt ut labo
+            </p>
+          </div>
+            <button>
+              <ArrowForward />
+            </button>
         </div>
       </div>
     </div>
