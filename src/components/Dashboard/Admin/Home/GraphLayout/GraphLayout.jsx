@@ -147,7 +147,7 @@ const GraphLayout = () => {
 
         {/* Footer Section */}
         <div className="flex justify-between items-center gap-5">
-          <div>
+          <div className="space-y-4">
             <h1 className="font-semibold">
               Let Go-Venture's Your Annual Report Easily
             </h1>
