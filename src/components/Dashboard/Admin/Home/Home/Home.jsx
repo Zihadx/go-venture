@@ -18,8 +18,8 @@ const AdminHome = () => {
                     <HomeMax style={{ fontSize: '40px' }}/>
                 </div>
                 <div>
-                <h1 className='font-bold text-3xl'>7,463</h1>
-                <p>New Bookings</p>
+                <h1 className='font-bold text-3xl'>76,463</h1>
+                <p>Total Bookings</p>
                 </div>
             </div>
 
