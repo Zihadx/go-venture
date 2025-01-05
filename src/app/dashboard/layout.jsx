@@ -54,7 +54,7 @@ const DashboardLayout = ({ children }) => {
         <DashNavbar toggleSidebar={toggleSidebar} />
 
         {/* Main Content Area */}
-        <main className="flex-grow mt-16 md:mt-20 px-4 md:px-8 overflow-x-hidden overflow-y-auto">
+        <main className="flex-grow mt-10 px-4 md:px-8 overflow-x-hidden overflow-y-auto">
           {children}
         </main>
 
