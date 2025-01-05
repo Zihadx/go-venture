@@ -120,7 +120,7 @@ const GraphLayout = () => {
       </div>
 
       {/* Summary Section */}
-      <div className="shadow-md p-4 md:p-8 rounded-md space-y-10">
+      <div className="shadow-md p-4 md:p-8 rounded-md space-y-10 bg-white">
         <div className="flex justify-around gap-8">
           {[
             { count: 657, label: "Total Concierge" },
