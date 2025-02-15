@@ -79,7 +79,7 @@ const GraphLayout = () => {
   const totalTours = availableTours + soldOutTours;
 
   return (
-    <div className="w-full md:w-1/2 space-y-10">
+    <div className="w-full md:w-1/2 space-y-10 mb-4">
       {/* Chart Section */}
       <div className="p-4 bg-white shadow-md rounded-lg">
         <Chart options={chartOptions} series={chartSeries} type="bar" height="450" />
@@ -149,7 +149,7 @@ const GraphLayout = () => {
         <div className="flex justify-between items-center gap-5">
           <div className="space-y-4">
             <h1 className="font-semibold">
-              Let Go-Venture's Your Annual Report Easily
+              Let Go-Venture&apos;s Your Annual Report Easily
             </h1>
             <p className="text-sm text-gray-600">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do

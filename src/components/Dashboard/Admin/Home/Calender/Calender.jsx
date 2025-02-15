@@ -51,7 +51,7 @@ const Calendar = () => {
   const calendarRows = generateCalendarRows();
 
   return (
-    <div className="w-full md:w-1/2 bg-white shadow-md rounded-lg p-4">
+    <div className="w-full md:w-1/2 bg-white mb-4 shadow-md rounded-lg p-4">
       <div>
         <h1 className="text-xl font-semibold mb-4">Recent Booking Schedule</h1>
         <div className="flex justify-center gap-4 items-center mb-4">
@@ -104,127 +104,130 @@ const Calendar = () => {
         </div>
         <Divider style={{ marginTop: "16px", marginBottom: "16px" }} />
       </div>
-
+      {/* calender bottom section --------------------- */}
       <div className="space-y-4">
-      <div className="flex justify-between items-center gap-4">
-        <div className="w-full md:w-1/3">
-          <Image
-            src="https://i.ibb.co/3hSQYvj/review-Section.jpg"
-            alt="Review Section"
-            width={300}
-            height={150}
-            layout="responsive"
-            className="rounded-xl"
-          />
-        </div>
-        <div className="space-y-3">
-          <h1 className="text-xl font-semibold">Bali-2</h1>
-          <div className="flex justify-between items-center gap-3">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-6 p-4 bg-white shadow-md md:shadow-none rounded-lg max-w-3xl mx-auto">
+          <div className="w-full md:w-1/3">
             <Image
               src="https://i.ibb.co/3hSQYvj/review-Section.jpg"
               alt="Review Section"
-              width={50}
-              height={50}
-              className="rounded-full"
+              width={300}
+              height={150}
+              className="rounded-xl w-full h-auto object-cover"
             />
-            <p>Sukarna</p>
-            <p>12m ago</p>
+          </div>
+          <div className="flex-1 space-y-3 text-center md:text-left">
+            <h1 className="text-xl font-semibold">Bali-2</h1>
+            <div className="flex justify-center md:justify-start items-center gap-3">
+              <Image
+                src="https://i.ibb.co/3hSQYvj/review-Section.jpg"
+                alt="User Profile"
+                width={40}
+                height={40}
+                className="rounded-full w-10 h-10 object-cover"
+              />
+              <div className="text-left">
+                <p className="text-gray-700 font-medium">Sukarna</p>
+                <p className="text-gray-500 text-sm">12m ago</p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-blue-100 p-4 rounded-lg shadow-md text-center w-full md:w-24">
+            <h1 className="text-lg font-bold text-blue-600">$30.35</h1>
           </div>
         </div>
-        <div className="bg-blue-100 p-2">
-            <h1>30,35</h1>
+        <div className="flex flex-col md:flex-row justify-between items-center gap-6 p-4 bg-white shadow-md md:shadow-none rounded-lg max-w-3xl mx-auto">
+          <div className="w-full md:w-1/3">
+            <Image
+              src="https://i.ibb.co/3hSQYvj/review-Section.jpg"
+              alt="Review Section"
+              width={300}
+              height={150}
+              className="rounded-xl w-full h-auto object-cover"
+            />
+          </div>
+          <div className="flex-1 space-y-3 text-center md:text-left">
+            <h1 className="text-xl font-semibold">Bali-2</h1>
+            <div className="flex justify-center md:justify-start items-center gap-3">
+              <Image
+                src="https://i.ibb.co/3hSQYvj/review-Section.jpg"
+                alt="User Profile"
+                width={40}
+                height={40}
+                className="rounded-full w-10 h-10 object-cover"
+              />
+              <div className="text-left">
+                <p className="text-gray-700 font-medium">Sukarna</p>
+                <p className="text-gray-500 text-sm">12m ago</p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-blue-100 p-4 rounded-lg shadow-md text-center w-full md:w-24">
+            <h1 className="text-lg font-bold text-blue-600">$30.35</h1>
+          </div>
         </div>
-      </div>
+        <div className="flex flex-col md:flex-row justify-between items-center gap-6 p-4 bg-white shadow-md md:shadow-none rounded-lg max-w-3xl mx-auto">
+          <div className="w-full md:w-1/3">
+            <Image
+              src="https://i.ibb.co/3hSQYvj/review-Section.jpg"
+              alt="Review Section"
+              width={300}
+              height={150}
+              className="rounded-xl w-full h-auto object-cover"
+            />
+          </div>
+          <div className="flex-1 space-y-3 text-center md:text-left">
+            <h1 className="text-xl font-semibold">Bali-2</h1>
+            <div className="flex justify-center md:justify-start items-center gap-3">
+              <Image
+                src="https://i.ibb.co/3hSQYvj/review-Section.jpg"
+                alt="User Profile"
+                width={40}
+                height={40}
+                className="rounded-full w-10 h-10 object-cover"
+              />
+              <div className="text-left">
+                <p className="text-gray-700 font-medium">Sukarna</p>
+                <p className="text-gray-500 text-sm">12m ago</p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-blue-100 p-4 rounded-lg shadow-md text-center w-full md:w-24">
+            <h1 className="text-lg font-bold text-blue-600">$30.35</h1>
+          </div>
+        </div>
+        <div className="flex flex-col md:flex-row justify-between items-center gap-6 p-4 bg-white shadow-md md:shadow-none rounded-lg max-w-3xl mx-auto">
+          <div className="w-full md:w-1/3">
+            <Image
+              src="https://i.ibb.co/3hSQYvj/review-Section.jpg"
+              alt="Review Section"
+              width={300}
+              height={150}
+              className="rounded-xl w-full h-auto object-cover"
+            />
+          </div>
+          <div className="flex-1 space-y-3 text-center md:text-left">
+            <h1 className="text-xl font-semibold">Bali-2</h1>
+            <div className="flex justify-center md:justify-start items-center gap-3">
+              <Image
+                src="https://i.ibb.co/3hSQYvj/review-Section.jpg"
+                alt="User Profile"
+                width={40}
+                height={40}
+                className="rounded-full w-10 h-10 object-cover"
+              />
+              <div className="text-left">
+                <p className="text-gray-700 font-medium">Sukarna</p>
+                <p className="text-gray-500 text-sm">12m ago</p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-blue-100 p-4 rounded-lg shadow-md text-center w-full md:w-24">
+            <h1 className="text-lg font-bold text-blue-600">$30.35</h1>
+          </div>
+        </div>
 
-      <div className="flex justify-between items-center gap-4">
-        <div className="w-full md:w-1/3">
-          <Image
-            src="https://i.ibb.co/3hSQYvj/review-Section.jpg"
-            alt="Review Section"
-            width={300}
-            height={150}
-            layout="responsive"
-            className="rounded-xl"
-          />
-        </div>
-        <div className="space-y-3">
-          <h1 className="text-xl font-semibold">Bali-2</h1>
-          <div className="flex justify-between items-center gap-3">
-            <Image
-              src="https://i.ibb.co/3hSQYvj/review-Section.jpg"
-              alt="Review Section"
-              width={50}
-              height={50}
-              className="rounded-full"
-            />
-            <p>Sukarna</p>
-            <p>12m ago</p>
-          </div>
-        </div>
-        <div className="bg-blue-100 p-2">
-            <h1>30,35</h1>
-        </div>
-      </div>
-
-      <div className="flex justify-between items-center gap-4">
-        <div className="w-full md:w-1/3">
-          <Image
-            src="https://i.ibb.co/3hSQYvj/review-Section.jpg"
-            alt="Review Section"
-            width={300}
-            height={150}
-            layout="responsive"
-            className="rounded-xl"
-          />
-        </div>
-        <div className="space-y-3">
-          <h1 className="text-xl font-semibold">Bali-2</h1>
-          <div className="flex justify-between items-center gap-3">
-            <Image
-              src="https://i.ibb.co/3hSQYvj/review-Section.jpg"
-              alt="Review Section"
-              width={50}
-              height={50}
-              className="rounded-full"
-            />
-            <p>Sukarna</p>
-            <p>12m ago</p>
-          </div>
-        </div>
-        <div className="bg-blue-100 p-2">
-            <h1>30,35</h1>
-        </div>
-      </div>
-
-      <div className="flex justify-between items-center gap-4">
-        <div className="w-full md:w-1/3">
-          <Image
-            src="https://i.ibb.co/3hSQYvj/review-Section.jpg"
-            alt="Review Section"
-            width={300}
-            height={150}
-            layout="responsive"
-            className="rounded-xl"
-          />
-        </div>
-        <div className="space-y-3">
-          <h1 className="text-xl font-semibold">Bali-2</h1>
-          <div className="flex justify-between items-center gap-3">
-            <Image
-              src="https://i.ibb.co/3hSQYvj/review-Section.jpg"
-              alt="Review Section"
-              width={50}
-              height={50}
-              className="rounded-full"
-            />
-            <p>Sukarna</p>
-            <p>12m ago</p>
-          </div>
-        </div>
-        <div className="bg-blue-100 p-2">
-            <h1>30,35</h1>
-        </div>
-      </div>
+  
       </div>
     </div>
   );
