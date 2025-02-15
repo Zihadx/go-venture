@@ -7,7 +7,7 @@ const DashboardPage = () => {
   return (
     <div>
       <AdminHome/>
-      <div className="flex justify-between gap-6 mt-10">
+      <div className="flex flex-col md:flex-row justify-between gap-6 mt-10">
       <Calender/>
       <GraphLayout/>
       </div>
