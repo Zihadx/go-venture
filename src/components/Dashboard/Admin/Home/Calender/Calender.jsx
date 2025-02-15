@@ -113,7 +113,7 @@ const Calendar = () => {
               alt="Review Section"
               width={300}
               height={150}
-              className="rounded-xl w-full h-auto object-cover"
+              className="rounded-xl w-full h-[150px] md:h-[100px] object-cover"
             />
           </div>
           <div className="flex-1 space-y-3 text-center md:text-left">
@@ -132,7 +132,7 @@ const Calendar = () => {
               </div>
             </div>
           </div>
-          <div className="bg-blue-100 p-4 rounded-lg shadow-md text-center w-full md:w-24">
+          <div className="bg-blue-100 p-4 rounded-lg shadow-md text-center">
             <h1 className="text-lg font-bold text-blue-600">$30.35</h1>
           </div>
         </div>
@@ -143,7 +143,7 @@ const Calendar = () => {
               alt="Review Section"
               width={300}
               height={150}
-              className="rounded-xl w-full h-auto object-cover"
+              className="rounded-xl w-full h-[150px] md:h-[100px] object-cover"
             />
           </div>
           <div className="flex-1 space-y-3 text-center md:text-left">
@@ -162,7 +162,7 @@ const Calendar = () => {
               </div>
             </div>
           </div>
-          <div className="bg-blue-100 p-4 rounded-lg shadow-md text-center w-full md:w-24">
+          <div className="bg-blue-100 p-4 rounded-lg shadow-md text-center">
             <h1 className="text-lg font-bold text-blue-600">$30.35</h1>
           </div>
         </div>
@@ -173,7 +173,7 @@ const Calendar = () => {
               alt="Review Section"
               width={300}
               height={150}
-              className="rounded-xl w-full h-auto object-cover"
+              className="rounded-xl w-full h-[150px] md:h-[100px] object-cover"
             />
           </div>
           <div className="flex-1 space-y-3 text-center md:text-left">
@@ -192,7 +192,7 @@ const Calendar = () => {
               </div>
             </div>
           </div>
-          <div className="bg-blue-100 p-4 rounded-lg shadow-md text-center w-full md:w-24">
+          <div className="bg-blue-100 p-4 rounded-lg shadow-md text-center">
             <h1 className="text-lg font-bold text-blue-600">$30.35</h1>
           </div>
         </div>
@@ -203,7 +203,7 @@ const Calendar = () => {
               alt="Review Section"
               width={300}
               height={150}
-              className="rounded-xl w-full h-auto object-cover"
+              className="rounded-xl w-full h-[150px] md:h-[100px] object-cover"
             />
           </div>
           <div className="flex-1 space-y-3 text-center md:text-left">
@@ -222,7 +222,7 @@ const Calendar = () => {
               </div>
             </div>
           </div>
-          <div className="bg-blue-100 p-4 rounded-lg shadow-md text-center w-full md:w-24">
+          <div className="bg-blue-100 p-4 rounded-lg shadow-md text-center">
             <h1 className="text-lg font-bold text-blue-600">$30.35</h1>
           </div>
         </div>
