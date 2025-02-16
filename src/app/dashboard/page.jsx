@@ -1,6 +1,7 @@
 import Calender from "@/components/Dashboard/Admin/Home/Calender/Calender";
 import GraphLayout from "@/components/Dashboard/Admin/Home/GraphLayout/GraphLayout";
 import AdminHome from "@/components/Dashboard/Admin/Home/Home/Home";
+import ReviewSlider from "@/components/Dashboard/Admin/ReviewSlider/ReviewSlider";
 
 
 const DashboardPage = () => {
@@ -11,6 +12,7 @@ const DashboardPage = () => {
       <Calender/>
       <GraphLayout/>
       </div>
+      <ReviewSlider/>
     </div>
   );
 };
