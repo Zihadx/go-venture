@@ -10,6 +10,7 @@ import SpecialOffer from "@/components/SpecialOffer/SpecialOffer";
 import MobileApps from "@/components/MobileApps/MobileApps";
 import ClientReviewsSection from "@/components/ClientReview/ClientReviews";
 import SearchBar from "@/components/SearchBar/SearchBar";
+import ScrollToTop from "@/components/ScrollToTop/ScrollToTop";
 
 const HomePage = async () => {
   const countriesRes = await fetch(
@@ -75,6 +76,7 @@ const HomePage = async () => {
       <HotDeals hotDealData={hotDealData} destinations={destinations} />
       <ClientReviewsSection />
       <BlogsPage blogs={blogs} />
+      <ScrollToTop/>
     </div>
   );
 };

@@ -44,6 +44,24 @@ const reviews = [
 
 const ReviewSlider = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [visibleReviews, setVisibleReviews] = useState(1);
+
+  useEffect(() => {
+    const updateVisibleReviews = () => {
+      if (window.innerWidth >= 1024) {
+        setVisibleReviews(3);
+      } else if (window.innerWidth >= 768) {
+        setVisibleReviews(2);
+      } else {
+        setVisibleReviews(1);
+      }
+    };
+
+    updateVisibleReviews();
+    window.addEventListener("resize", updateVisibleReviews);
+
+    return () => window.removeEventListener("resize", updateVisibleReviews);
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -53,17 +71,17 @@ const ReviewSlider = () => {
   }, [currentIndex]);
 
   const prevSlide = () => {
-    setCurrentIndex((prev) => (prev === 0 ? reviews.length - 1 : prev - 1));
+    setCurrentIndex((prev) => (prev === 0 ? reviews.length - visibleReviews : prev - 1));
   };
 
   const nextSlide = () => {
-    setCurrentIndex((prev) => (prev === reviews.length - 1 ? 0 : prev + 1));
+    setCurrentIndex((prev) => (prev >= reviews.length - visibleReviews ? 0 : prev + 1));
   };
 
   return (
     <div className="relative w-full h-[400px] mx-auto my-12 p-8 bg-gradient-to-r from-blue-400 to-pink-200 rounded-xl shadow-2xl text-white overflow-hidden">
       <h2 className="text-3xl font-bold mb-6 text-center">What Our Customers Say</h2>
-      <div className="relative flex items-center justify-center">
+      <div className="relative flex items-center justify-center overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentIndex}
@@ -73,10 +91,10 @@ const ReviewSlider = () => {
             transition={{ duration: 0.6, ease: "easeInOut" }}
             className="flex gap-6 w-full justify-center"
           >
-            {reviews.slice(currentIndex, currentIndex + 3).map((review) => (
+            {reviews.slice(currentIndex, currentIndex + visibleReviews).map((review) => (
               <div
                 key={review.id}
-                className="bg-white text-gray-900 p-8 shadow-xl rounded-lg text-center flex flex-col w-1/3 transform hover:scale-105 transition duration-300"
+                className="bg-white text-gray-900 p-8 shadow-md rounded-lg text-center flex flex-col w-full sm:w-1/2 lg:w-1/3 transform hover:scale-105 transition duration-300"
               >
                 <p className="text-gray-700 italic mb-4 text-lg">“{review.text}”</p>
                 <div className="flex items-center gap-3 justify-center">
