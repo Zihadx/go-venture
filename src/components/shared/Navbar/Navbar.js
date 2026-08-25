@@ -1,35 +1,24 @@
 "use client";
 
-import React, { useRef } from "react";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import Container from "@mui/material/Container";
-import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import CloseIcon from "@mui/icons-material/Close";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import Drawer from "@mui/material/Drawer";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
-import Divider from "@mui/material/Divider";
-import useMediaQuery from "@mui/material/useMediaQuery";
 import { motion, AnimatePresence } from "framer-motion";
-import NavbarPart1 from "./NavbarPart1";
+import AppBar from "@mui/material/AppBar";
+import Container from "@mui/material/Container";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Drawer from "@mui/material/Drawer";
+import Avatar from "@mui/material/Avatar";
+import MenuIcon from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
 import SearchIcon from "@mui/icons-material/Search";
-import logo from "@/assets/logo/logo.png";
+import LogoutOutlined from "@mui/icons-material/LogoutOutlined";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { signOut } from "next-auth/react";
-import { Avatar, Typography } from "@mui/material";
-import { LogoutOutlined } from "@mui/icons-material";
-import {
-  getUserInfo,
-  isLoggingIn,
-  removeUserInfo,
-} from "@/services/auth.service";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import logo from "@/assets/logo/logo.png";
+import { getUserInfo, removeUserInfo } from "@/services/auth.service";
 
 const NavItems = [
   { route: "Home", pathname: "/" },
@@ -39,12 +28,69 @@ const NavItems = [
 ];
 
 const Navbar = ({ session }) => {
-  const userInfo = getUserInfo();
-  const router = useRouter()
-  console.log(userInfo);
-  // console.log(isLoggingIn())
+  const router = useRouter();
+  const pathname = usePathname();
 
-  const handleLogOut = async () => {
+  const [isVisible, setIsVisible] = useState(true);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+
+  const isMobile = useMediaQuery("(max-width:960px)");
+
+  const userInfo = getUserInfo();
+  const user = userInfo?.email || session?.user;
+
+  const userName =
+    userInfo?.name || session?.user?.name || "Traveler";
+
+  const userImage = userInfo?.image || session?.user?.image;
+
+  /* --------------------------------
+     SCROLL BEHAVIOR
+  -------------------------------- */
+  useEffect(() => {
+    let lastScroll = window.scrollY;
+
+    const onScroll = () => {
+      const currentScroll = window.scrollY;
+
+      // Top of page
+      if (currentScroll <= 30) {
+        setIsScrolled(false);
+        setIsVisible(true);
+      }
+
+      // Scrolled page
+      else {
+        setIsScrolled(true);
+
+        // Scrolling down → hide
+        if (currentScroll > lastScroll + 5) {
+          setIsVisible(false);
+          setSearchOpen(false);
+        }
+
+        // Scrolling up → show
+        if (currentScroll < lastScroll - 5) {
+          setIsVisible(true);
+        }
+      }
+
+      lastScroll = currentScroll;
+    };
+
+    window.addEventListener("scroll", onScroll, {
+      passive: true,
+    });
+
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  /* --------------------------------
+     LOGOUT
+  -------------------------------- */
+  const handleLogout = async () => {
     try {
       removeUserInfo();
 
@@ -52,234 +98,601 @@ const Navbar = ({ session }) => {
         redirect: false,
         callbackUrl: "/",
       });
-      router.refresh();
 
-      console.log("Logged out successfully");
+      router.refresh();
     } catch (error) {
-      console.error("Error logging out", error);
+      console.error("Logout error:", error);
     }
   };
 
-  const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
-  const [isSearchOpen, setIsSearchOpen] = React.useState(false);
-  const isMobile = useMediaQuery("(max-width:960px)");
-  const searchRef = useRef(null);
+  /* --------------------------------
+     ACTIVE ROUTE
+  -------------------------------- */
+  const isActive = (path) =>
+    path === "/"
+      ? pathname === "/"
+      : pathname.startsWith(path);
 
-  const handleDrawerToggle = () => {
-    setIsDrawerOpen(!isDrawerOpen);
-  };
+  /* --------------------------------
+     DYNAMIC NAVBAR COLORS
+  -------------------------------- */
+  const navText = isScrolled
+    ? "text-gray-800"
+    : "text-white";
 
-  const handleSearchClick = () => {
-    setIsSearchOpen(!isSearchOpen);
-  };
+  const mutedText = isScrolled
+    ? "text-gray-500 hover:text-[#116A7F]"
+    : "text-white/65 hover:text-white";
+
+  const iconColor = isScrolled
+    ? "!text-gray-800"
+    : "!text-white";
 
   return (
     <>
-      <AppBar
-        position="static"
-        className="bg-transparent shadow-none z-20 absolute lg:px-[58px]"
-      >
-        <Container maxWidth="xl">
-          <Toolbar disableGutters>
-            <Box sx={{ display: "flex", alignItems: "center", flexGrow: 1 }}>
-              {isMobile && (
-                <IconButton
-                  color="inherit"
-                  aria-label="open drawer"
-                  edge="start"
-                  onClick={handleDrawerToggle}
-                  sx={{ mr: 2 }}
-                >
-                  <MenuIcon sx={{ color: "black" }} />
-                </IconButton>
-              )}
-              <Box sx={{ flexGrow: 1 }}>
-                <Link href="/" className="flex items-center gap-1">
-                  <Image
-                    src={logo}
-                    className="w-[60px] h-[65px] py-2"
-                    alt="logo2"
-                  />
-                  <h1 className="text-2xl font-semibold">
-                    <span className="text-orange-500">Go V</span>entures
-                  </h1>
-                </Link>
-              </Box>
-              {!isMobile && (
-                <Box sx={{ display: "flex" }}>
-                  {NavItems.map((item) => (
-                    <Link key={item.route} href={item.pathname}>
-                      <Button className="text-white" sx={{ ml: 2 }}>
-                        {item.route}
-                      </Button>
-                    </Link>
-                  ))}
-                </Box>
-              )}
-            </Box>
-
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <IconButton
-                color="inherit"
-                aria-label="search"
-                onClick={handleSearchClick}
-                sx={{ ml: 2 }}
-              >
-                {isSearchOpen ? (
-                  <CloseIcon className="text-gray-100" />
-                ) : (
-                  <SearchIcon className="text-gray-100" />
-                )}
-              </IconButton>
-            </Box>
-          </Toolbar>
-        </Container>
-        <AnimatePresence>
-          {isSearchOpen && (
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 20 }}
-              exit={{ opacity: 0, y: 50 }}
-              transition={{ duration: 0.3 }}
-              className="absolute left-0 right-0 flex justify-center items-center py-2 text-gray-700"
-              style={{ top: "40px" }}
-              ref={searchRef}
+      {/* ================= NAVBAR ================= */}
+      <AnimatePresence>
+        {isVisible && (
+          <motion.div
+            initial={{ y: -100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -100, opacity: 0 }}
+            transition={{
+              duration: 0.35,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+            className="fixed inset-x-0 top-0 z-50"
+          >
+            <Container
+              maxWidth="xl"
+              className="px-4 lg:px-12"
             >
-              <div className="relative w-full max-w-lg mb-4 mx-4">
-                <input
-                  type="text"
-                  className="border border-gray-300 rounded-full py-2 pl-10 pr-4 w-full focus:outline-none focus:ring-1 focus:ring-[#2095ae] transition-all duration-300"
-                  placeholder="Search..."
-                />
-                <SearchIcon className="text-primary absolute left-4 top-1/2 transform -translate-y-1/2" />
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </AppBar>
+              <motion.div
+                animate={{
+                  backgroundColor: isScrolled
+                    ? "rgba(255,255,255,0.94)"
+                    : "rgba(255,255,255,0.08)",
+                  borderColor: isScrolled
+                    ? "rgba(15,23,42,0.08)"
+                    : "rgba(255,255,255,0.16)",
+                  boxShadow: isScrolled
+                    ? "0 12px 35px rgba(15,23,42,0.10)"
+                    : "0 10px 35px rgba(0,0,0,0.06)",
+                }}
+                transition={{ duration: 0.25 }}
+                className="
+                  mt-4
+                  overflow-hidden
+                  rounded-2xl
+                  border
+                  backdrop-blur-xl
+                "
+              >
+                <Toolbar
+                  disableGutters
+                  className="h-[64px] px-3 md:px-5"
+                >
+                  {/* MOBILE MENU */}
+                  {isMobile && (
+                    <IconButton
+                      onClick={() => setMenuOpen(true)}
+                      className={`mr-2 ${iconColor}`}
+                    >
+                      <MenuIcon />
+                    </IconButton>
+                  )}
 
-      {/*---------- Menu bar for mobile screen---------- */}
+                  {/* LOGO */}
+                  <Link
+                    href="/"
+                    className="flex shrink-0 items-center gap-2.5"
+                  >
+                    <div
+                      className="
+                        flex h-11 w-11
+                        items-center justify-center
+                        rounded-xl bg-white
+                        shadow-sm
+                      "
+                    >
+                      <Image
+                        src={logo}
+                        alt="Go Ventures"
+                        width={42}
+                        height={42}
+                        className="h-10 w-10 object-contain"
+                      />
+                    </div>
 
-      <Drawer anchor="right" open={isDrawerOpen} onClose={handleDrawerToggle}>
-        <Box
-          sx={{
-            width: 250,
-            display: "flex",
-            flexDirection: "column",
-            height: "100%",
-          }}
+                    <div className="hidden sm:block">
+                      <motion.h1
+                        animate={{
+                          color: isScrolled
+                            ? "#111827"
+                            : "#ffffff",
+                        }}
+                        className="
+                          text-lg
+                          font-bold
+                          tracking-tight
+                        "
+                      >
+                        <span className="text-orange-500">
+                          Go V
+                        </span>
+                        entures
+                      </motion.h1>
+
+                      <motion.p
+                        animate={{
+                          color: isScrolled
+                            ? "#9ca3af"
+                            : "rgba(255,255,255,.5)",
+                        }}
+                        className="
+                          text-[8px]
+                          uppercase
+                          tracking-[.3em]
+                        "
+                      >
+                        Explore Beyond
+                      </motion.p>
+                    </div>
+                  </Link>
+
+                  {/* DESKTOP NAVIGATION */}
+                  {!isMobile && (
+                    <nav
+                      className="
+                        absolute
+                        left-1/2
+                        -translate-x-1/2
+                      "
+                    >
+                      <motion.div
+                        animate={{
+                          backgroundColor: isScrolled
+                            ? "rgba(15,23,42,.05)"
+                            : "rgba(0,0,0,.10)",
+                        }}
+                        className="flex rounded-full p-1"
+                      >
+                        {NavItems.map((item) => (
+                          <Link
+                            key={item.pathname}
+                            href={item.pathname}
+                            className="
+                              relative
+                              rounded-full
+                              px-5 py-2.5
+                              text-sm
+                            "
+                          >
+                            {/* ACTIVE BACKGROUND */}
+                            {isActive(item.pathname) && (
+                              <motion.span
+                                layoutId="activeNav"
+                                transition={{
+                                  type: "spring",
+                                  stiffness: 350,
+                                  damping: 30,
+                                }}
+                                className="
+                                  absolute
+                                  inset-0
+                                  rounded-full
+                                  bg-[#116A7F]
+                                "
+                              />
+                            )}
+
+                            {/* NAV TEXT */}
+                            <motion.span
+                              animate={{
+                                color: isActive(item.pathname)
+                                  ? "#ffffff"
+                                  : isScrolled
+                                  ? "#64748b"
+                                  : "rgba(255,255,255,.65)",
+                              }}
+                              className="
+                                relative
+                                z-10
+                                transition-colors
+                                duration-300
+                              "
+                            >
+                              {item.route}
+                            </motion.span>
+                          </Link>
+                        ))}
+                      </motion.div>
+                    </nav>
+                  )}
+
+                  {/* RIGHT SIDE */}
+                  <div className="ml-auto flex items-center gap-1">
+                    {/* SEARCH */}
+                    <IconButton
+                      onClick={() =>
+                        setSearchOpen((prev) => !prev)
+                      }
+                      className={iconColor}
+                    >
+                      {searchOpen ? (
+                        <CloseIcon />
+                      ) : (
+                        <SearchIcon />
+                      )}
+                    </IconButton>
+
+                    {/* USER */}
+                    {user ? (
+                      <Link
+                        href="/dashboard"
+                        className="
+                          ml-1
+                          hidden
+                          items-center
+                          gap-2
+                          rounded-full
+                          border
+                          border-black/5
+                          bg-black/[.04]
+                          py-1
+                          pl-1
+                          pr-4
+                          md:flex
+                        "
+                      >
+                        {userImage ? (
+                          <Image
+                            src={userImage}
+                            alt={userName}
+                            width={34}
+                            height={34}
+                            className="
+                              h-[34px]
+                              w-[34px]
+                              rounded-full
+                              object-cover
+                            "
+                          />
+                        ) : (
+                          <Avatar
+                            className="
+                              !h-[34px]
+                              !w-[34px]
+                              !bg-[#116A7F]
+                            "
+                          >
+                            {userName.charAt(0)}
+                          </Avatar>
+                        )}
+
+                        <span
+                          className="
+                            max-w-[90px]
+                            truncate
+                            text-xs
+                            font-medium
+                          "
+                        >
+                          {userName}
+                        </span>
+                      </Link>
+                    ) : (
+                      <Link
+                        href="/login"
+                        className="
+                          ml-2
+                          hidden
+                          rounded-full
+                          bg-[#116A7F]
+                          px-5 py-2.5
+                          text-xs
+                          font-semibold
+                          text-white
+                          shadow-sm
+                          transition-all
+                          hover:bg-[#0D5667]
+                          hover:shadow-md
+                          md:block
+                        "
+                      >
+                        Login
+                      </Link>
+                    )}
+                  </div>
+                </Toolbar>
+
+                {/* SEARCH */}
+                <AnimatePresence>
+                  {searchOpen && (
+                    <motion.div
+                      initial={{
+                        opacity: 0,
+                        height: 0,
+                      }}
+                      animate={{
+                        opacity: 1,
+                        height: "auto",
+                      }}
+                      exit={{
+                        opacity: 0,
+                        height: 0,
+                      }}
+                      className="px-4 pb-4"
+                    >
+                      <div
+                        className="
+                          mx-auto
+                          flex
+                          max-w-xl
+                          items-center
+                          rounded-2xl
+                          border
+                          border-black/10
+                          bg-black/[.03]
+                          px-4 py-3
+                        "
+                      >
+                        <SearchIcon
+                          className="
+                            mr-2
+                            !text-gray-400
+                          "
+                        />
+
+                        <input
+                          autoFocus
+                          type="text"
+                          placeholder="Search destinations..."
+                          className="
+                            w-full
+                            bg-transparent
+                            text-sm
+                            text-gray-800
+                            outline-none
+                            placeholder:text-gray-400
+                          "
+                        />
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            </Container>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ================= MOBILE DRAWER ================= */}
+      <Drawer
+        anchor="left"
+        open={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        PaperProps={{
+          className:
+            "!w-[300px] !rounded-r-3xl !bg-[#111827] !text-white",
+        }}
+      >
+        <div
+          className="
+            flex
+            h-full
+            flex-col
+            p-5
+          "
         >
-          <Box sx={{ display: "flex", justifyContent: "flex-end", padding: 1 }}>
+          {/* DRAWER HEADER */}
+          <div
+            className="
+              mb-8
+              flex
+              items-center
+              justify-between
+            "
+          >
+            <Link
+              href="/"
+              className="flex items-center gap-2"
+              onClick={() => setMenuOpen(false)}
+            >
+              <div
+                className="
+                  flex h-10 w-10
+                  items-center
+                  justify-center
+                  rounded-xl
+                  bg-white
+                "
+              >
+                <Image
+                  src={logo}
+                  alt="Go Ventures"
+                  width={38}
+                  height={38}
+                  className="h-9 w-9 object-contain"
+                />
+              </div>
+
+              <span className="font-bold">
+                <span className="text-[#116A7F]">
+                  Go V
+                </span>
+                entures
+              </span>
+            </Link>
+
             <IconButton
-              color="inherit"
-              aria-label="close drawer"
-              onClick={handleDrawerToggle}
+              onClick={() => setMenuOpen(false)}
+              className="!text-white"
             >
               <CloseIcon />
             </IconButton>
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              padding: 2,
-            }}
-          >
-            {userInfo?.email || session?.user ? (
-              <>
+          </div>
+
+          {/* USER */}
+          {user ? (
+            <div
+              className="
+                mb-6
+                flex
+                items-center
+                gap-3
+                rounded-2xl
+                bg-white/5
+                p-4
+              "
+            >
+              {userImage ? (
                 <Image
-                  src={userInfo?.image || session?.user?.image}
-                  alt={userInfo?.name || session?.user?.name}
-                  width={100}
-                  height={100}
-                  className="h-20 w-20 rounded-full"
+                  src={userImage}
+                  alt={userName}
+                  width={48}
+                  height={48}
+                  className="
+                    h-12 w-12
+                    rounded-full
+                    object-cover
+                  "
                 />
-                <Typography variant="h6">
-                  {userInfo?.name || session?.user.name}
-                </Typography>
-                <Button
-                  className="bg-primary"
-                  variant="contained"
-                  color="primary"
-                  fullWidth
+              ) : (
+                <Avatar className="!bg-[#116A7F]">
+                  {userName.charAt(0)}
+                </Avatar>
+              )}
+
+              <div className="min-w-0">
+                <p
+                  className="
+                    truncate
+                    text-sm
+                    font-semibold
+                  "
                 >
-                  View Profile
-                </Button>
-              </>
-            ) : (
-              <>
-                <Avatar className="h-20 w-20" />
-                <Link href="/login">
-                  <Button
-                    className="text-white bg-primary p-1 mt-4 rounded-md"
-                    variant="contained"
-                    color="primary"
-                  >
-                    Login
-                  </Button>
-                </Link>
-              </>
-            )}
-          </Box>
-          <List>
+                  {userName}
+                </p>
+
+                <p
+                  className="
+                    truncate
+                    text-xs
+                    text-white/40
+                  "
+                >
+                  {userInfo?.email ||
+                    session?.user?.email}
+                </p>
+              </div>
+            </div>
+          ) : (
+            <Link
+              href="/login"
+              onClick={() => setMenuOpen(false)}
+              className="
+                mb-6
+                rounded-xl
+                bg-[#116A7F]
+                py-3
+                text-center
+                text-sm
+                font-semibold
+                text-white
+                transition
+                hover:bg-[#0D5667]
+              "
+            >
+              Login
+            </Link>
+          )}
+
+          {/* MAIN LINKS */}
+          <nav className="space-y-1">
             {NavItems.map((item) => (
-              <Link key={item.route} href={item.pathname}>
-                <ListItem component="a">
-                  <ListItemText
-                    primary={item.route}
-                    className="hover:text-primary"
-                  />
-                </ListItem>
+              <Link
+                key={item.pathname}
+                href={item.pathname}
+                onClick={() => setMenuOpen(false)}
+                className={`
+                  block
+                  rounded-xl
+                  px-4 py-3.5
+                  text-sm
+                  transition
+                  ${
+                    isActive(item.pathname)
+                      ? "bg-[#116A7F] text-white"
+                      : "text-white/60 hover:bg-white/5 hover:text-white"
+                  }
+                `}
+              >
+                {item.route}
               </Link>
             ))}
-          </List>
-          <Divider />
-          <Box />
+          </nav>
 
-          <Box
-            sx={{
-              paddingLeft: 2,
-              marginTop: 2,
-            }}
+          <div
+            className="
+              my-6
+              h-px
+              bg-white/10
+            "
+          />
+
+          {/* SECONDARY LINKS */}
+          <nav
+            className="
+              space-y-1
+              text-sm
+              text-white/50
+            "
           >
-            <Link href="/">
-              <Typography className="hover:text-primary">Settings</Typography>
-            </Link>
-            <Link href="/">
-              <Typography className="hover:text-primary">Helps</Typography>
-            </Link>
-            <Link href="/">
-              <Typography className="hover:text-primary">Feedback</Typography>
-            </Link>
-            <Link href="/">
-              <Typography className="hover:text-primary">Bookings</Typography>
-            </Link>
-            <Link href="/">
-              <Typography className="hover:text-primary">Feedback</Typography>
-            </Link>
-            <Link href="/">
-              <Typography className="hover:text-primary">Guide</Typography>
-            </Link>
-          </Box>
-
-          {/*---------- logOut button ------------ */}
-
-          <Box sx={{ display: "flex", justifyContent: "start", padding: 2 }}>
-            {userInfo?.name || session?.user ? (
-              <Typography
-                onClick={handleLogOut}
-                className="text-primary flex items-center gap-1 cursor-pointer mt-2"
-                size="small"
+            {[
+              "Settings",
+              "Helps",
+              "Feedback",
+              "Bookings",
+              "Guide",
+            ].map((item) => (
+              <Link
+                key={item}
+                href="/"
+                className="
+                  block
+                  rounded-xl
+                  px-4 py-2.5
+                  hover:bg-white/5
+                  hover:text-white
+                "
               >
-                Logout <LogoutOutlined fontSize="small" className="" />
-              </Typography>
-            ) : (
-              " "
-            )}
-          </Box>
-        </Box>
+                {item}
+              </Link>
+            ))}
+          </nav>
+
+          {/* LOGOUT */}
+          {user && (
+            <button
+              onClick={handleLogout}
+              className="
+                mt-auto
+                flex
+                items-center
+                justify-between
+                rounded-xl
+                px-4 py-3
+                text-sm
+                text-red-400
+                hover:bg-red-500/10
+              "
+            >
+              Logout
+              <LogoutOutlined fontSize="small" />
+            </button>
+          )}
+        </div>
       </Drawer>
     </>
   );
