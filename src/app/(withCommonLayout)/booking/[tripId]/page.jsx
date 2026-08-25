@@ -96,7 +96,7 @@ export default function BookingWizardPage() {
     return (
       <div className="custom-container py-16 text-center">
         <p className="text-gray-500">We couldn&apos;t find that trip.</p>
-        <a href="/trips" className="text-primary font-semibold hover:underline">Browse trips</a>
+        <a href="/all-destinations" className="text-primary font-semibold hover:underline">Browse trips</a>
       </div>
     );
   }

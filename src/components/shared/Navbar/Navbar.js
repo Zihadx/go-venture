@@ -197,7 +197,7 @@ const Navbar = ({ session }) => {
             }}
             className="fixed inset-x-0 top-0 z-50"
           >
-            <Container maxWidth="xl" className="px-3 sm:px-5 lg:px-12">
+            <div >
               <motion.div
                 animate={{
                   backgroundColor: scrolled
@@ -211,7 +211,7 @@ const Navbar = ({ session }) => {
                     : "0 10px 35px rgba(0,0,0,.06)",
                 }}
                 transition={{ duration: 0.25 }}
-                className="relative mt-3 overflow-visible rounded-2xl border backdrop-blur-xl sm:mt-4"
+                className="relative  overflow-visible border backdrop-blur-xl "
               >
                 <Toolbar
                   disableGutters
@@ -234,9 +234,9 @@ const Navbar = ({ session }) => {
 
                   <Link
                     href="/"
-                    className="flex shrink-0 items-center gap-2.5"
+                    className="flex shrink-0 items-center"
                   >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white shadow-sm">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl">
                       <Image
                         src={logo}
                         alt="Go Ventures"
@@ -251,10 +251,10 @@ const Navbar = ({ session }) => {
                         animate={{
                           color: scrolled ? "#111827" : "#fff",
                         }}
-                        className="text-lg font-bold tracking-tight"
+                        className="text-lg font-bold"
                       >
                         <span className="text-orange-500">Go V</span>
-                        entures
+                        enture
                       </motion.h1>
 
                       <motion.p
@@ -476,7 +476,7 @@ const Navbar = ({ session }) => {
                   )}
                 </AnimatePresence>
               </motion.div>
-            </Container>
+            </div>
           </motion.header>
         )}
       </AnimatePresence>

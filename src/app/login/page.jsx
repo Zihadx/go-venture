@@ -116,14 +116,8 @@ const Login = () => {
     <div className="min-h-screen w-full bg-gray-50 px-4 py-8 sm:px-6 lg:px-8 flex items-center justify-center">
       <div className="relative w-full max-w-md overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 shadow-xl sm:p-8">
         {/* Decorative background */}
-        <div className="pointer-events-none absolute -left-32 -top-24 opacity-40">
-          <Image
-            src={treeImage}
-            alt="Decorative tree"
-            width={300}
-            height={300}
-            className="h-[250px] w-[200px] object-contain"
-          />
+        <div className="rounded-full absolute -top-16 -left-40 pointer-events-none">
+          <Image src={treeImage} alt="treeImage" width={400} height={400} className="h-[380px] w-[280px]"></Image>
         </div>
 
         <div className="pointer-events-none absolute -bottom-24 -right-24 h-48 w-48 rounded-full bg-primary/10" />
@@ -256,12 +250,13 @@ const Login = () => {
           </div>
 
           {/* Social login */}
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <div className="flex flex-col md:flex-row gap-4 items-center justify-center">
             {/* Google */}
             <Button
+            className="w-full"
               variant="outlined"
               disabled={!!socialLoading}
-              startIcon={<FaGoogle />}
+              startIcon={<FaGoogle className="text-red-400" />}
               onClick={() => handleSocialLogin("google")}
               sx={{
                 minHeight: "44px",
@@ -281,9 +276,10 @@ const Login = () => {
 
             {/* Facebook */}
             <Button
+                 className="w-full"
               variant="outlined"
               disabled={!!socialLoading}
-              startIcon={<FaFacebook />}
+              startIcon={<FaFacebook className="text-blue-500" />}
               onClick={() => handleSocialLogin("facebook")}
               sx={{
                 minHeight: "44px",
@@ -301,27 +297,6 @@ const Login = () => {
               {socialLoading === "facebook" ? "..." : "Facebook"}
             </Button>
 
-            {/* Github */}
-            <Button
-              variant="outlined"
-              disabled={!!socialLoading}
-              startIcon={<FaGithub />}
-              onClick={() => handleSocialLogin("github")}
-              sx={{
-                minHeight: "44px",
-                borderRadius: "10px",
-                borderColor: "#e5e7eb",
-                color: "#374151",
-                textTransform: "none",
-                fontWeight: 600,
-                "&:hover": {
-                  borderColor: "#2095ae",
-                  backgroundColor: "#f0fdfa",
-                },
-              }}
-            >
-              {socialLoading === "github" ? "..." : "Github"}
-            </Button>
           </div>
 
           {/* Register */}

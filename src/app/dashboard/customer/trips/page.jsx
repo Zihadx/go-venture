@@ -66,7 +66,7 @@ export default function MyTripsPage() {
       {!loading && rows.length === 0 && (
         <div className="text-center py-16 bg-white rounded-xl border border-gray-100">
           <p className="text-gray-500">No {tab} trips yet.</p>
-          <Link href="/trips" className="text-primary font-semibold hover:underline text-sm">Browse trips to get started</Link>
+          <Link href="/all-destinations" className="text-primary font-semibold hover:underline text-sm">Browse trips to get started</Link>
         </div>
       )}
 

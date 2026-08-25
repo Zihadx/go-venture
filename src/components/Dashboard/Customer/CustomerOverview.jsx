@@ -66,7 +66,7 @@ export default function CustomerOverview() {
         {upcoming.length === 0 ? (
           <div className="text-center py-10">
             <p className="text-gray-500 mb-2">No upcoming trips yet.</p>
-            <Link href="/trips" className="button-primary text-sm py-2 px-4 inline-block">Browse trips</Link>
+            <Link href="/all-destinations" className="button-primary text-sm py-2 px-4 inline-block">Browse trips</Link>
           </div>
         ) : (
           <div className="space-y-3">
