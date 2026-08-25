@@ -1,10 +1,3 @@
-// Dashboard data-access layer.
-//
-// Every export here is async and shaped like a real REST call (params in,
-// { data, total } or a plain payload out) even though it currently reads
-// from the in-memory mock DB. When the Mongoose API is ready, swap the body
-// of each function for a `fetch("/api/...")` call — nothing in the
-// dashboard UI needs to change because it only ever imports from this file.
 
 import {
   MOCK_USERS,
@@ -21,8 +14,6 @@ import {
 const LATENCY_MS = 350;
 const delay = (ms = LATENCY_MS) => new Promise((res) => setTimeout(res, ms));
 
-// In-memory mutation so status/role changes persist for the session even
-// though there's no real database behind them yet.
 let usersStore = [...MOCK_USERS];
 let bookingsStore = [...MOCK_BOOKINGS];
 
@@ -135,9 +126,7 @@ export async function getBookingsByCustomerEmail(email) {
     .sort((a, b) => new Date(b.bookedAt) - new Date(a.bookedAt));
 }
 
-// Synchronous, no-delay accessor for other services (e.g. billing) that need
-// to derive their own data from the current bookings state without owning
-// a duplicate copy of it.
+
 export function getBookingsSnapshot() {
   return bookingsStore;
 }
@@ -188,8 +177,7 @@ export async function getDashboardSummary() {
 
 /* ----------------------------- Agent dashboard ----------------------------- */
 
-// Falls back to the first mock agent so the visualization always has
-// something to render before a real agent identity is wired in.
+
 export async function getAgentDashboard(agentName) {
   await delay(300);
   const name = MOCK_AGENTS.includes(agentName) ? agentName : MOCK_AGENTS[0];

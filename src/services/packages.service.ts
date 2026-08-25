@@ -5,10 +5,7 @@ const delay = (ms = 300) => new Promise((res) => setTimeout(res, ms));
 
 const now = new Date().toISOString();
 
-// Seeded from the same catalog the public /trips page and booking wizard
-// already used — this becomes the one mutable store both the admin CRUD and
-// the public catalog read from (see trips.service.js's getPackagesSnapshot
-// usage), rather than two independent copies of "what packages exist."
+
 let packagesStore: TourPackage[] = (TRIP_CATALOG as any[]).map((t) => ({
   id: t.id,
   title: t.title,

@@ -2,9 +2,7 @@ import { getPackagesSnapshot, getPackageById as getPackageByIdAsync } from "@/se
 
 const delay = (ms = 300) => new Promise((res) => setTimeout(res, ms));
 
-// Only "active" (published) packages are ever shown publicly — draft and
-// archived packages exist in the admin store but never leak into the
-// customer-facing catalog or booking flow.
+
 function getPublishedPackages() {
   return getPackagesSnapshot().filter((p) => p.status === "active");
 }
