@@ -1,404 +1,444 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import AppBar from "@mui/material/AppBar";
-import Container from "@mui/material/Container";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Drawer from "@mui/material/Drawer";
-import Avatar from "@mui/material/Avatar";
+
+import {
+  AppBar,
+  Avatar,
+  Container,
+  Drawer,
+  IconButton,
+  Toolbar,
+  useMediaQuery,
+} from "@mui/material";
+
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import SearchIcon from "@mui/icons-material/Search";
-import LogoutOutlined from "@mui/icons-material/LogoutOutlined";
-import useMediaQuery from "@mui/material/useMediaQuery";
+import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
+import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
+import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
+import BookOutlinedIcon from "@mui/icons-material/BookOutlined";
+
 import { signOut } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
+
 import logo from "@/assets/logo/logo.png";
 import { getUserInfo, removeUserInfo } from "@/services/auth.service";
 
-const NavItems = [
-  { route: "Home", pathname: "/" },
-  { route: "Destinations", pathname: "/all-destinations" },
-  { route: "News", pathname: "/all-blogs" },
-  { route: "Dashboard", pathname: "/dashboard" },
+const NAV_ITEMS = [
+  { label: "Home", href: "/" },
+  { label: "Destinations", href: "/all-destinations" },
+  { label: "News", href: "/all-blogs" },
+  { label: "Dashboard", href: "/dashboard" },
 ];
+
+const PROFILE_ITEMS = [
+  {
+    label: "Dashboard",
+    href: "/dashboard",
+    icon: DashboardOutlinedIcon,
+  },
+  {
+    label: "Profile",
+    href: "/dashboard/account",
+    icon: PersonOutlineIcon,
+  },
+  {
+    label: "Bookings",
+    href: "/dashboard/customer/trips",
+    icon: BookOutlinedIcon,
+  },
+];
+
+const SECONDARY_ITEMS = ["Settings", "Help", "Feedback", "Guide"];
 
 const Navbar = ({ session }) => {
   const router = useRouter();
   const pathname = usePathname();
-
-  const [isVisible, setIsVisible] = useState(true);
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
+  const profileRef = useRef(null);
 
   const isMobile = useMediaQuery("(max-width:960px)");
 
+  const [visible, setVisible] = useState(true);
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+
   const userInfo = getUserInfo();
+
   const user = userInfo?.email || session?.user;
-
-  const userName =
-    userInfo?.name || session?.user?.name || "Traveler";
-
+  const userName = userInfo?.name || session?.user?.name || "Traveler";
+  const userEmail = userInfo?.email || session?.user?.email;
   const userImage = userInfo?.image || session?.user?.image;
 
-  /* --------------------------------
-     SCROLL BEHAVIOR
-  -------------------------------- */
+  /* ---------------- ACTIVE ROUTE ---------------- */
+
+  const isActive = (href) =>
+    href === "/" ? pathname === "/" : pathname.startsWith(href);
+
+  /* ---------------- SCROLL ---------------- */
+
   useEffect(() => {
     let lastScroll = window.scrollY;
 
-    const onScroll = () => {
-      const currentScroll = window.scrollY;
+    const handleScroll = () => {
+      const current = window.scrollY;
 
-      // Top of page
-      if (currentScroll <= 30) {
-        setIsScrolled(false);
-        setIsVisible(true);
-      }
+      if (current <= 30) {
+        setScrolled(false);
+        setVisible(true);
+      } else {
+        setScrolled(true);
 
-      // Scrolled page
-      else {
-        setIsScrolled(true);
-
-        // Scrolling down → hide
-        if (currentScroll > lastScroll + 5) {
-          setIsVisible(false);
+        if (current > lastScroll + 5) {
+          setVisible(false);
           setSearchOpen(false);
+          setProfileOpen(false);
         }
 
-        // Scrolling up → show
-        if (currentScroll < lastScroll - 5) {
-          setIsVisible(true);
+        if (current < lastScroll - 5) {
+          setVisible(true);
         }
       }
 
-      lastScroll = currentScroll;
+      lastScroll = current;
     };
 
-    window.addEventListener("scroll", onScroll, {
-      passive: true,
-    });
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  /* --------------------------------
-     LOGOUT
-  -------------------------------- */
+  /* ---------------- OUTSIDE PROFILE CLICK ---------------- */
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        profileRef.current &&
+        !profileRef.current.contains(event.target)
+      ) {
+        setProfileOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () =>
+      document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  /* ---------------- LOGOUT ---------------- */
+
   const handleLogout = async () => {
     try {
       removeUserInfo();
 
+      setProfileOpen(false);
+      setMobileOpen(false);
+
       await signOut({
         redirect: false,
-        callbackUrl: "/",
       });
 
+      router.push("/");
       router.refresh();
     } catch (error) {
       console.error("Logout error:", error);
     }
   };
 
-  /* --------------------------------
-     ACTIVE ROUTE
-  -------------------------------- */
-  const isActive = (path) =>
-    path === "/"
-      ? pathname === "/"
-      : pathname.startsWith(path);
+  /* ---------------- USER AVATAR ---------------- */
 
-  /* --------------------------------
-     DYNAMIC NAVBAR COLORS
-  -------------------------------- */
-  const navText = isScrolled
-    ? "text-gray-800"
-    : "text-white";
+  const UserAvatar = ({ size = 34 }) => (
+    userImage ? (
+      <Image
+        src={userImage}
+        alt={userName}
+        width={size}
+        height={size}
+        className="rounded-full object-cover"
+      />
+    ) : (
+      <Avatar
+        sx={{
+          width: size,
+          height: size,
+          bgcolor: "#116A7F",
+          fontSize: size <= 34 ? 14 : 18,
+        }}
+      >
+        {userName.charAt(0).toUpperCase()}
+      </Avatar>
+    )
+  );
 
-  const mutedText = isScrolled
-    ? "text-gray-500 hover:text-[#116A7F]"
-    : "text-white/65 hover:text-white";
+  /* ---------------- CLOSE MOBILE ---------------- */
 
-  const iconColor = isScrolled
-    ? "!text-gray-800"
-    : "!text-white";
+  const closeMobile = () => setMobileOpen(false);
 
   return (
     <>
       {/* ================= NAVBAR ================= */}
+
       <AnimatePresence>
-        {isVisible && (
-          <motion.div
+        {visible && (
+          <motion.header
             initial={{ y: -100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: -100, opacity: 0 }}
             transition={{
-              duration: 0.35,
+              duration: 0.3,
               ease: [0.22, 1, 0.36, 1],
             }}
             className="fixed inset-x-0 top-0 z-50"
           >
-            <Container
-              maxWidth="xl"
-              className="px-4 lg:px-12"
-            >
+            <Container maxWidth="xl" className="px-3 sm:px-5 lg:px-12">
               <motion.div
                 animate={{
-                  backgroundColor: isScrolled
-                    ? "rgba(255,255,255,0.94)"
-                    : "rgba(255,255,255,0.08)",
-                  borderColor: isScrolled
-                    ? "rgba(15,23,42,0.08)"
-                    : "rgba(255,255,255,0.16)",
-                  boxShadow: isScrolled
-                    ? "0 12px 35px rgba(15,23,42,0.10)"
-                    : "0 10px 35px rgba(0,0,0,0.06)",
+                  backgroundColor: scrolled
+                    ? "rgba(255,255,255,.96)"
+                    : "rgba(255,255,255,.08)",
+                  borderColor: scrolled
+                    ? "rgba(15,23,42,.08)"
+                    : "rgba(255,255,255,.16)",
+                  boxShadow: scrolled
+                    ? "0 12px 35px rgba(15,23,42,.10)"
+                    : "0 10px 35px rgba(0,0,0,.06)",
                 }}
                 transition={{ duration: 0.25 }}
-                className="
-                  mt-4
-                  overflow-hidden
-                  rounded-2xl
-                  border
-                  backdrop-blur-xl
-                "
+                className="relative mt-3 overflow-visible rounded-2xl border backdrop-blur-xl sm:mt-4"
               >
                 <Toolbar
                   disableGutters
-                  className="h-[64px] px-3 md:px-5"
+                  className="h-16 px-3 sm:px-5"
                 >
                   {/* MOBILE MENU */}
+
                   {isMobile && (
                     <IconButton
-                      onClick={() => setMenuOpen(true)}
-                      className={`mr-2 ${iconColor}`}
+                      onClick={() => setMobileOpen(true)}
+                      className={`mr-1 ${
+                        scrolled ? "!text-gray-800" : "!text-white"
+                      }`}
                     >
                       <MenuIcon />
                     </IconButton>
                   )}
 
                   {/* LOGO */}
+
                   <Link
                     href="/"
                     className="flex shrink-0 items-center gap-2.5"
                   >
-                    <div
-                      className="
-                        flex h-11 w-11
-                        items-center justify-center
-                        rounded-xl bg-white
-                        shadow-sm
-                      "
-                    >
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white shadow-sm">
                       <Image
                         src={logo}
                         alt="Go Ventures"
-                        width={42}
-                        height={42}
-                        className="h-10 w-10 object-contain"
+                        width={40}
+                        height={40}
+                        className="h-9 w-9 object-contain"
                       />
                     </div>
 
                     <div className="hidden sm:block">
                       <motion.h1
                         animate={{
-                          color: isScrolled
-                            ? "#111827"
-                            : "#ffffff",
+                          color: scrolled ? "#111827" : "#fff",
                         }}
-                        className="
-                          text-lg
-                          font-bold
-                          tracking-tight
-                        "
+                        className="text-lg font-bold tracking-tight"
                       >
-                        <span className="text-orange-500">
-                          Go V
-                        </span>
+                        <span className="text-orange-500">Go V</span>
                         entures
                       </motion.h1>
 
                       <motion.p
                         animate={{
-                          color: isScrolled
+                          color: scrolled
                             ? "#9ca3af"
                             : "rgba(255,255,255,.5)",
                         }}
-                        className="
-                          text-[8px]
-                          uppercase
-                          tracking-[.3em]
-                        "
+                        className="text-[8px] uppercase tracking-[.3em]"
                       >
                         Explore Beyond
                       </motion.p>
                     </div>
                   </Link>
 
-                  {/* DESKTOP NAVIGATION */}
+                  {/* DESKTOP NAV */}
+
                   {!isMobile && (
-                    <nav
-                      className="
-                        absolute
-                        left-1/2
-                        -translate-x-1/2
-                      "
-                    >
-                      <motion.div
-                        animate={{
-                          backgroundColor: isScrolled
-                            ? "rgba(15,23,42,.05)"
-                            : "rgba(0,0,0,.10)",
-                        }}
-                        className="flex rounded-full p-1"
+                    <nav className="absolute left-1/2 -translate-x-1/2">
+                      <div
+                        className={`flex rounded-full p-1 ${
+                          scrolled
+                            ? "bg-slate-900/[.05]"
+                            : "bg-black/[.10]"
+                        }`}
                       >
-                        {NavItems.map((item) => (
+                        {NAV_ITEMS.map((item) => (
                           <Link
-                            key={item.pathname}
-                            href={item.pathname}
-                            className="
-                              relative
-                              rounded-full
-                              px-5 py-2.5
-                              text-sm
-                            "
+                            key={item.href}
+                            href={item.href}
+                            className="relative rounded-full px-4 py-2.5 text-sm"
                           >
-                            {/* ACTIVE BACKGROUND */}
-                            {isActive(item.pathname) && (
+                            {isActive(item.href) && (
                               <motion.span
                                 layoutId="activeNav"
+                                className="absolute inset-0 rounded-full bg-[#116A7F]"
                                 transition={{
                                   type: "spring",
                                   stiffness: 350,
                                   damping: 30,
                                 }}
-                                className="
-                                  absolute
-                                  inset-0
-                                  rounded-full
-                                  bg-[#116A7F]
-                                "
                               />
                             )}
 
-                            {/* NAV TEXT */}
-                            <motion.span
-                              animate={{
-                                color: isActive(item.pathname)
-                                  ? "#ffffff"
-                                  : isScrolled
-                                  ? "#64748b"
-                                  : "rgba(255,255,255,.65)",
-                              }}
-                              className="
-                                relative
-                                z-10
-                                transition-colors
-                                duration-300
-                              "
+                            <span
+                              className={`relative z-10 ${
+                                isActive(item.href)
+                                  ? "text-white"
+                                  : scrolled
+                                  ? "text-slate-500"
+                                  : "text-white/65"
+                              }`}
                             >
-                              {item.route}
-                            </motion.span>
+                              {item.label}
+                            </span>
                           </Link>
                         ))}
-                      </motion.div>
+                      </div>
                     </nav>
                   )}
 
                   {/* RIGHT SIDE */}
+
                   <div className="ml-auto flex items-center gap-1">
                     {/* SEARCH */}
+
                     <IconButton
-                      onClick={() =>
-                        setSearchOpen((prev) => !prev)
+                      onClick={() => setSearchOpen((v) => !v)}
+                      className={
+                        scrolled ? "!text-gray-800" : "!text-white"
                       }
-                      className={iconColor}
                     >
-                      {searchOpen ? (
-                        <CloseIcon />
-                      ) : (
-                        <SearchIcon />
-                      )}
+                      {searchOpen ? <CloseIcon /> : <SearchIcon />}
                     </IconButton>
 
-                    {/* USER */}
-                    {user ? (
-                      <Link
-                        href="/dashboard"
-                        className="
-                          ml-1
-                          hidden
-                          items-center
-                          gap-2
-                          rounded-full
-                          border
-                          border-black/5
-                          bg-black/[.04]
-                          py-1
-                          pl-1
-                          pr-4
-                          md:flex
-                        "
-                      >
-                        {userImage ? (
-                          <Image
-                            src={userImage}
-                            alt={userName}
-                            width={34}
-                            height={34}
-                            className="
-                              h-[34px]
-                              w-[34px]
-                              rounded-full
-                              object-cover
-                            "
-                          />
-                        ) : (
-                          <Avatar
-                            className="
-                              !h-[34px]
-                              !w-[34px]
-                              !bg-[#116A7F]
-                            "
-                          >
-                            {userName.charAt(0)}
-                          </Avatar>
-                        )}
+                    {/* PROFILE */}
 
-                        <span
-                          className="
-                            max-w-[90px]
-                            truncate
-                            text-xs
-                            font-medium
-                          "
+                    {user ? (
+                      <div ref={profileRef} className="relative">
+                        <button
+                          onClick={() =>
+                            setProfileOpen((v) => !v)
+                          }
+                          className={`ml-1 flex items-center gap-2 rounded-full border p-1 transition ${
+                            scrolled
+                              ? "border-black/10 bg-black/[.04] hover:bg-black/[.07]"
+                              : "border-white/10 bg-white/10 hover:bg-white/15"
+                          }`}
                         >
-                          {userName}
-                        </span>
-                      </Link>
+                          <UserAvatar />
+
+                          <span
+                            className={`hidden max-w-[90px] truncate pr-2 text-xs font-semibold md:block ${
+                              scrolled
+                                ? "text-gray-700"
+                                : "text-white"
+                            }`}
+                          >
+                            {userName}
+                          </span>
+                        </button>
+
+                        {/* PROFILE DROPDOWN */}
+
+                        <AnimatePresence>
+                          {profileOpen && (
+                            <motion.div
+                              initial={{
+                                opacity: 0,
+                                y: -8,
+                                scale: 0.96,
+                              }}
+                              animate={{
+                                opacity: 1,
+                                y: 0,
+                                scale: 1,
+                              }}
+                              exit={{
+                                opacity: 0,
+                                y: -8,
+                                scale: 0.96,
+                              }}
+                              transition={{ duration: 0.18 }}
+                              className="absolute right-0 top-[calc(100%+10px)] w-64 overflow-hidden rounded-2xl border border-gray-100 bg-white p-2 shadow-2xl"
+                            >
+                              {/* PROFILE HEADER */}
+
+                              <div className="mb-2 flex items-center gap-3 rounded-xl bg-gray-50 p-3">
+                                <UserAvatar size={42} />
+
+                                <div className="min-w-0">
+                                  <p className="truncate text-sm font-bold text-gray-800">
+                                    {userName}
+                                  </p>
+
+                                  <p className="truncate text-xs text-gray-400">
+                                    {userEmail}
+                                  </p>
+                                </div>
+                              </div>
+
+                              {/* PROFILE LINKS */}
+
+                              <div className="space-y-1">
+                                {PROFILE_ITEMS.map((item) => {
+                                  const Icon = item.icon;
+
+                                  return (
+                                    <Link
+                                      key={item.href}
+                                      href={item.href}
+                                      onClick={() =>
+                                        setProfileOpen(false)
+                                      }
+                                      className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-gray-600 transition hover:bg-[#116A7F]/10 hover:text-[#116A7F]"
+                                    >
+                                      <Icon fontSize="small" />
+
+                                      <span>{item.label}</span>
+                                    </Link>
+                                  );
+                                })}
+                              </div>
+
+                              <div className="my-2 h-px bg-gray-100" />
+
+                              {/* LOGOUT */}
+
+                              <button
+                                onClick={handleLogout}
+                                className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-red-500 transition hover:bg-red-50"
+                              >
+                                <LogoutOutlinedIcon fontSize="small" />
+
+                                <span>Logout</span>
+                              </button>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
                     ) : (
                       <Link
                         href="/login"
-                        className="
-                          ml-2
-                          hidden
-                          rounded-full
-                          bg-[#116A7F]
-                          px-5 py-2.5
-                          text-xs
-                          font-semibold
-                          text-white
-                          shadow-sm
-                          transition-all
-                          hover:bg-[#0D5667]
-                          hover:shadow-md
-                          md:block
-                        "
+                        className="ml-1 hidden rounded-full bg-[#116A7F] px-5 py-2.5 text-xs font-semibold text-white shadow-sm transition hover:bg-[#0D5667] md:block"
                       >
                         Login
                       </Link>
@@ -407,13 +447,11 @@ const Navbar = ({ session }) => {
                 </Toolbar>
 
                 {/* SEARCH */}
+
                 <AnimatePresence>
                   {searchOpen && (
                     <motion.div
-                      initial={{
-                        opacity: 0,
-                        height: 0,
-                      }}
+                      initial={{ opacity: 0, height: 0 }}
                       animate={{
                         opacity: 1,
                         height: "auto",
@@ -424,38 +462,14 @@ const Navbar = ({ session }) => {
                       }}
                       className="px-4 pb-4"
                     >
-                      <div
-                        className="
-                          mx-auto
-                          flex
-                          max-w-xl
-                          items-center
-                          rounded-2xl
-                          border
-                          border-black/10
-                          bg-black/[.03]
-                          px-4 py-3
-                        "
-                      >
-                        <SearchIcon
-                          className="
-                            mr-2
-                            !text-gray-400
-                          "
-                        />
+                      <div className="mx-auto flex max-w-xl items-center rounded-2xl border border-black/10 bg-black/[.03] px-4 py-3">
+                        <SearchIcon className="mr-2 !text-gray-400" />
 
                         <input
                           autoFocus
                           type="text"
                           placeholder="Search destinations..."
-                          className="
-                            w-full
-                            bg-transparent
-                            text-sm
-                            text-gray-800
-                            outline-none
-                            placeholder:text-gray-400
-                          "
+                          className="w-full bg-transparent text-sm text-gray-800 outline-none placeholder:text-gray-400"
                         />
                       </div>
                     </motion.div>
@@ -463,70 +477,48 @@ const Navbar = ({ session }) => {
                 </AnimatePresence>
               </motion.div>
             </Container>
-          </motion.div>
+          </motion.header>
         )}
       </AnimatePresence>
 
       {/* ================= MOBILE DRAWER ================= */}
+
       <Drawer
         anchor="left"
-        open={menuOpen}
-        onClose={() => setMenuOpen(false)}
+        open={mobileOpen}
+        onClose={closeMobile}
         PaperProps={{
           className:
-            "!w-[300px] !rounded-r-3xl !bg-[#111827] !text-white",
+            "!w-[290px] !max-w-[85vw] !rounded-r-3xl !bg-[#111827] !text-white",
         }}
       >
-        <div
-          className="
-            flex
-            h-full
-            flex-col
-            p-5
-          "
-        >
-          {/* DRAWER HEADER */}
-          <div
-            className="
-              mb-8
-              flex
-              items-center
-              justify-between
-            "
-          >
+        <div className="flex h-full flex-col p-5">
+          {/* HEADER */}
+
+          <div className="mb-7 flex items-center justify-between">
             <Link
               href="/"
+              onClick={closeMobile}
               className="flex items-center gap-2"
-              onClick={() => setMenuOpen(false)}
             >
-              <div
-                className="
-                  flex h-10 w-10
-                  items-center
-                  justify-center
-                  rounded-xl
-                  bg-white
-                "
-              >
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white">
                 <Image
                   src={logo}
                   alt="Go Ventures"
-                  width={38}
-                  height={38}
-                  className="h-9 w-9 object-contain"
+                  width={36}
+                  height={36}
+                  className="h-8 w-8 object-contain"
                 />
               </div>
 
               <span className="font-bold">
-                <span className="text-[#116A7F]">
-                  Go V
-                </span>
+                <span className="text-[#3ca6ba]">Go V</span>
                 entures
               </span>
             </Link>
 
             <IconButton
-              onClick={() => setMenuOpen(false)}
+              onClick={closeMobile}
               className="!text-white"
             >
               <CloseIcon />
@@ -534,162 +526,76 @@ const Navbar = ({ session }) => {
           </div>
 
           {/* USER */}
+
           {user ? (
-            <div
-              className="
-                mb-6
-                flex
-                items-center
-                gap-3
-                rounded-2xl
-                bg-white/5
-                p-4
-              "
-            >
-              {userImage ? (
-                <Image
-                  src={userImage}
-                  alt={userName}
-                  width={48}
-                  height={48}
-                  className="
-                    h-12 w-12
-                    rounded-full
-                    object-cover
-                  "
-                />
-              ) : (
-                <Avatar className="!bg-[#116A7F]">
-                  {userName.charAt(0)}
-                </Avatar>
-              )}
+            <div className="mb-6 flex items-center gap-3 rounded-2xl bg-white/5 p-4">
+              <UserAvatar size={46} />
 
               <div className="min-w-0">
-                <p
-                  className="
-                    truncate
-                    text-sm
-                    font-semibold
-                  "
-                >
+                <p className="truncate text-sm font-semibold">
                   {userName}
                 </p>
 
-                <p
-                  className="
-                    truncate
-                    text-xs
-                    text-white/40
-                  "
-                >
-                  {userInfo?.email ||
-                    session?.user?.email}
+                <p className="truncate text-xs text-white/40">
+                  {userEmail}
                 </p>
               </div>
             </div>
           ) : (
             <Link
               href="/login"
-              onClick={() => setMenuOpen(false)}
-              className="
-                mb-6
-                rounded-xl
-                bg-[#116A7F]
-                py-3
-                text-center
-                text-sm
-                font-semibold
-                text-white
-                transition
-                hover:bg-[#0D5667]
-              "
+              onClick={closeMobile}
+              className="mb-6 rounded-xl bg-[#116A7F] py-3 text-center text-sm font-semibold text-white"
             >
               Login
             </Link>
           )}
 
-          {/* MAIN LINKS */}
+          {/* MAIN NAV */}
+
           <nav className="space-y-1">
-            {NavItems.map((item) => (
+            {NAV_ITEMS.map((item) => (
               <Link
-                key={item.pathname}
-                href={item.pathname}
-                onClick={() => setMenuOpen(false)}
-                className={`
-                  block
-                  rounded-xl
-                  px-4 py-3.5
-                  text-sm
-                  transition
-                  ${
-                    isActive(item.pathname)
-                      ? "bg-[#116A7F] text-white"
-                      : "text-white/60 hover:bg-white/5 hover:text-white"
-                  }
-                `}
+                key={item.href}
+                href={item.href}
+                onClick={closeMobile}
+                className={`block rounded-xl px-4 py-3.5 text-sm transition ${
+                  isActive(item.href)
+                    ? "bg-[#116A7F] text-white"
+                    : "text-white/60 hover:bg-white/5 hover:text-white"
+                }`}
               >
-                {item.route}
+                {item.label}
               </Link>
             ))}
           </nav>
 
-          <div
-            className="
-              my-6
-              h-px
-              bg-white/10
-            "
-          />
+          <div className="my-6 h-px bg-white/10" />
 
-          {/* SECONDARY LINKS */}
-          <nav
-            className="
-              space-y-1
-              text-sm
-              text-white/50
-            "
-          >
-            {[
-              "Settings",
-              "Helps",
-              "Feedback",
-              "Bookings",
-              "Guide",
-            ].map((item) => (
+          {/* SECONDARY */}
+
+          <nav className="space-y-1">
+            {SECONDARY_ITEMS.map((item) => (
               <Link
                 key={item}
                 href="/"
-                className="
-                  block
-                  rounded-xl
-                  px-4 py-2.5
-                  hover:bg-white/5
-                  hover:text-white
-                "
+                onClick={closeMobile}
+                className="block rounded-xl px-4 py-2.5 text-sm text-white/50 transition hover:bg-white/5 hover:text-white"
               >
                 {item}
               </Link>
             ))}
           </nav>
 
-          {/* LOGOUT */}
+          {/* MOBILE LOGOUT */}
+
           {user && (
             <button
               onClick={handleLogout}
-              className="
-                mt-auto
-                flex
-                items-center
-                justify-between
-                rounded-xl
-                px-4 py-3
-                text-sm
-                text-red-400
-                hover:bg-red-500/10
-              "
+              className="mt-auto flex items-center justify-between rounded-xl px-4 py-3 text-sm text-red-400 transition hover:bg-red-500/10"
             >
-              Logout
-              <LogoutOutlined fontSize="small" />
+              <span>Logout</span>
+              <LogoutOutlinedIcon fontSize="small" />
             </button>
           )}
         </div>
