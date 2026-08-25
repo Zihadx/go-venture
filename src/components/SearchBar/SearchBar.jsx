@@ -40,7 +40,7 @@ const SearchBar = () => {
 
   return (
     <div className="px-3 flex justify-center items-center">
-      <div className="flex flex-col md:flex-row items-center justify-center bg-white shadow-md space-y-4 md:space-y-0 md:space-x-4 rounded-lg px-5 py-4 z-40 w-full md:w-auto -translate-y-28 -mt-10 md:-translate-y-10 md:-mt-0">
+      <div className="flex flex-col md:flex-row items-center justify-center bg-white shadow-md space-y-4 md:space-y-0 md:space-x-4 rounded-lg px-5 py-4 z-40 w-full md:w-auto -translate-y-28 mt-5 md:-translate-y-10 md:-mt-0">
         {/* --------Destination -------------*/}
         <div className="flex items-center w-full">
           <LocationOn className="text-orange-500" />

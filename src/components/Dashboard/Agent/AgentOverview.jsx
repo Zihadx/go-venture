@@ -3,12 +3,15 @@
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import BookOnlineOutlinedIcon from "@mui/icons-material/BookOnlineOutlined";
-import PaidOutlinedIcon from "@mui/icons-material/PaidOutlined";
-import HourglassEmptyOutlinedIcon from "@mui/icons-material/HourglassEmptyOutlined";
-import FlightTakeoffOutlinedIcon from "@mui/icons-material/FlightTakeoffOutlined";
-import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
-import CheckBoxIcon from "@mui/icons-material/CheckBox";
+import {
+  BookOnlineOutlined,
+  PaidOutlined,
+  HourglassEmptyOutlined,
+  FlightTakeoffOutlined,
+  CheckBoxOutlineBlank,
+  CheckBox,
+} from "@mui/icons-material";
+
 import { getAgentDashboard } from "@/services/dashboard.service";
 import { formatCurrency, formatDate } from "@/utils/format";
 import useCurrentUser from "@/hooks/useCurrentUser";
@@ -17,138 +20,290 @@ import StatusChip from "@/components/Dashboard/ui/StatusChip";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
+const card =
+  "rounded-2xl border border-gray-200/70 bg-white shadow-sm dark:border-white/10 dark:bg-white/[0.035] dark:shadow-none";
+
 export default function AgentOverview() {
   const { user } = useCurrentUser();
   const [data, setData] = useState(null);
   const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
-    getAgentDashboard(user?.name).then((res) => {
+    if (!user?.name) return;
+
+    getAgentDashboard(user.name).then((res) => {
       setData(res);
       setTasks(res.tasks);
     });
   }, [user?.name]);
 
-  const toggleTask = (id) => {
-    setTasks((prev) => prev.map((t) => (t.id === id ? { ...t, done: !t.done } : t)));
-    // TODO: persist to a real /api/tasks endpoint once the backend is wired.
-  };
+  const toggleTask = (id) =>
+    setTasks((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, done: !t.done } : t))
+    );
 
   if (!data) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {Array.from({ length: 4 }).map((_, i) => <div key={i} className="h-24 rounded-xl bg-gray-100 animate-pulse" />)}
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div
+            key={i}
+            className="h-24 animate-pulse rounded-2xl bg-gray-100 dark:bg-white/5"
+          />
+        ))}
       </div>
     );
   }
 
   const { kpis, series, customers, recentBookings } = data;
 
+  const stats = [
+    [BookOnlineOutlined, "My bookings", kpis.totalBookings, "#7A316F"],
+    [PaidOutlined, "My commission", formatCurrency(kpis.commission), "#2095ae"],
+    [FlightTakeoffOutlined, "Upcoming trips", kpis.upcoming, "#0EA65F"],
+    [
+      HourglassEmptyOutlined,
+      "Awaiting confirmation",
+      kpis.pending,
+      "#b59677",
+    ],
+  ];
+
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold text-gray-800">Agent dashboard — {data.agentName}</h2>
-        <p className="text-gray-500">Your bookings, commission, and customer portfolio.</p>
+    <div className="space-y-6 pb-8">
+      {/* Header */}
+      <header>
+        <p className="mb-1 text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+          Agent workspace
+        </p>
+
+        <h2 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+          Welcome back, {data.agentName}
+        </h2>
+
+        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+          Your bookings, commission, and customer portfolio.
+        </p>
+      </header>
+
+      {/* Stats */}
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4">
+        {stats.map(([Icon, label, value, accent]) => (
+          <StatCard
+            key={label}
+            icon={<Icon />}
+            label={label}
+            value={value}
+            accent={accent}
+          />
+        ))}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-        <StatCard icon={<BookOnlineOutlinedIcon />} label="My bookings" value={kpis.totalBookings} accent="#7A316F" />
-        <StatCard icon={<PaidOutlinedIcon />} label="My commission" value={formatCurrency(kpis.commission)} accent="#2095ae" />
-        <StatCard icon={<FlightTakeoffOutlinedIcon />} label="Upcoming trips" value={kpis.upcoming} accent="#0EA65F" />
-        <StatCard icon={<HourglassEmptyOutlinedIcon />} label="Awaiting confirmation" value={kpis.pending} accent="#b59677" />
-      </div>
+      {/* Chart + Tasks */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <div className={`${card} p-5 lg:col-span-2`}>
+          <div className="mb-2">
+            <h3 className="font-bold text-gray-900 dark:text-white">
+              Bookings & commission
+            </h3>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-100 p-4">
-          <h3 className="font-bold text-gray-800 mb-2">Bookings & commission — last 12 months</h3>
+            <p className="text-xs text-gray-400">
+              Performance over the last 12 months
+            </p>
+          </div>
+
+          {/* CHART — intentionally unchanged */}
           <Chart
             options={{
               chart: { toolbar: { show: false } },
               stroke: { curve: "smooth", width: [0, 3] },
               colors: ["#7A316F", "#2095ae"],
-              plotOptions: { bar: { columnWidth: "45%", borderRadius: 4 } },
+              plotOptions: {
+                bar: { columnWidth: "45%", borderRadius: 4 },
+              },
               dataLabels: { enabled: false },
-              xaxis: { categories: series.labels, labels: { style: { colors: "#9ca3af" } } },
+              xaxis: {
+                categories: series.labels,
+                labels: {
+                  style: { colors: "#9ca3af" },
+                },
+              },
               yaxis: [
-                { title: { text: "Bookings" }, labels: { style: { colors: "#9ca3af" } } },
-                { opposite: true, title: { text: "Commission ($)" }, labels: { style: { colors: "#9ca3af" } } },
+                {
+                  title: { text: "Bookings" },
+                  labels: { style: { colors: "#9ca3af" } },
+                },
+                {
+                  opposite: true,
+                  title: { text: "Commission ($)" },
+                  labels: { style: { colors: "#9ca3af" } },
+                },
               ],
               grid: { borderColor: "#f1f5f9" },
               legend: { position: "top" },
             }}
             series={[
-              { name: "Bookings", type: "column", data: series.bookingsCount },
-              { name: "Commission", type: "line", data: series.commission },
+              {
+                name: "Bookings",
+                type: "column",
+                data: series.bookingsCount,
+              },
+              {
+                name: "Commission",
+                type: "line",
+                data: series.commission,
+              },
             ]}
             type="line"
             height={300}
           />
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
-          <h3 className="font-bold text-gray-800 mb-3">My tasks</h3>
-          <div className="space-y-2">
-            {tasks.length === 0 && <p className="text-sm text-gray-400">No open tasks — nice work.</p>}
-            {tasks.map((t) => (
+        {/* Tasks */}
+        <section className={`${card} p-5`}>
+          <div className="mb-4">
+            <h3 className="font-bold text-gray-900 dark:text-white">
+              My tasks
+            </h3>
+            <p className="text-xs text-gray-400">
+              Stay on top of your priorities
+            </p>
+          </div>
+
+          <div className="space-y-1">
+            {!tasks.length && (
+              <p className="py-6 text-center text-sm text-gray-400">
+                No open tasks — nice work.
+              </p>
+            )}
+
+            {tasks.map((task) => (
               <button
-                key={t.id}
-                onClick={() => toggleTask(t.id)}
-                className="flex items-start gap-2 w-full text-left p-2 rounded-lg hover:bg-gray-50"
+                key={task.id}
+                onClick={() => toggleTask(task.id)}
+                className="flex w-full items-start gap-3 rounded-xl p-3 text-left transition hover:bg-gray-50 dark:hover:bg-white/5"
               >
-                {t.done ? (
-                  <CheckBoxIcon sx={{ fontSize: 20, color: "#0EA65F" }} />
+                {task.done ? (
+                  <CheckBox
+                    sx={{ fontSize: 20, color: "#0EA65F" }}
+                  />
                 ) : (
-                  <CheckBoxOutlineBlankIcon sx={{ fontSize: 20, color: "#d1d5db" }} />
+                  <CheckBoxOutlineBlank
+                    sx={{ fontSize: 20, color: "#d1d5db" }}
+                  />
                 )}
+
                 <div className="min-w-0">
-                  <p className={`text-sm ${t.done ? "line-through text-gray-400" : "text-gray-700"}`}>{t.title}</p>
-                  <p className="text-xs text-gray-400">Due in {t.dueInDays}d</p>
+                  <p
+                    className={`text-sm ${
+                      task.done
+                        ? "text-gray-400 line-through"
+                        : "text-gray-700 dark:text-gray-200"
+                    }`}
+                  >
+                    {task.title}
+                  </p>
+
+                  <p className="mt-1 text-xs text-gray-400">
+                    Due in {task.dueInDays}d
+                  </p>
                 </div>
               </button>
             ))}
           </div>
-        </div>
+        </section>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
-          <h3 className="font-bold text-gray-800 mb-3">My customers</h3>
-          <div className="space-y-3 max-h-72 overflow-y-auto">
-            {customers.map((c) => (
-              <div key={c.email} className="flex items-center justify-between border-b last:border-0 pb-2 last:pb-0">
-                <div>
-                  <p className="text-sm font-semibold text-gray-700">{c.name}</p>
-                  <p className="text-xs text-gray-400">{c.email}</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-sm font-medium text-gray-700">{formatCurrency(c.spend)}</p>
-                  <p className="text-xs text-gray-400">{c.bookings} booking{c.bookings > 1 ? "s" : ""}</p>
-                </div>
-              </div>
-            ))}
+      {/* Customers + Bookings */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        {/* Customers */}
+        <section className={`${card} p-5`}>
+          <div className="mb-4">
+            <h3 className="font-bold text-gray-900 dark:text-white">
+              My customers
+            </h3>
+            <p className="text-xs text-gray-400">
+              Your customer portfolio
+            </p>
           </div>
-        </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="font-bold text-gray-800">Recent bookings</h3>
-            <Link href="/dashboard/admin/bookings" className="text-sm text-primary font-semibold hover:underline">View all</Link>
-          </div>
-          <div className="space-y-3">
-            {recentBookings.map((b) => (
-              <div key={b.id} className="flex items-center justify-between border-b last:border-0 pb-2 last:pb-0">
-                <div>
-                  <p className="text-sm font-semibold text-gray-700">{b.destination}</p>
-                  <p className="text-xs text-gray-400">{b.customer.name} · {formatDate(b.travelDate)}</p>
+          <div className="max-h-72 space-y-1 overflow-y-auto">
+            {customers.map((customer) => (
+              <div
+                key={customer.email}
+                className="flex items-center justify-between rounded-xl p-3 transition hover:bg-gray-50 dark:hover:bg-white/5"
+              >
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-semibold text-gray-700 dark:text-gray-200">
+                    {customer.name}
+                  </p>
+                  <p className="truncate text-xs text-gray-400">
+                    {customer.email}
+                  </p>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-gray-600">{formatCurrency(b.amount)}</span>
-                  <StatusChip status={b.status} />
+
+                <div className="ml-4 text-right">
+                  <p className="text-sm font-semibold text-gray-700 dark:text-gray-200">
+                    {formatCurrency(customer.spend)}
+                  </p>
+                  <p className="text-xs text-gray-400">
+                    {customer.bookings} booking
+                    {customer.bookings > 1 ? "s" : ""}
+                  </p>
                 </div>
               </div>
             ))}
           </div>
-        </div>
+        </section>
+
+        {/* Recent bookings */}
+        <section className={`${card} p-5`}>
+          <div className="mb-4 flex items-center justify-between">
+            <div>
+              <h3 className="font-bold text-gray-900 dark:text-white">
+                Recent bookings
+              </h3>
+              <p className="text-xs text-gray-400">
+                Latest customer activity
+              </p>
+            </div>
+
+            <Link
+              href="/dashboard/admin/bookings"
+              className="text-sm font-semibold text-primary transition hover:opacity-70"
+            >
+              View all
+            </Link>
+          </div>
+
+          <div className="space-y-1">
+            {recentBookings.map((booking) => (
+              <div
+                key={booking.id}
+                className="flex items-center justify-between rounded-xl p-3 transition hover:bg-gray-50 dark:hover:bg-white/5"
+              >
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-semibold text-gray-700 dark:text-gray-200">
+                    {booking.destination}
+                  </p>
+
+                  <p className="truncate text-xs text-gray-400">
+                    {booking.customer.name} ·{" "}
+                    {formatDate(booking.travelDate)}
+                  </p>
+                </div>
+
+                <div className="ml-4 flex items-center gap-3">
+                  <span className="hidden text-sm font-medium text-gray-600 dark:text-gray-300 sm:block">
+                    {formatCurrency(booking.amount)}
+                  </span>
+
+                  <StatusChip status={booking.status} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
       </div>
     </div>
   );

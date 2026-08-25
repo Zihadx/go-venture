@@ -197,7 +197,7 @@ const Navbar = ({ session }) => {
             }}
             className="fixed inset-x-0 top-0 z-50"
           >
-            <div >
+            <div>
               <motion.div
                 animate={{
                   backgroundColor: scrolled
@@ -211,11 +211,11 @@ const Navbar = ({ session }) => {
                     : "0 10px 35px rgba(0,0,0,.06)",
                 }}
                 transition={{ duration: 0.25 }}
-                className="relative  overflow-visible border backdrop-blur-xl "
+                className="relative overflow-visible border backdrop-blur-xl"
               >
                 <Toolbar
                   disableGutters
-                  className="h-16 px-3 sm:px-5"
+                  className="h-16 custom-container"
                 >
                   {/* MOBILE MENU */}
 

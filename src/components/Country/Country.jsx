@@ -1,74 +1,125 @@
 "use client";
 
-
-import CountyBigCard from "@/components/ui/CardDesign/CountryCard/CountyBigCard";
-
 import { useState } from "react";
+import CountyBigCard from "@/components/ui/CardDesign/CountryCard/CountyBigCard";
 import CountrySmallCard from "../ui/CardDesign/CountryCard/CountrySmallCard";
 import CountryButton from "./countryButton";
-
 
 const CountryPage = ({ countries }) => {
   const [showAll, setShowAll] = useState(false);
 
-  return (
-    <div className="mt-20 custom-container">
-      {/* Content */}
-      <div className="w-full md:w-1/2 text-center mx-auto space-y-4">
-        <h1 className="text-4xl font-semibold">Global Escapes</h1>
-        <p>
-          Explore top destinations worldwide with Go-Venture&apos;s curated
-          selection by country. From iconic landmarks to hidden gems, find your
-          next adventure here.
-        </p>
-      </div>
+  const countryList = Array.isArray(countries?.data)
+    ? countries.data
+    : [];
 
-      {/*----------- Country cards----------- */}
-      <div className="md:flex justify-between gap-6 mt-10">
-        {/* ---------Big card--------- */}
-        <div className="w-full md:w-2/5 mb-6 md:mb-0">
-          {countries.data.slice(0, 1).map((country) => (
-            <CountyBigCard key={country._id} country={country} />
-          ))}
+  if (!countryList.length) return null;
+
+  const featuredCountry = countryList[0];
+  const smallCountries = countryList.slice(1, 5);
+  const remainingCountries = countryList.slice(5);
+
+  return (
+    <section className="mt-20 md:mt-28 lg:mt-32">
+      <div className="custom-container">
+
+        {/* =========================
+            SECTION INTRO
+        ========================== */}
+
+        <div className="mx-auto max-w-3xl text-center">
+
+          <div className="mb-4 flex items-center justify-center gap-3">
+            <span className="h-px w-8 bg-primary/40" />
+
+            <span className="text-xs font-medium uppercase tracking-[0.25em] text-gray-500">
+              Explore the world
+            </span>
+
+            <span className="h-px w-8 bg-primary/40" />
+          </div>
+
+          <h2 className="text-3xl font-semibold tracking-tight text-gray-900 sm:text-4xl md:text-5xl">
+            Global Escapes
+          </h2>
+
+          <p className="mx-auto mt-4 max-w-2xl text-sm leading-6 text-gray-500 md:text-base md:leading-7">
+            Explore unforgettable destinations around the world.
+            Discover iconic places, hidden gems, and experiences
+            waiting to become your next adventure.
+          </p>
+
         </div>
 
-        {/* --------Small cards --------------*/}
-        <div className="w-full md:w-3/5 grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* -----------First three small cards ------------*/}
-          {countries.data.slice(1, showAll ? 5 : 4).map((country, index) => (
-            <CountrySmallCard key={country._id} country={country} />
-          ))}
+        {/* =========================
+            FEATURED DESTINATIONS
+        ========================== */}
 
-          <>
-            {/* ----------"See more" button -------*/}
-            {!showAll && countries.data.length > 4 && (
-              <div className="relative">
+        <div className="mt-10 grid gap-6 lg:mt-14 lg:grid-cols-5">
 
-                <div
-                  className="absolute inset-0 bg-cover bg-center opacity-25"
-                  style={{
-                    backgroundImage: "url('https://i.ibb.co/98wyXBv/map.png')",
-                  }}
-                ></div>
+          {/* Featured */}
 
-                <div className="relative z-10 flex items-center justify-center h-full">
-                  <CountryButton showAll={showAll} setShowAll={setShowAll} />
+          <div className="min-w-0 lg:col-span-2">
+            <CountyBigCard country={featuredCountry} />
+          </div>
+
+          {/* Small cards */}
+
+          <div className="grid min-w-0 grid-cols-1 gap-6 sm:grid-cols-2 lg:col-span-3">
+
+            {smallCountries.map((country) => (
+              <div
+                key={country._id}
+                className="min-w-0"
+              >
+                <CountrySmallCard country={country} />
+              </div>
+            ))}
+
+            {/* Explore more */}
+
+            {!showAll && remainingCountries.length > 0 && (
+              <div className="">
+                
+                <div className="text-center">
+
+                  
+
+                  <div className="mt-4">
+                    <CountryButton
+                      showAll={showAll}
+                      setShowAll={setShowAll}
+                    />
+                  </div>
+
                 </div>
+
               </div>
             )}
-          </>
-        </div>
-      </div>
 
-      {/*------------ Show all countries ------------*/}
-      {showAll && (
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
-          {countries.data.slice(5).map((country) => (
-            <CountrySmallCard key={country._id} country={country} />
-          ))}
+          </div>
         </div>
-      )}
-    </div>
+
+        {/* =========================
+            ALL COUNTRIES
+        ========================== */}
+
+        {showAll && remainingCountries.length > 0 && (
+          <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+
+            {remainingCountries.map((country) => (
+              <div
+                key={country._id}
+                className="min-w-0"
+              >
+                <CountrySmallCard country={country} />
+              </div>
+            ))}
+
+          </div>
+        )}
+
+      </div>
+    </section>
   );
 };
 

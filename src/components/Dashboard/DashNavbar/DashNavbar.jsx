@@ -2,13 +2,7 @@
 
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import {
-  IconButton,
-  Menu,
-  MenuItem,
-  Badge,
-  Divider,
-} from "@mui/material";
+import { IconButton, Menu, MenuItem, Badge, Divider } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import { findModuleByPath, ROLE_LABELS, ROLE_COLORS } from "@/config/roles";
@@ -67,7 +61,6 @@ const DashNavbar = ({ toggleSidebar, toggleDrawer }) => {
         <div className="flex w-full items-center justify-between px-1 sm:px-2">
           {/* LEFT SIDE */}
           <div className="flex min-w-0 items-center gap-2 sm:gap-4">
-            
             {/* ONE MENU BUTTON FOR BOTH DESKTOP & MOBILE */}
             <IconButton
               onClick={() => {
@@ -103,6 +96,14 @@ const DashNavbar = ({ toggleSidebar, toggleDrawer }) => {
               </p>
             </div>
           </div>
+        <div className="hidden sm:block rounded-xl border border-gray-200/50 bg-white/50 px-4 py-2 text-sm text-gray-700 shadow-sm backdrop-blur-xl dark:border-white/[0.12] dark:bg-white/[0.07] dark:text-gray-200">
+  <p>
+    Everything is accessible for preview{" "}
+    <span className="ml-2 rounded-full border border-green-500/20 bg-green-500/10 px-2 py-0.5 text-xs font-medium text-green-700 backdrop-blur-md dark:border-emerald-300/20 dark:bg-emerald-400/10 dark:text-emerald-300">
+      !RBAC
+    </span>
+  </p>
+</div>
 
           {/* RIGHT SIDE */}
           <div className="flex items-center gap-1 sm:gap-2 md:gap-3">
@@ -119,10 +120,7 @@ const DashNavbar = ({ toggleSidebar, toggleDrawer }) => {
               onClick={(e) => setNotifAnchor(e.currentTarget)}
               aria-label="Notifications"
             >
-              <Badge
-                badgeContent={NOTIFICATIONS.length}
-                color="error"
-              >
+              <Badge badgeContent={NOTIFICATIONS.length} color="error">
                 <NotificationsNoneOutlinedIcon />
               </Badge>
             </IconButton>
@@ -156,9 +154,7 @@ const DashNavbar = ({ toggleSidebar, toggleDrawer }) => {
                       {n.text}
                     </p>
 
-                    <p className="text-xs text-gray-400">
-                      {n.time}
-                    </p>
+                    <p className="text-xs text-gray-400">{n.time}</p>
                   </div>
                 </MenuItem>
               ))}
@@ -198,9 +194,7 @@ const DashNavbar = ({ toggleSidebar, toggleDrawer }) => {
                   backgroundColor: user
                     ? ROLE_COLORS[user.role]?.bg
                     : "#e5e7eb",
-                  color: user
-                    ? ROLE_COLORS[user.role]?.fg
-                    : "#374151",
+                  color: user ? ROLE_COLORS[user.role]?.fg : "#374151",
                 }}
               >
                 {initials}
@@ -229,10 +223,7 @@ const DashNavbar = ({ toggleSidebar, toggleDrawer }) => {
                 },
               }}
             >
-              <MenuItem
-                disabled
-                className="!opacity-100"
-              >
+              <MenuItem disabled className="!opacity-100">
                 <div className="min-w-0">
                   <p className="truncate text-sm font-semibold text-gray-700 dark:text-gray-200">
                     {user?.email}
@@ -246,17 +237,11 @@ const DashNavbar = ({ toggleSidebar, toggleDrawer }) => {
 
               <Divider />
 
-              <MenuItem
-                onClick={() => setUserAnchor(null)}
-              >
+              <MenuItem onClick={() => setUserAnchor(null)}>
                 Account settings
               </MenuItem>
 
-              <MenuItem
-                onClick={() => setUserAnchor(null)}
-              >
-                Sign out
-              </MenuItem>
+              <MenuItem onClick={() => setUserAnchor(null)}>Sign out</MenuItem>
             </Menu>
           </div>
         </div>

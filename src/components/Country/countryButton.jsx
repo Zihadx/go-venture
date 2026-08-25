@@ -9,7 +9,7 @@ const CountryButton = ({ showAll, setShowAll }) => {
     <div className="flex justify-center items-center w-full h-full">
       <button
         onClick={handleSeeMoreClick}
-        className="w-full lg:w-1/2 md:h-20 button-primary text-xl"
+        className="button-primary text-sm"
       >
         See more
       </button>
