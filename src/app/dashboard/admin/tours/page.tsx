@@ -111,7 +111,7 @@ export default function PackagesManagementPage() {
         onPageSizeChange={(size) => { setPageSize(size); setPage(0); }}
         emptyMessage="No packages match these filters."
         toolbar={
-          <>
+          <div className="flex w-full flex-col gap-3 sm:grid sm:grid-cols-2 lg:flex lg:flex-row lg:items-center">
             <TextField
               size="small"
               placeholder="Search packages…"
@@ -126,7 +126,7 @@ export default function PackagesManagementPage() {
             <button onClick={openCreate} className="ml-auto button-primary text-sm py-2 px-4 flex items-center gap-1">
               <AddOutlinedIcon fontSize="small" /> New package
             </button>
-          </>
+          </div>
         }
       />
 

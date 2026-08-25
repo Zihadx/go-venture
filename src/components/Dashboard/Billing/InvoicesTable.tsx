@@ -71,7 +71,7 @@ export default function InvoicesTable({ onSelect }: Props) {
       onRowClick={onSelect}
       emptyMessage="No invoices match these filters."
       toolbar={
-        <>
+        <div className="flex w-full flex-col gap-3 sm:grid sm:grid-cols-2 lg:flex lg:flex-row lg:items-center">
           <TextField
             size="small"
             placeholder="Search invoice, booking, customer…"
@@ -83,7 +83,7 @@ export default function InvoicesTable({ onSelect }: Props) {
           <Select size="small" value={status} onChange={(e) => { setPage(0); setStatus(e.target.value); }} className="w-full md:w-44">
             {STATUS_FILTERS.map((s) => <MenuItem key={s} value={s} className="capitalize">{s === "all" ? "All statuses" : s}</MenuItem>)}
           </Select>
-        </>
+        </div>
       }
     />
   );

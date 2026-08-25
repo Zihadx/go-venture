@@ -123,7 +123,7 @@ export default function UsersManagementPage() {
         onPageChange={setPage}
         onPageSizeChange={(size) => { setPageSize(size); setPage(0); }}
         toolbar={
-          <>
+          <div className="flex w-full flex-col gap-3 sm:grid sm:grid-cols-2 lg:flex lg:flex-row lg:items-center">
             <TextField
               size="small"
               placeholder="Search name or email…"
@@ -144,7 +144,7 @@ export default function UsersManagementPage() {
             >
               Export CSV
             </button>
-          </>
+          </div>
         }
       />
 
