@@ -1,5 +1,8 @@
-"use client"
-import { useState } from "react";
+"use client";
+
+import React, { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import AddRoundedIcon from "@mui/icons-material/AddRounded";
 
 const FAQsection = () => {
   const [activeIndex, setActiveIndex] = useState(null);
@@ -28,39 +31,104 @@ const FAQsection = () => {
   ];
 
   const toggleFAQ = (index) => {
-    setActiveIndex(activeIndex === index ? null : index);
+    setActiveIndex((current) => (current === index ? null : index));
   };
 
   return (
-    <div className="mt-10">
-      <h2 className="text-2xl font-bold mb-4">Questions & Answers:</h2>
-      <div className="space-y-4">
-        {faqs.map((faq, index) => (
-          <div key={index} className="border rounded-md">
-            <button
-              className={`w-full text-left p-4 ${
-                activeIndex === index ? "bg-gray-100" : "bg-white"
-              } flex justify-between items-center`}
-              onClick={() => toggleFAQ(index)}
+    <section className="mt-20 pt-16">
+     
+      {/* FAQ LIST */}
+      <div className="border-t border-[#111827]/10">
+        {faqs.map((faq, index) => {
+          const isOpen = activeIndex === index;
+
+          return (
+            <div
+              key={index}
+              className="border-b border-[#111827]/10"
             >
-              <span
-                className={`font-medium ${
-                  activeIndex === index ? "text-red-500" : "text-black"
-                }`}
+              <button
+                type="button"
+                onClick={() => toggleFAQ(index)}
+                aria-expanded={isOpen}
+                className="group flex w-full items-center justify-between gap-6 py-6 text-left md:py-7"
               >
-                {faq.question}
-              </span>
-              <span className="text-xl">
-                {activeIndex === index ? "▲" : "▼"}
-              </span>
-            </button>
-            {activeIndex === index && (
-              <div className="p-4 bg-gray-50 text-gray-600">{faq.answer}</div>
-            )}
-          </div>
-        ))}
+                <div className="flex items-start gap-5">
+                  {/* Small index */}
+                  <span
+                    className={`mt-1 text-[10px] font-semibold tracking-[0.2em] transition-colors duration-300 ${
+                      isOpen
+                        ? "text-[#2095AE]"
+                        : "text-[#111827]/25"
+                    }`}
+                  >
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+
+                  {/* Question */}
+                  <span
+                    className={`text-base font-medium transition-colors duration-300 md:text-lg ${
+                      isOpen
+                        ? "text-[#2095AE]"
+                        : "text-[#111827] group-hover:text-[#2095AE]"
+                    }`}
+                  >
+                    {faq.question}
+                  </span>
+                </div>
+
+                {/* Icon */}
+                <span
+                  className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border transition-all duration-300 ${
+                    isOpen
+                      ? "rotate-45 border-[#2095AE] bg-[#2095AE] text-white"
+                      : "border-[#111827]/15 text-[#111827]/50 group-hover:border-[#2095AE] group-hover:text-[#2095AE]"
+                  }`}
+                >
+                  <AddRoundedIcon sx={{ fontSize: 19 }} />
+                </span>
+              </button>
+
+              {/* ANSWER */}
+              <AnimatePresence initial={false}>
+                {isOpen && (
+                  <motion.div
+                    initial={{
+                      height: 0,
+                      opacity: 0,
+                    }}
+                    animate={{
+                      height: "auto",
+                      opacity: 1,
+                    }}
+                    exit={{
+                      height: 0,
+                      opacity: 0,
+                    }}
+                    transition={{
+                      height: {
+                        duration: 0.35,
+                        ease: [0.22, 1, 0.36, 1],
+                      },
+                      opacity: {
+                        duration: 0.2,
+                      },
+                    }}
+                    className="overflow-hidden"
+                  >
+                    <div className="pb-7 pl-[3.25rem] pr-12 md:pl-[3.5rem] md:pr-16">
+                      <p className="max-w-2xl text-sm leading-7 text-[#111827]/55 md:text-[15px]">
+                        {faq.answer}
+                      </p>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          );
+        })}
       </div>
-    </div>
+    </section>
   );
 };
 

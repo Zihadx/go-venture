@@ -270,6 +270,7 @@ const SearchBar = () => {
             ====================================================== */}
             <div className="flex items-center p-2 md:p-3">
               <Button
+              href="/all-destinations"
                 type="submit"
                 disableElevation
                 startIcon={
