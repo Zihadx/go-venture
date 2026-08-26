@@ -1,31 +1,120 @@
-import React from 'react';
-import SpecialOfferCard from '../ui/SpecialOfferCard/SpecialOfferCard';
+"use client";
 
-const SpecialOffer = ({specialOfferData, destinations}) => {
-    return (
-        <div className="custom-container mt-20">
-           <div className="w-full md:w-1/2 text-center mx-auto space-y-4">
-           <h1 className="text-4xl font-semibold">Epic Special Offer</h1>
-            <p>Unlock incredible discounts on your favorite products. Don&apos;t miss out on these limited-time deals!</p>
-           </div>
+import React from "react";
+import { motion } from "framer-motion";
+import SpecialOfferCard from "../ui/SpecialOfferCard/SpecialOfferCard";
 
+const SpecialOffer = ({ specialOfferData, destinations }) => {
+  const ease = [0.22, 1, 0.36, 1];
 
-           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10">
+  const headerVariants = {
+    hidden: {
+      opacity: 0,
+      y: 30,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.75,
+        ease,
+      },
+    },
+  };
+
+  const cardsContainer = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.14,
+        delayChildren: 0.1,
+      },
+    },
+  };
+
+  const cardVariants = {
+    hidden: {
+      opacity: 0,
+      y: 45,
+      scale: 0.97,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        duration: 0.7,
+        ease,
+      },
+    },
+  };
+
+  return (
+    <section className="custom-container mt-20 md:mt-28">
+      {/* Header */}
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{
+          once: true,
+          amount: 0.35,
+        }}
+        className="mx-auto w-full text-center md:w-1/2"
+      >
+        <motion.div variants={headerVariants}>
+          <h2 className="text-4xl font-semibold tracking-tight text-[#10213a] md:text-5xl">
+            Epic Special Offer
+          </h2>
+        </motion.div>
+
+        <motion.p
+          variants={headerVariants}
+          className="mt-4 text-sm leading-7 text-gray-500 md:text-base"
+        >
+          Unlock incredible discounts on your favorite products. Don&apos;t
+          miss out on these limited-time deals!
+        </motion.p>
+      </motion.div>
+
+      {/* Offers */}
+      <motion.div
+        variants={cardsContainer}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{
+          once: true,
+          amount: 0.15,
+        }}
+        className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-2"
+      >
         {specialOfferData.map((specialOffer) => {
           const destination = destinations.data.find(
             (dest) => dest._id === specialOffer.destinationId
           );
+
           return (
-            <SpecialOfferCard
+            <motion.div
               key={specialOffer._id}
-              specialOffer={specialOffer}
-              destination={destination}
-            />
+              variants={cardVariants}
+              whileHover={{
+                y: -6,
+                transition: {
+                  duration: 0.3,
+                  ease: "easeOut",
+                },
+              }}
+              className="will-change-transform"
+            >
+              <SpecialOfferCard
+                specialOffer={specialOffer}
+                destination={destination}
+              />
+            </motion.div>
           );
         })}
-      </div>
-        </div>
-    );
+      </motion.div>
+    </section>
+  );
 };
 
 export default SpecialOffer;

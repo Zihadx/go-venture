@@ -1,13 +1,6 @@
-
 "use client";
 
-import {
-  Box,
-  Container,
-  IconButton,
-  Divider,
-  Tooltip,
-} from "@mui/material";
+import { Box, Container, IconButton, Divider, Tooltip } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -27,12 +20,7 @@ import {
   EmailOutlined,
 } from "@mui/icons-material";
 
-import {
-  FaPaypal,
-  FaStripe,
-  FaCcMastercard,
-  FaCcVisa,
-} from "react-icons/fa";
+import { FaPaypal, FaStripe, FaCcMastercard, FaCcVisa } from "react-icons/fa";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -116,10 +104,6 @@ const Footer = () => {
 
       <div className="pointer-events-none absolute inset-0">
         {/* Travel image */}
-        <div
-          className="absolute inset-0 bg-cover bg-center opacity-[0.13]"
-          
-        />
 
         {/* Dark overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#061824]/85 via-[#061824]/95 to-[#061824]" />
@@ -133,29 +117,27 @@ const Footer = () => {
         <div className="absolute left-1/2 top-[55%] h-40 w-40 -translate-x-1/2 rounded-full bg-cyan-400/[0.035] blur-3xl" />
       </div>
 
-      <Container
-        maxWidth={false}
-        className="custom-container relative z-10"
-      >
+      <Container maxWidth={false} className="custom-container relative z-10">
         {/* =========================================================
             PREMIUM CTA
         ========================================================= */}
 
         <section
           className="
+         
             relative
             overflow-hidden
             rounded-b-[32px]
             border
             border-[#2095AE]/20
             bg-[#2095AE]/[0.055]
-            px-6
+            
             py-10
             shadow-[0_0_80px_rgba(32,149,174,0.08)]
             backdrop-blur-xl
-            sm:px-10
-            md:px-14
+          
             md:py-14
+            custom-container
           "
         >
           {/* Decorative circles */}
@@ -169,7 +151,7 @@ const Footer = () => {
           <div className="relative z-10 flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
             {/* CTA Content */}
 
-            <div className="max-w-2xl">
+            <div className="max-w-2xl ">
               <div className="mb-4 flex items-center gap-3">
                 <span className="h-px w-10 bg-[#2095AE]" />
 
@@ -190,8 +172,8 @@ const Footer = () => {
 
               <p className="mt-5 max-w-xl text-sm leading-7 text-white/55 sm:text-base">
                 Discover extraordinary destinations, thoughtfully designed
-                journeys, and unforgettable experiences made around the way
-                you want to travel.
+                journeys, and unforgettable experiences made around the way you
+                want to travel.
               </p>
             </div>
 
@@ -222,7 +204,6 @@ const Footer = () => {
               "
             >
               Explore Destinations
-
               <ArrowForwardRounded
                 fontSize="small"
                 className="transition-transform duration-300 group-hover:translate-x-1"
@@ -245,6 +226,7 @@ const Footer = () => {
             lg:grid-cols-[1.5fr_1fr_1fr_1.25fr]
             lg:gap-10
             lg:py-20
+             custom-container
           "
         >
           {/* =====================================================
@@ -252,10 +234,7 @@ const Footer = () => {
           ===================================================== */}
 
           <div>
-            <Link
-              href="/"
-              className="group inline-flex items-center gap-3"
-            >
+            <Link href="/" className="group inline-flex items-center gap-3">
               <div
                 className="
                   relative
@@ -375,11 +354,7 @@ const Footer = () => {
 
             <div className="mt-8 flex items-center gap-2">
               {socialLinks.map((social) => (
-                <Tooltip
-                  key={social.label}
-                  title={social.label}
-                  arrow
-                >
+                <Tooltip key={social.label} title={social.label} arrow>
                   <IconButton
                     component="a"
                     href={social.href}
@@ -397,8 +372,7 @@ const Footer = () => {
                         background: "#2095AE",
                         borderColor: "#2095AE",
                         transform: "translateY(-4px) scale(1.04)",
-                        boxShadow:
-                          "0 10px 25px rgba(32,149,174,0.25)",
+                        boxShadow: "0 10px 25px rgba(32,149,174,0.25)",
                       },
                     }}
                   >
@@ -418,9 +392,7 @@ const Footer = () => {
               Explore
             </p>
 
-            <h3 className="mb-7 text-xl font-medium text-white">
-              Quick Links
-            </h3>
+            <h3 className="mb-7 text-xl font-medium text-white">Quick Links</h3>
 
             <ul className="space-y-4">
               {quickLinks.map((link) => (
@@ -634,6 +606,7 @@ const Footer = () => {
             md:flex-row
             md:items-center
             md:justify-between
+             custom-container
           "
         >
           {/* Copyright / Legal */}
@@ -677,11 +650,7 @@ const Footer = () => {
             </span>
 
             {paymentMethods.map((payment) => (
-              <Tooltip
-                key={payment.label}
-                title={payment.label}
-                arrow
-              >
+              <Tooltip key={payment.label} title={payment.label} arrow>
                 <div
                   className="
                     flex
@@ -749,4 +718,3 @@ const Footer = () => {
 };
 
 export default Footer;
-
