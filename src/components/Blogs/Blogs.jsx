@@ -1,142 +1,173 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
-import BlogsCard from "../ui/CardDesign/BlogsCard/BlogsCard";
+import { motion } from "framer-motion";
 import { ArrowForwardRounded } from "@mui/icons-material";
+import BlogsCard from "../ui/CardDesign/BlogsCard/BlogsCard";
 
 const BlogsPage = ({ blogs }) => {
   const blogList = blogs?.data?.slice(0, 3) || [];
   const totalBlogs = blogs?.data?.length || 0;
 
+  const ease = [0.22, 1, 0.36, 1];
+
+  const containerVariants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.14,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: {
+      opacity: 0,
+      y: 40,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.8,
+        ease,
+      },
+    },
+  };
+
   return (
-    <section className="relative mt-28 overflow-hidden py-10 md:mt-36">
-      <div className="custom-container">
+    <section className="relative overflow-hidden bg-[#f7f8f6] py-24 md:py-32">
+      {/* Background atmosphere */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 overflow-hidden"
+      >
+        <div className="absolute -right-52 -top-40 h-[620px] w-[620px] rounded-full bg-[#2095AE]/[0.035] blur-3xl" />
 
-        {/* =========================
-            SECTION HEADER
-        ========================== */}
-        <div className="mb-12 flex flex-col gap-7 md:flex-row md:items-end md:justify-between">
-          <div className="max-w-2xl">
+        <div className="absolute -bottom-60 -left-40 h-[500px] w-[500px] rounded-full bg-[#2095AE]/[0.025] blur-3xl" />
+      </div>
+
+      <div className="custom-container relative z-10">
+        {/* =====================================================
+            HEADER
+        ====================================================== */}
+        <div className="flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
+          <motion.div
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.85, ease }}
+            className="max-w-3xl"
+          >
             {/* Eyebrow */}
-            <div className="mb-5 flex items-center gap-3">
-              <span className="h-px w-10 bg-[#2095ae]" />
-
-              <span className="text-xs font-semibold uppercase tracking-[0.28em] text-[#2095ae]">
-                Travel Journal
-              </span>
-            </div>
+            <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#2095AE]">
+              Travel Journal
+            </span>
 
             {/* Heading */}
-            <h2 className="text-4xl font-medium leading-[1.1] tracking-tight text-[#10213a] md:text-5xl lg:text-6xl">
-              Stories that
-              <span className="font-serif italic text-[#2095ae]">
-                {" "}
-                inspire
-              </span>
+            <h2 className="mt-5 text-[clamp(3rem,6vw,6rem)] font-medium leading-[0.92] tracking-[-0.065em] text-[#111827]">
+              Stories worth
               <br />
-              your next journey.
+              <span className="font-serif italic text-[#2095AE]">
+                travelling for.
+              </span>
             </h2>
 
             {/* Description */}
-            <p className="mt-5 max-w-xl text-sm leading-7 text-gray-500 md:text-base">
-              Explore inspiring destinations, thoughtful travel guides, and
-              stories designed to help you discover more of the world.
+            <p className="mt-7 max-w-2xl text-[15px] leading-[1.85] text-[#111827]/55 sm:text-base">
+              Destination guides, travel inspiration and stories from the
+              places that make the world worth exploring.
             </p>
-          </div>
+          </motion.div>
 
           {/* Desktop CTA */}
           {totalBlogs > 0 && (
-            <Link
-              href="/all-blogs"
-              className="group hidden items-center gap-3 text-sm font-semibold text-[#10213a] transition-all duration-300 md:flex"
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, ease }}
+              className="hidden lg:block"
             >
-              <span className="border-b border-[#10213a]/30 pb-1 transition-colors duration-300 group-hover:border-[#2095ae] group-hover:text-[#2095ae]">
-                Explore all stories
-              </span>
+              <Link
+                href="/all-blogs"
+                className="group inline-flex items-center gap-4"
+              >
+                <span className="text-sm font-semibold text-[#111827] transition-colors duration-300 group-hover:text-[#2095AE]">
+                  Explore all stories
+                </span>
 
-              <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[#10213a]/15 transition-all duration-300 group-hover:border-[#2095ae] group-hover:bg-[#2095ae] group-hover:text-white">
-                <ArrowForwardRounded
-                  fontSize="small"
-                  className="transition-transform duration-300 group-hover:translate-x-0.5"
-                />
-              </span>
-            </Link>
+                <span className="flex h-11 w-11 items-center justify-center rounded-full border border-[#111827]/15 transition-all duration-300 group-hover:border-[#2095AE] group-hover:bg-[#2095AE]">
+                  <ArrowForwardRounded
+                    sx={{ fontSize: 18 }}
+                    className="text-[#111827] transition-all duration-300 group-hover:translate-x-1 group-hover:text-white"
+                  />
+                </span>
+              </Link>
+            </motion.div>
           )}
         </div>
 
-        {/* =========================
-            BLOG GRID
-        ========================== */}
+        {/* =====================================================
+            BLOG COLLECTION
+        ====================================================== */}
         {blogList.length > 0 ? (
-          <div className="grid grid-cols-1 gap-7 md:grid-cols-2 lg:grid-cols-3">
-            {blogList.map((blog, index) => (
-              <div
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{
+              once: true,
+              amount: 0.1,
+            }}
+            className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"
+          >
+            {blogList.map((blog) => (
+              <motion.div
                 key={blog._id}
-                className="group relative"
+                variants={itemVariants}
+                className="h-full"
               >
-                {/* Editorial Meta */}
-                <div className="mb-4 flex items-center justify-between px-1">
-                  <span className="text-[11px] font-semibold tracking-[0.2em] text-gray-400">
-                    0{index + 1}
-                  </span>
-
-                  <span className="mx-4 h-px flex-1 bg-gray-200/70" />
-
-                  <span className="text-[10px] uppercase tracking-[0.18em] text-gray-400">
-                    Journal
-                  </span>
-                </div>
-
-                {/* Card */}
-                <div className="overflow-hidden  transition-all duration-500 group-hover:-translate-y-1 group-hover:shadow-lg">
-                  <BlogsCard blog={blog} />
-                </div>
-              </div>
+                <BlogsCard blog={blog} />
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         ) : (
-          /* Empty State */
-          <div className="rounded-[24px] border border-dashed border-gray-200 py-20 text-center">
-            <p className="text-sm text-gray-500">
+          <div className="mt-16 border border-dashed border-[#111827]/15 py-24 text-center">
+            <span className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#2095AE]">
+              Travel Journal
+            </span>
+
+            <p className="mt-4 text-sm text-[#111827]/45">
               No travel stories available yet.
             </p>
           </div>
         )}
 
-        {/* =========================
-            MOBILE CTA
-        ========================== */}
+        {/* =====================================================
+            BOTTOM CTA
+        ====================================================== */}
         {totalBlogs > 0 && (
-          <div className="mt-10 flex justify-center md:hidden">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.15, ease }}
+            className="mt-14 flex justify-center lg:hidden"
+          >
             <Link
               href="/all-blogs"
-              className="group inline-flex items-center gap-3 rounded-full bg-[#2095ae] px-6 py-3.5 text-sm font-semibold text-white shadow-[0_10px_25px_rgba(32,149,174,0.15)] transition-all duration-300 hover:bg-[#16788d] hover:shadow-[0_15px_35px_rgba(32,149,174,0.25)]"
+              className="group inline-flex items-center gap-3 rounded-full bg-[#2095AE] px-6 py-3.5 text-sm font-semibold text-white shadow-[0_12px_30px_rgba(32,149,174,0.16)] transition-all duration-300 hover:bg-[#16788D] hover:shadow-[0_16px_35px_rgba(32,149,174,0.24)]"
             >
-              Explore all {totalBlogs}+ stories
+              Explore all {totalBlogs} stories
 
               <ArrowForwardRounded
-                fontSize="small"
+                sx={{ fontSize: 17 }}
                 className="transition-transform duration-300 group-hover:translate-x-1"
               />
             </Link>
-          </div>
-        )}
-
-        {/* =========================
-            DESKTOP BOTTOM INFO
-        ========================== */}
-        {totalBlogs > 0 && (
-          <div className="mt-12 hidden items-center justify-between border-t border-gray-200 pt-6 md:flex">
-            <p className="text-xs uppercase tracking-[0.2em] text-gray-400">
-              Curated travel inspiration
-            </p>
-
-            <p className="text-sm text-gray-500">
-              <span className="font-semibold text-[#2095ae]">
-                {totalBlogs}+
-              </span>{" "}
-              stories waiting to be discovered
-            </p>
-          </div>
+          </motion.div>
         )}
       </div>
     </section>

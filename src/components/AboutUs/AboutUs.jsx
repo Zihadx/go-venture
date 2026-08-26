@@ -38,12 +38,6 @@ const AboutUsPage = () => {
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 overflow-hidden"
       >
-        <div className="absolute -right-40 top-20 h-[520px] w-[520px] rounded-full bg-[#2095AE]/[0.045] blur-3xl" />
-
-        <div className="absolute left-0 top-[42%] h-px w-full bg-[#111827]/[0.055]" />
-
-        <div className="absolute left-[7%] top-[14%] hidden h-24 w-px bg-[#111827]/10 lg:block" />
-        <div className="absolute right-[8%] bottom-[13%] hidden h-28 w-px bg-[#2095AE]/20 lg:block" />
       </div>
 
       <div className="custom-container relative z-10">
@@ -65,9 +59,7 @@ const AboutUsPage = () => {
             {/* Editorial index */}
 
             <div className="absolute left-0 top-0 z-30 flex items-center gap-4">
-              <span className="text-[10px] font-semibold uppercase tracking-[0.32em] text-[#2095AE]">
-                01
-              </span>
+           
 
               <span className="h-px w-10 bg-[#2095AE]/50" />
 

@@ -45,7 +45,7 @@ const MobileApps = () => {
   ];
 
   return (
-    <section className="relative mt-28 overflow-hidden bg-[#eef8fa] py-20 md:mt-36 md:py-28">
+    <section className="relative overflow-hidden bg-[#eef8fa] py-20 md:py-28">
       {/* =====================================================
           BACKGROUND DECORATION
       ====================================================== */}

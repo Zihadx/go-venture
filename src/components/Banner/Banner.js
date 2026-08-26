@@ -2,7 +2,6 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -16,7 +15,7 @@ import {
 
 import {
   LocationOnOutlined,
-  ArrowForward,
+  ArrowForwardRounded,
 } from "@mui/icons-material";
 
 import "./Banner.css";
@@ -24,7 +23,6 @@ import "./Banner.css";
 const Banner = () => {
   const [allBanners, setBanners] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
-
   const swiperRef = useRef(null);
 
   useEffect(() => {
@@ -40,16 +38,9 @@ const Banner = () => {
 
         const data = await response.json();
 
-        setBanners(
-          Array.isArray(data?.data)
-            ? data.data
-            : []
-        );
+        setBanners(Array.isArray(data?.data) ? data.data : []);
       } catch (error) {
-        console.error(
-          "Failed to fetch banners:",
-          error
-        );
+        console.error("Failed to fetch banners:", error);
       }
     };
 
@@ -62,18 +53,24 @@ const Banner = () => {
 
   if (!allBanners.length) {
     return (
-      <section className="relative h-[620px] overflow-hidden bg-[#eeeae3]">
-        <div className="absolute inset-0 animate-pulse bg-[#e5e0d8]" />
+      <section className="relative h-[620px] overflow-hidden bg-[#e9e7e1] md:h-[680px] lg:h-[720px]">
+        <div className="absolute inset-0 animate-pulse bg-[#e1ded7]" />
+
+        <div className="absolute inset-0 flex items-end">
+          <div className="custom-container pb-20 md:pb-24">
+            <div className="h-5 w-40 rounded-full bg-white/30" />
+            <div className="mt-5 h-16 w-[min(650px,80vw)] rounded-xl bg-white/30" />
+            <div className="mt-5 h-4 w-[min(420px,65vw)] rounded-full bg-white/20" />
+          </div>
+        </div>
       </section>
     );
   }
 
-  const activeBanner =
-    allBanners[activeIndex] || allBanners[0];
+  const activeBanner = allBanners[activeIndex] || allBanners[0];
 
   return (
-    <section className="travel-banner relative h-[620px] overflow-hidden md:h-[680px] lg:h-[720px]">
-
+    <section className="travel-banner group relative h-[620px] overflow-hidden bg-[#071525] md:h-[680px] lg:h-[720px]">
       {/* =====================================================
           IMAGE SLIDER
       ====================================================== */}
@@ -84,7 +81,7 @@ const Banner = () => {
         spaceBetween={0}
         loop={allBanners.length > 1}
         speed={1200}
-        navigation={true}
+        navigation={false}
         pagination={{
           clickable: true,
           el: ".travel-banner-pagination",
@@ -97,11 +94,7 @@ const Banner = () => {
               }
             : false
         }
-        modules={[
-          Pagination,
-          Navigation,
-          Autoplay,
-        ]}
+        modules={[Pagination, Navigation, Autoplay]}
         onSlideChange={handleSlideChange}
         className="h-full w-full"
       >
@@ -110,28 +103,25 @@ const Banner = () => {
             key={banner?._id || index}
             className="h-full"
           >
-            <div className="relative h-full w-full">
-
+            <div className="relative h-full w-full overflow-hidden">
               <Image
                 src={banner?.image}
-                alt={
-                  banner?.title ||
-                  "Travel destination"
-                }
+                alt={banner?.title || "Travel destination"}
                 fill
                 priority={index === 0}
                 sizes="100vw"
                 className="travel-banner-image object-cover"
               />
 
-              {/* soft cinematic overlay */}
+              {/* Cinematic image treatment */}
+              <div className="absolute inset-0 bg-black/15" />
 
-              <div className="absolute inset-0 bg-black/10" />
+              <div className="absolute inset-0 bg-gradient-to-r from-[#020b13]/80 via-[#020b13]/35 to-transparent" />
 
-              <div className="absolute inset-0 bg-gradient-to-r from-black/65 via-black/25 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#020b13]/75 via-transparent to-transparent" />
 
-              <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
-
+              {/* Subtle teal atmosphere */}
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_40%,rgba(32,149,174,0.10),transparent_35%)]" />
             </div>
           </SwiperSlide>
         ))}
@@ -142,157 +132,101 @@ const Banner = () => {
       ====================================================== */}
 
       <div className="pointer-events-none absolute inset-0 z-20">
-
-        <div className="custom-container flex h-full items-center">
-
+        <div className="custom-container flex h-full items-end pb-20 md:pb-24 lg:pb-28">
           <div
-            key={
-              activeBanner?._id ||
-              activeIndex
-            }
-            className="travel-banner-content max-w-2xl text-white"
+            key={activeBanner?._id || activeIndex}
+            className="travel-banner-content max-w-3xl text-white"
           >
-
-            {/* Small editorial label */}
-
-            <div className="mb-6 flex items-center gap-3">
-
-              <span className="h-px w-9 bg-white/70" />
-
-              <span className="text-[10px] font-medium uppercase tracking-[0.32em] text-white/70">
-                Discover somewhere beautiful
-              </span>
-
-            </div>
-
-            {/* Main title */}
-
-            <h1 className="max-w-2xl font-serif text-5xl font-medium leading-[0.98] tracking-[-0.035em] sm:text-6xl md:text-7xl lg:text-[78px]">
-
-              {activeBanner?.title}
-
-            </h1>
-
-            {/* Description */}
-
-            <p className="mt-6 max-w-lg text-sm leading-6 text-white/75 md:text-[15px] md:leading-7">
-
-              {activeBanner?.description}
-
-            </p>
-
             {/* Location */}
-
-            <div className="pointer-events-auto mt-8 inline-flex items-center gap-3 rounded-full border border-white/20 bg-white/10 px-4 py-2.5 backdrop-blur-md">
-
+            <div className="pointer-events-auto mb-6 inline-flex items-center gap-2.5 rounded-full border border-white/15 bg-black/20 px-4 py-2 backdrop-blur-xl">
               <LocationOnOutlined
                 sx={{
-                  fontSize: 17,
-                  color: "#ffffff",
+                  fontSize: 16,
+                  color: "#2095ae",
                 }}
               />
 
-              <span className="text-xs font-medium tracking-wide text-white">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white">
                 {activeBanner?.locations?.city}
               </span>
 
-              <span className="text-white/30">
-                /
-              </span>
+              <span className="text-white/30">•</span>
 
-              <span className="text-xs text-white/65">
+              <span className="text-[11px] uppercase tracking-[0.12em] text-white/60">
                 {activeBanner?.locations?.country}
               </span>
-
             </div>
 
+            {/* Heading */}
+            <h1 className="max-w-3xl font-serif text-5xl font-medium leading-[0.94] tracking-[-0.045em] text-white sm:text-6xl md:text-7xl lg:text-[84px]">
+              {activeBanner?.title}
+            </h1>
+
+            {/* Description */}
+            <p className="mt-6 max-w-xl text-sm leading-7 text-white/70 md:text-[15px] md:leading-7">
+              {activeBanner?.description}
+            </p>
+
+            {/* CTA */}
+            <div className="pointer-events-auto mt-8">
+              <button
+                type="button"
+                onClick={() =>
+                  swiperRef.current?.swiper?.slideNext()
+                }
+                className="group inline-flex items-center gap-4 rounded-full bg-white px-6 py-3.5 text-sm font-semibold text-[#10213a] transition-all duration-500 hover:bg-[#2095ae] hover:text-white"
+              >
+                <span>Explore destination</span>
+
+                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#10213a] text-white transition-all duration-500 group-hover:bg-white group-hover:text-[#2095ae]">
+                  <ArrowForwardRounded
+                    sx={{
+                      fontSize: 17,
+                    }}
+                    className="transition-transform duration-300 group-hover:translate-x-1"
+                  />
+                </span>
+              </button>
+            </div>
           </div>
-
         </div>
-
       </div>
 
       {/* =====================================================
-          TOP RIGHT INDEX
-      ====================================================== */}
-
-      <div className="pointer-events-none absolute right-6 top-7 z-30 md:right-10 md:top-28 lg:right-14">
-
-        <div className="flex items-center gap-3 text-white">
-
-          <span className="font-serif text-2xl italic">
-            {String(activeIndex + 1).padStart(
-              2,
-              "0"
-            )}
-          </span>
-
-          <span className="h-px w-8 bg-white/40" />
-
-          <span className="text-[10px] tracking-[0.2em] text-white/60">
-            {String(allBanners.length).padStart(
-              2,
-              "0"
-            )}
-          </span>
-
-        </div>
-
-      </div>
-
-      {/* =====================================================
-          BOTTOM AREA
+          BOTTOM CONTROLS
       ====================================================== */}
 
       <div className="pointer-events-none absolute bottom-0 left-0 right-0 z-30">
-
-        <div className="custom-container flex items-end justify-between pb-7 md:pb-9">
-
-          {/* Decorative line */}
-
-          <div className="hidden items-center gap-3 md:flex">
-
-            <span className="text-[9px] uppercase tracking-[0.2em] text-white/50">
-              Scroll to explore
-            </span>
-
-            <span className="h-px w-12 bg-white/30" />
-
-          </div>
-
+        <div className="custom-container flex items-center justify-between pb-7 md:pb-9">
           {/* Pagination */}
-
           <div className="travel-banner-pagination pointer-events-auto" />
 
-          {/* Next */}
+          {/* Next control */}
+          {allBanners.length > 1 && (
+            <button
+              type="button"
+              onClick={() =>
+                swiperRef.current?.swiper?.slideNext()
+              }
+              aria-label="Next destination"
+              className="pointer-events-auto flex items-center gap-3 text-white"
+            >
+              <span className="hidden text-[10px] font-medium uppercase tracking-[0.22em] text-white/50 sm:block">
+                Next destination
+              </span>
 
-          <button
-            type="button"
-            onClick={() =>
-              swiperRef.current?.swiper?.slideNext()
-            }
-            className="pointer-events-auto hidden items-center gap-3 text-white md:flex"
-            aria-label="Next destination"
-          >
-
-            <span className="text-[10px] uppercase tracking-[0.2em] text-white/60">
-              Next
-            </span>
-
-            <span className="flex h-10 w-10 items-center justify-center rounded-full border border-white/25 bg-white/10 backdrop-blur-md transition-all duration-300 hover:bg-white hover:text-black">
-
-              <ArrowForward
-                sx={{ fontSize: 16 }}
-              />
-
-            </span>
-
-          </button>
-
+              <span className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-white/10 backdrop-blur-xl transition-all duration-300 hover:border-[#2095ae] hover:bg-[#2095ae]">
+                <ArrowForwardRounded
+                  sx={{
+                    fontSize: 18,
+                  }}
+                  className="transition-transform duration-300 group-hover:translate-x-1"
+                />
+              </span>
+            </button>
+          )}
         </div>
-
       </div>
-
     </section>
   );
 };

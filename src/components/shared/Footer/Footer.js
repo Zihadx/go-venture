@@ -91,7 +91,7 @@ const Footer = () => {
   };
 
   return (
-    <footer className="relative mt-24 overflow-hidden bg-[#061824] text-white">
+    <footer className="relative overflow-hidden bg-[#061824] text-white">
       {/* =========================================================
           TOP BRAND LINE
       ========================================================= */}
