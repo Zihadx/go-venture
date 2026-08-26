@@ -27,7 +27,7 @@ const inputStyles = {
   },
   "& .MuiOutlinedInput-root": {
     "&.Mui-focused fieldset": {
-      borderColor: "#2095ae", 
+      borderColor: "#2095ae",
     },
     "& input": {
       color: "#2095ae",
@@ -55,8 +55,15 @@ const Register = () => {
     const data = modifyPayload(values);
     // console.log(data);
 
-    if (values.password.length < 6 || !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).+$/.test(values.password)) {
-      toast.error("Password must be at least 6 characters and include uppercase, lowercase, a number, and a symbol.");
+    if (
+      values.password.length < 6 ||
+      !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).+$/.test(
+        values.password,
+      )
+    ) {
+      toast.error(
+        "Password must be at least 6 characters and include uppercase, lowercase, a number, and a symbol.",
+      );
       return;
     }
 
@@ -74,8 +81,19 @@ const Register = () => {
         }
       }
     } catch (err) {
-      const errorMessage = err?.message ? JSON.parse(err.message)?.message : "An unexpected error occurred.";
-      console.log(errorMessage);
+      console.error("Registration error:", err);
+
+      let errorMessage = "An unexpected error occurred.";
+
+      try {
+        if (err?.message) {
+          const parsed = JSON.parse(err.message);
+          errorMessage = parsed?.message || err.message;
+        }
+      } catch {
+        errorMessage = err?.message || errorMessage;
+      }
+
       toast.error(errorMessage);
     }
   };
@@ -83,10 +101,14 @@ const Register = () => {
   return (
     <div className="flex items-center justify-center min-h-screen">
       <div className="bg-white p-8 rounded-md shadow-md w-full max-w-md relative overflow-hidden border">
-      <h1 className="text-xl font-bold text-center mb-4">Create an Account!</h1>
+        <h1 className="text-xl font-bold text-center mb-4">
+          Create an Account!
+        </h1>
         {error && (
           <Box>
-            <Typography sx={{ color: "red", textAlign: "center" }}>{error}</Typography>
+            <Typography sx={{ color: "red", textAlign: "center" }}>
+              {error}
+            </Typography>
           </Box>
         )}
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -141,23 +163,37 @@ const Register = () => {
             <FormControlLabel
               control={<Checkbox color="primary" />}
               label="I agree to the Terms and Conditions"
-              sx={{ "& .MuiCheckbox-colorPrimary.Mui-checked": { color: "#2095ae" } }}
+              sx={{
+                "& .MuiCheckbox-colorPrimary.Mui-checked": { color: "#2095ae" },
+              }}
             />
           </div>
 
           {/* ---------Submit Button -----------*/}
-          <Button variant="contained" color="primary" fullWidth type="submit" className=" bg-primary">
+          <Button
+            variant="contained"
+            color="primary"
+            fullWidth
+            type="submit"
+            className=" bg-primary"
+          >
             Register
           </Button>
         </form>
         <div className="text-center mt-4">
-          Already have an account? {" "}
+          Already have an account?{" "}
           <Link href="/login" className="text-primary">
             Login here
           </Link>
         </div>
         <div className="rounded-full absolute -top-24 -left-40 pointer-events-none">
-          <Image src={treeImage} alt="treeImage" width={400} height={400} className="h-[380px] w-[280px]"></Image>
+          <Image
+            src={treeImage}
+            alt="treeImage"
+            width={400}
+            height={400}
+            className="h-[380px] w-[280px]"
+          ></Image>
         </div>
         <div className="p-20 rounded-full bg-primary absolute -bottom-24 -right-24"></div>
       </div>
