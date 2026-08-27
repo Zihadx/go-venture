@@ -14,7 +14,7 @@ import {
   DashboardOutlined,
   PersonOutlineRounded,
   LuggageOutlined,
-  ChevronDownRounded,
+  KeyboardArrowDownRounded as ChevronDownRounded,
 } from "@mui/icons-material";
 
 import { signOut } from "next-auth/react";
