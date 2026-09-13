@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
@@ -24,66 +24,77 @@ import { useMediaQuery } from "@mui/material";
 import logo from "@/assets/logo/logo.png";
 import { getUserInfo, removeUserInfo } from "@/services/auth.service";
 
+/* ============================================================
+   CONSTANTS
+============================================================ */
+
+const EASE = [0.22, 1, 0.36, 1];
+const BRAND_COLOR = "#116A7F";
+const DARK_TEXT = "#10213a";
+
 const NAV_ITEMS = [
-  {
-    label: "Home",
-    href: "/",
-  },
-  {
-    label: "Destinations",
-    href: "/all-destinations",
-  },
-  {
-    label: "Journal",
-    href: "/all-blogs",
-  },
-  {
-    label: "Dashboard",
-    href: "/dashboard",
-  },
+  { label: "Home", href: "/" },
+  { label: "Destinations", href: "/all-destinations" },
+  { label: "Journal", href: "/all-blogs" },
+  { label: "Dashboard", href: "/dashboard" },
 ];
 
 const PROFILE_ITEMS = [
-  {
-    label: "Dashboard",
-    href: "/dashboard",
-    icon: DashboardOutlined,
-  },
-  {
-    label: "Profile",
-    href: "/dashboard/account",
-    icon: PersonOutlineRounded,
-  },
-  {
-    label: "My journeys",
-    href: "/dashboard/customer/trips",
-    icon: LuggageOutlined,
-  },
+  { label: "Dashboard", href: "/dashboard", icon: DashboardOutlined },
+  { label: "Profile", href: "/dashboard/account", icon: PersonOutlineRounded },
+  { label: "My journeys", href: "/dashboard/customer/trips", icon: LuggageOutlined },
 ];
 
 const MOBILE_SECONDARY = [
-  {
-    label: "Settings",
-    href: "/",
-  },
-  {
-    label: "Help",
-    href: "/",
-  },
-  {
-    label: "Travel guide",
-    href: "/",
-  },
+  { label: "Settings", href: "/" },
+  { label: "Help", href: "/" },
+  { label: "Travel guide", href: "/" },
 ];
 
-const EASE = [0.22, 1, 0.36, 1];
+const SCROLL_HIDE_THRESHOLD = 24;
+const SCROLL_DELTA = 6;
+
+/* ============================================================
+   PRESENTATIONAL HELPERS
+============================================================ */
+
+/**
+ * Circular avatar — falls back to the user's initial when no
+ * profile image is available. Kept outside the component body
+ * so it isn't recreated (and remounted) on every render.
+ */
+function UserAvatar({ name, image, size = 36 }) {
+  if (image) {
+    return (
+      <Image
+        src={image}
+        alt={name}
+        width={size}
+        height={size}
+        className="rounded-full object-cover"
+      />
+    );
+  }
+
+  return (
+    <div
+      style={{ width: size, height: size }}
+      className="flex shrink-0 items-center justify-center rounded-full bg-[#116A7F] text-xs font-semibold text-white"
+    >
+      {name.charAt(0).toUpperCase()}
+    </div>
+  );
+}
+
+/* ============================================================
+   NAVBAR
+============================================================ */
 
 const Navbar = ({ session }) => {
   const router = useRouter();
   const pathname = usePathname();
 
   const profileRef = useRef(null);
-
   const isMobile = useMediaQuery("(max-width: 960px)");
 
   const [visible, setVisible] = useState(true);
@@ -93,158 +104,121 @@ const Navbar = ({ session }) => {
   const [profileOpen, setProfileOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
 
-  /*
-   * ------------------------------------------------------------
-   * USER
-   * ------------------------------------------------------------
-   */
+  // Client-only local user info. Read lazily (not during render/SSR)
+  // to avoid a hydration mismatch, since getUserInfo() likely reads
+  // from localStorage/cookies that don't exist on the server.
+  const [localUser, setLocalUser] = useState(null);
 
-  const userInfo = getUserInfo();
+  useEffect(() => {
+    setLocalUser(getUserInfo());
+  }, []);
 
-  const user = userInfo?.email || session?.user;
+  /* --- Derived user info --------------------------------- */
 
-  const userName =
-    userInfo?.name ||
-    session?.user?.name ||
-    "Traveler";
+  const user = localUser?.email || session?.user;
+  const userName = localUser?.name || session?.user?.name || "Traveler";
+  const userEmail = localUser?.email || session?.user?.email || "";
+  const userImage = localUser?.image || session?.user?.image || "";
 
-  const userEmail =
-    userInfo?.email ||
-    session?.user?.email ||
-    "";
+  const isActive = useCallback(
+    (href) => (href === "/" ? pathname === "/" : pathname.startsWith(href)),
+    [pathname]
+  );
 
-  const userImage =
-    userInfo?.image ||
-    session?.user?.image ||
-    "";
-
-  /*
-   * ------------------------------------------------------------
-   * ACTIVE ROUTE
-   * ------------------------------------------------------------
-   */
-
-  const isActive = (href) => {
-    if (href === "/") {
-      return pathname === "/";
-    }
-
-    return pathname.startsWith(href);
-  };
-
-  /*
-   * ------------------------------------------------------------
-   * SCROLL BEHAVIOR
-   * ------------------------------------------------------------
-   */
+  /* --- Scroll behavior (show/hide + blur-on-scroll) -------- */
 
   useEffect(() => {
     let lastScroll = window.scrollY;
+    let ticking = false;
 
-    const handleScroll = () => {
+    const updateOnScroll = () => {
       const currentScroll = window.scrollY;
 
-      if (currentScroll <= 24) {
+      if (currentScroll <= SCROLL_HIDE_THRESHOLD) {
         setScrolled(false);
         setVisible(true);
-        lastScroll = currentScroll;
-        return;
-      }
+      } else {
+        setScrolled(true);
 
-      setScrolled(true);
-
-      if (currentScroll > lastScroll + 6) {
-        setVisible(false);
-        setSearchOpen(false);
-        setProfileOpen(false);
-      }
-
-      if (currentScroll < lastScroll - 6) {
-        setVisible(true);
+        if (currentScroll > lastScroll + SCROLL_DELTA) {
+          setVisible(false);
+          setSearchOpen(false);
+          setProfileOpen(false);
+        } else if (currentScroll < lastScroll - SCROLL_DELTA) {
+          setVisible(true);
+        }
       }
 
       lastScroll = currentScroll;
+      ticking = false;
     };
 
-    window.addEventListener("scroll", handleScroll, {
-      passive: true,
-    });
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
+    const handleScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(updateOnScroll);
     };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  /*
-   * ------------------------------------------------------------
-   * CLOSE PROFILE OUTSIDE CLICK
-   * ------------------------------------------------------------
-   */
+  /* --- Close profile menu on outside click ------------------ */
 
   useEffect(() => {
     const handleOutsideClick = (event) => {
-      if (
-        profileRef.current &&
-        !profileRef.current.contains(event.target)
-      ) {
+      if (profileRef.current && !profileRef.current.contains(event.target)) {
         setProfileOpen(false);
       }
     };
 
-    document.addEventListener(
-      "mousedown",
-      handleOutsideClick
-    );
-
-    return () => {
-      document.removeEventListener(
-        "mousedown",
-        handleOutsideClick
-      );
-    };
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => document.removeEventListener("mousedown", handleOutsideClick);
   }, []);
 
-  /*
-   * ------------------------------------------------------------
-   * ESCAPE
-   * ------------------------------------------------------------
-   */
+  /* --- Escape closes any open overlay ------------------------ */
 
   useEffect(() => {
     const handleEscape = (event) => {
       if (event.key !== "Escape") return;
-
       setSearchOpen(false);
       setProfileOpen(false);
       setMobileOpen(false);
     };
 
     document.addEventListener("keydown", handleEscape);
-
-    return () => {
-      document.removeEventListener(
-        "keydown",
-        handleEscape
-      );
-    };
+    return () => document.removeEventListener("keydown", handleEscape);
   }, []);
 
-  /*
-   * ------------------------------------------------------------
-   * LOGOUT
-   * ------------------------------------------------------------
-   */
+  /* --- Close the mobile drawer if the viewport grows past it -- */
+
+  useEffect(() => {
+    if (!isMobile) setMobileOpen(false);
+  }, [isMobile]);
+
+  /* --- Lock body scroll while the mobile drawer is open ------- */
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+
+    const { overflow } = document.body.style;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = overflow;
+    };
+  }, [mobileOpen]);
+
+  /* --- Actions ------------------------------------------------ */
 
   const handleLogout = async () => {
     try {
       removeUserInfo();
-
+      setLocalUser(null);
       setProfileOpen(false);
       setMobileOpen(false);
 
-      await signOut({
-        redirect: false,
-      });
+      await signOut({ redirect: false });
 
       router.push("/");
       router.refresh();
@@ -253,131 +227,69 @@ const Navbar = ({ session }) => {
     }
   };
 
-  /*
-   * ------------------------------------------------------------
-   * SEARCH
-   * ------------------------------------------------------------
-   */
-
   const handleSearchSubmit = (event) => {
     event.preventDefault();
 
     const value = searchValue.trim();
-
     if (!value) return;
 
-    router.push(
-      `/all-destinations?search=${encodeURIComponent(value)}`
-    );
-
+    router.push(`/all-destinations?search=${encodeURIComponent(value)}`);
     setSearchValue("");
     setSearchOpen(false);
   };
 
-  /*
-   * ------------------------------------------------------------
-   * USER AVATAR
-   * ------------------------------------------------------------
-   */
+  const closeMobile = () => setMobileOpen(false);
 
-  const UserAvatar = ({ size = 36 }) => {
-    if (userImage) {
-      return (
-        <Image
-          src={userImage}
-          alt={userName}
-          width={size}
-          height={size}
-          className="rounded-full object-cover"
-        />
-      );
-    }
-
-    return (
-      <div
-        style={{
-          width: size,
-          height: size,
-        }}
-        className="flex shrink-0 items-center justify-center rounded-full bg-[#116A7F] text-xs font-semibold text-white"
-      >
-        {userName.charAt(0).toUpperCase()}
-      </div>
-    );
+  const toggleSearch = () => {
+    setSearchOpen((value) => !value);
+    setProfileOpen(false);
   };
 
-  /*
-   * ------------------------------------------------------------
-   * CLOSE MOBILE
-   * ------------------------------------------------------------
-   */
-
-  const closeMobile = () => {
-    setMobileOpen(false);
+  const toggleProfile = () => {
+    setProfileOpen((value) => !value);
+    setSearchOpen(false);
   };
+
+  /* --- Scroll-dependent style tokens, memoized ----------------- */
+
+  const headerStyle = useMemo(
+    () => ({
+      backgroundColor: scrolled ? "rgba(255,255,255,0.96)" : "rgba(8,20,31,0.04)",
+      borderColor: scrolled ? "rgba(15,23,42,0.08)" : "rgba(255,255,255,0.14)",
+      boxShadow: scrolled
+        ? "0 14px 45px rgba(15,23,42,0.08)"
+        : "0 12px 40px rgba(0,0,0,0.02)",
+    }),
+    [scrolled]
+  );
 
   return (
     <>
       {/* ========================================================
           DESKTOP / GLOBAL NAVBAR
       ========================================================= */}
-
       <AnimatePresence>
         {visible && (
           <motion.header
-            initial={{
-              y: -100,
-              opacity: 0,
-            }}
-            animate={{
-              y: 0,
-              opacity: 1,
-            }}
-            exit={{
-              y: -100,
-              opacity: 0,
-            }}
-            transition={{
-              duration: 0.45,
-              ease: EASE,
-            }}
+            initial={{ y: -100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -100, opacity: 0 }}
+            transition={{ duration: 0.45, ease: EASE }}
             className="fixed inset-x-0 top-0 z-[100]"
           >
             <motion.div
-              animate={{
-                backgroundColor: scrolled
-                  ? "rgba(255,255,255,0.96)"
-                  : "rgba(8,20,31,0.04)",
-
-                borderColor: scrolled
-                  ? "rgba(15,23,42,0.08)"
-                  : "rgba(255,255,255,0.14)",
-
-                boxShadow: scrolled
-                  ? "0 14px 45px rgba(15,23,42,0.08)"
-                  : "0 12px 40px rgba(0,0,0,0.02)",
-              }}
-              transition={{
-                duration: 0.35,
-                ease: EASE,
-              }}
+              animate={headerStyle}
+              transition={{ duration: 0.35, ease: EASE }}
               className="border-b backdrop-blur-xl"
             >
               <div className="custom-container">
                 <div className="relative flex h-[76px] items-center">
-                  {/* =================================================
-                      MOBILE MENU
-                  ================================================== */}
-
+                  {/* MOBILE MENU TRIGGER */}
                   {isMobile && (
                     <motion.button
-                      whileTap={{
-                        scale: 0.92,
-                      }}
+                      whileTap={{ scale: 0.92 }}
                       type="button"
-                      onClick={() =>
-                        setMobileOpen(true)
-                      }
+                      onClick={() => setMobileOpen(true)}
                       aria-label="Open menu"
                       className={`mr-3 flex h-10 w-10 items-center justify-center rounded-full border transition ${
                         scrolled
@@ -389,14 +301,8 @@ const Navbar = ({ session }) => {
                     </motion.button>
                   )}
 
-                  {/* =================================================
-                      LOGO
-                  ================================================== */}
-
-                  <Link
-                    href="/"
-                    className="group flex shrink-0 items-center"
-                  >
+                  {/* LOGO */}
+                  <Link href="/" className="group flex shrink-0 items-center">
                     <div className="relative flex h-11 w-11 items-center justify-center">
                       <Image
                         src={logo}
@@ -410,31 +316,18 @@ const Navbar = ({ session }) => {
 
                     <div className="ml-2.5 hidden sm:block">
                       <motion.div
-                        animate={{
-                          color: scrolled
-                            ? "#10213a"
-                            : "#ffffff",
-                        }}
-                        transition={{
-                          duration: 0.3,
-                        }}
+                        animate={{ color: scrolled ? DARK_TEXT : "#ffffff" }}
+                        transition={{ duration: 0.3 }}
                         className="text-[17px] font-bold leading-none tracking-[-0.03em]"
                       >
-                        <span className="text-[#2095AE]">
-                          Go V
-                        </span>
-                        enture
+                        <span className="text-[#2095AE]">Go V</span>enture
                       </motion.div>
 
                       <motion.div
                         animate={{
-                          color: scrolled
-                            ? "rgba(16,33,58,.42)"
-                            : "rgba(255,255,255,.5)",
+                          color: scrolled ? "rgba(16,33,58,.42)" : "rgba(255,255,255,.5)",
                         }}
-                        transition={{
-                          duration: 0.3,
-                        }}
+                        transition={{ duration: 0.3 }}
                         className="mt-1 text-[7px] font-medium uppercase tracking-[0.32em]"
                       >
                         Explore Beyond
@@ -442,17 +335,12 @@ const Navbar = ({ session }) => {
                     </div>
                   </Link>
 
-                  {/* =================================================
-                      DESKTOP NAVIGATION
-                  ================================================== */}
-
+                  {/* DESKTOP NAVIGATION */}
                   {!isMobile && (
                     <nav className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
                       <div className="flex items-center gap-1">
                         {NAV_ITEMS.map((item) => {
-                          const active = isActive(
-                            item.href
-                          );
+                          const active = isActive(item.href);
 
                           return (
                             <Link
@@ -464,15 +352,13 @@ const Navbar = ({ session }) => {
                                 animate={{
                                   color: active
                                     ? scrolled
-                                      ? "#10213a"
+                                      ? DARK_TEXT
                                       : "#ffffff"
                                     : scrolled
                                     ? "rgba(16,33,58,.55)"
                                     : "rgba(255,255,255,.68)",
                                 }}
-                                transition={{
-                                  duration: 0.25,
-                                }}
+                                transition={{ duration: 0.25 }}
                                 className="relative z-10 text-[12px] font-medium tracking-wide"
                               >
                                 {item.label}
@@ -481,25 +367,13 @@ const Navbar = ({ session }) => {
                               <motion.span
                                 initial={false}
                                 animate={{
-                                  width: active
-                                    ? "100%"
-                                    : "0%",
-                                  opacity: active
-                                    ? 1
-                                    : 0,
+                                  width: active ? "100%" : "0%",
+                                  opacity: active ? 1 : 0,
                                 }}
-                                whileHover={{
-                                  width: "100%",
-                                  opacity: 1,
-                                }}
-                                transition={{
-                                  duration: 0.3,
-                                  ease: EASE,
-                                }}
+                                whileHover={{ width: "100%", opacity: 1 }}
+                                transition={{ duration: 0.3, ease: EASE }}
                                 className={`absolute bottom-1 left-1/2 h-[1.5px] -translate-x-1/2 ${
-                                  scrolled
-                                    ? "bg-[#2095AE]"
-                                    : "bg-white"
+                                  scrolled ? "bg-[#2095AE]" : "bg-white"
                                 }`}
                               />
                             </Link>
@@ -509,66 +383,37 @@ const Navbar = ({ session }) => {
                     </nav>
                   )}
 
-                  {/* =================================================
-                      RIGHT SIDE
-                  ================================================== */}
-
+                  {/* RIGHT SIDE */}
                   <div className="ml-auto flex items-center gap-2">
-                    {/* SEARCH */}
-
+                    {/* SEARCH TOGGLE */}
                     <motion.button
-                      whileTap={{
-                        scale: 0.92,
-                      }}
+                      whileTap={{ scale: 0.92 }}
                       type="button"
-                      aria-label="Search"
-                      onClick={() => {
-                        setSearchOpen((value) => !value);
-                        setProfileOpen(false);
-                      }}
+                      aria-label={searchOpen ? "Close search" : "Search"}
+                      aria-expanded={searchOpen}
+                      onClick={toggleSearch}
                       className={`flex h-10 w-10 items-center justify-center rounded-full transition ${
                         scrolled
                           ? "text-[#10213a] hover:bg-black/5"
                           : "text-white hover:bg-white/10"
                       }`}
                     >
-                      <AnimatePresence
-                        mode="wait"
-                        initial={false}
-                      >
+                      <AnimatePresence mode="wait" initial={false}>
                         {searchOpen ? (
                           <motion.div
                             key="close"
-                            initial={{
-                              opacity: 0,
-                              rotate: -45,
-                            }}
-                            animate={{
-                              opacity: 1,
-                              rotate: 0,
-                            }}
-                            exit={{
-                              opacity: 0,
-                              rotate: 45,
-                            }}
+                            initial={{ opacity: 0, rotate: -45 }}
+                            animate={{ opacity: 1, rotate: 0 }}
+                            exit={{ opacity: 0, rotate: 45 }}
                           >
                             <CloseRounded fontSize="small" />
                           </motion.div>
                         ) : (
                           <motion.div
                             key="search"
-                            initial={{
-                              opacity: 0,
-                              scale: 0.7,
-                            }}
-                            animate={{
-                              opacity: 1,
-                              scale: 1,
-                            }}
-                            exit={{
-                              opacity: 0,
-                              scale: 0.7,
-                            }}
+                            initial={{ opacity: 0, scale: 0.7 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.7 }}
                           >
                             <SearchRounded fontSize="small" />
                           </motion.div>
@@ -576,49 +421,32 @@ const Navbar = ({ session }) => {
                       </AnimatePresence>
                     </motion.button>
 
-                    {/* DIVIDER */}
-
                     <span
                       className={`hidden h-6 w-px md:block ${
-                        scrolled
-                          ? "bg-black/10"
-                          : "bg-white/15"
+                        scrolled ? "bg-black/10" : "bg-white/15"
                       }`}
                     />
 
-                    {/* =================================================
-                        PROFILE
-                    ================================================== */}
-
+                    {/* PROFILE */}
                     {user ? (
-                      <div
-                        ref={profileRef}
-                        className="relative"
-                      >
+                      <div ref={profileRef} className="relative">
                         <motion.button
-                          whileTap={{
-                            scale: 0.97,
-                          }}
+                          whileTap={{ scale: 0.97 }}
                           type="button"
-                          onClick={() => {
-                            setProfileOpen(
-                              (value) => !value
-                            );
-                            setSearchOpen(false);
-                          }}
+                          aria-haspopup="menu"
+                          aria-expanded={profileOpen}
+                          onClick={toggleProfile}
                           className={`group flex items-center gap-2 rounded-full border p-1 pr-2 transition-all ${
                             scrolled
                               ? "border-black/10 bg-white hover:border-black/15 hover:bg-black/[.025]"
                               : "border-white/15 bg-white/10 hover:bg-white/15"
                           }`}
                         >
-                          <UserAvatar size={34} />
+                          <UserAvatar name={userName} image={userImage} size={34} />
 
                           <span
                             className={`hidden max-w-[90px] truncate text-xs font-semibold lg:block ${
-                              scrolled
-                                ? "text-[#10213a]"
-                                : "text-white"
+                              scrolled ? "text-[#10213a]" : "text-white"
                             }`}
                           >
                             {userName}
@@ -626,57 +454,31 @@ const Navbar = ({ session }) => {
 
                           <ChevronDownRounded
                             className={`hidden transition-transform duration-300 md:block ${
-                              profileOpen
-                                ? "rotate-180"
-                                : ""
-                            } ${
-                              scrolled
-                                ? "text-gray-400"
-                                : "text-white/50"
-                            }`}
-                            sx={{
-                              fontSize: 16,
-                            }}
+                              profileOpen ? "rotate-180" : ""
+                            } ${scrolled ? "text-gray-400" : "text-white/50"}`}
+                            sx={{ fontSize: 16 }}
                           />
                         </motion.button>
 
                         {/* PROFILE MENU */}
-
                         <AnimatePresence>
                           {profileOpen && (
                             <motion.div
-                              initial={{
-                                opacity: 0,
-                                y: -10,
-                                scale: 0.96,
-                              }}
-                              animate={{
-                                opacity: 1,
-                                y: 0,
-                                scale: 1,
-                              }}
-                              exit={{
-                                opacity: 0,
-                                y: -8,
-                                scale: 0.97,
-                              }}
-                              transition={{
-                                duration: 0.25,
-                                ease: EASE,
-                              }}
+                              role="menu"
+                              initial={{ opacity: 0, y: -10, scale: 0.96 }}
+                              animate={{ opacity: 1, y: 0, scale: 1 }}
+                              exit={{ opacity: 0, y: -8, scale: 0.97 }}
+                              transition={{ duration: 0.25, ease: EASE }}
                               className="absolute right-0 top-[calc(100%+12px)] w-[280px] overflow-hidden rounded-[22px] border border-black/[.07] bg-white p-2 shadow-[0_25px_70px_rgba(15,23,42,.16)]"
                             >
-                              {/* PROFILE */}
-
                               <div className="rounded-[17px] bg-[#f5f7f6] p-4">
                                 <div className="flex items-center gap-3">
-                                  <UserAvatar size={46} />
+                                  <UserAvatar name={userName} image={userImage} size={46} />
 
                                   <div className="min-w-0">
                                     <p className="truncate text-sm font-semibold text-[#10213a]">
                                       {userName}
                                     </p>
-
                                     <p className="mt-0.5 truncate text-[11px] text-gray-400">
                                       {userEmail}
                                     </p>
@@ -684,90 +486,54 @@ const Navbar = ({ session }) => {
                                 </div>
                               </div>
 
-                              {/* LINKS */}
-
                               <div className="mt-2 space-y-0.5">
-                                {PROFILE_ITEMS.map(
-                                  (item) => {
-                                    const Icon =
-                                      item.icon;
+                                {PROFILE_ITEMS.map((item) => {
+                                  const Icon = item.icon;
+                                  const active = isActive(item.href);
 
-                                    const active =
-                                      isActive(
-                                        item.href
-                                      );
-
-                                    return (
-                                      <Link
-                                        key={
-                                          item.href
-                                        }
-                                        href={
-                                          item.href
-                                        }
-                                        onClick={() =>
-                                          setProfileOpen(
-                                            false
-                                          )
-                                        }
-                                        className={`group flex items-center gap-3 rounded-[14px] px-3.5 py-3 text-sm transition ${
+                                  return (
+                                    <Link
+                                      key={item.href}
+                                      href={item.href}
+                                      onClick={() => setProfileOpen(false)}
+                                      className={`group flex items-center gap-3 rounded-[14px] px-3.5 py-3 text-sm transition ${
+                                        active
+                                          ? "bg-[#116A7F]/[.08] text-[#116A7F]"
+                                          : "text-gray-600 hover:bg-gray-50 hover:text-[#116A7F]"
+                                      }`}
+                                    >
+                                      <span
+                                        className={`flex h-8 w-8 items-center justify-center rounded-lg ${
                                           active
-                                            ? "bg-[#116A7F]/[.08] text-[#116A7F]"
-                                            : "text-gray-600 hover:bg-gray-50 hover:text-[#116A7F]"
+                                            ? "bg-[#116A7F] text-white"
+                                            : "bg-gray-100 text-gray-400 group-hover:bg-[#116A7F]/10 group-hover:text-[#116A7F]"
                                         }`}
                                       >
-                                        <span
-                                          className={`flex h-8 w-8 items-center justify-center rounded-lg ${
-                                            active
-                                              ? "bg-[#116A7F] text-white"
-                                              : "bg-gray-100 text-gray-400 group-hover:bg-[#116A7F]/10 group-hover:text-[#116A7F]"
-                                          }`}
-                                        >
-                                          <Icon
-                                            sx={{
-                                              fontSize: 17,
-                                            }}
-                                          />
-                                        </span>
+                                        <Icon sx={{ fontSize: 17 }} />
+                                      </span>
 
-                                        <span className="font-medium">
-                                          {item.label}
-                                        </span>
+                                      <span className="font-medium">{item.label}</span>
 
-                                        <ArrowForwardRounded
-                                          className="ml-auto opacity-0 transition-all duration-300 group-hover:translate-x-0.5 group-hover:opacity-60"
-                                          sx={{
-                                            fontSize: 15,
-                                          }}
-                                        />
-                                      </Link>
-                                    );
-                                  }
-                                )}
+                                      <ArrowForwardRounded
+                                        className="ml-auto opacity-0 transition-all duration-300 group-hover:translate-x-0.5 group-hover:opacity-60"
+                                        sx={{ fontSize: 15 }}
+                                      />
+                                    </Link>
+                                  );
+                                })}
                               </div>
 
                               <div className="my-2 h-px bg-gray-100" />
 
-                              {/* LOGOUT */}
-
                               <button
                                 type="button"
-                                onClick={
-                                  handleLogout
-                                }
+                                onClick={handleLogout}
                                 className="flex w-full items-center gap-3 rounded-[14px] px-3.5 py-3 text-sm text-red-500 transition hover:bg-red-50"
                               >
                                 <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-red-50">
-                                  <LogoutRounded
-                                    sx={{
-                                      fontSize: 17,
-                                    }}
-                                  />
+                                  <LogoutRounded sx={{ fontSize: 17 }} />
                                 </span>
-
-                                <span className="font-medium">
-                                  Sign out
-                                </span>
+                                <span className="font-medium">Sign out</span>
                               </button>
                             </motion.div>
                           )}
@@ -780,9 +546,7 @@ const Navbar = ({ session }) => {
                       >
                         Login
                         <ArrowForwardRounded
-                          sx={{
-                            fontSize: 15,
-                          }}
+                          sx={{ fontSize: 15 }}
                           className="transition-transform duration-300 group-hover:translate-x-0.5"
                         />
                       </Link>
@@ -790,54 +554,27 @@ const Navbar = ({ session }) => {
                   </div>
                 </div>
 
-                {/* =====================================================
-                    SEARCH PANEL
-                ====================================================== */}
-
+                {/* SEARCH PANEL */}
                 <AnimatePresence initial={false}>
                   {searchOpen && (
                     <motion.div
-                      initial={{
-                        height: 0,
-                        opacity: 0,
-                      }}
-                      animate={{
-                        height: "auto",
-                        opacity: 1,
-                      }}
-                      exit={{
-                        height: 0,
-                        opacity: 0,
-                      }}
-                      transition={{
-                        duration: 0.35,
-                        ease: EASE,
-                      }}
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.35, ease: EASE }}
                       className="overflow-hidden"
                     >
-                      <form
-                        onSubmit={
-                          handleSearchSubmit
-                        }
-                        className="mx-auto max-w-2xl pb-5"
-                      >
+                      <form onSubmit={handleSearchSubmit} className="mx-auto max-w-2xl pb-5">
                         <div className="group flex items-center rounded-2xl border border-black/[.08] bg-[#f6f7f6] px-4 transition focus-within:border-[#116A7F]/30 focus-within:bg-white focus-within:shadow-[0_10px_35px_rgba(15,23,42,.06)]">
                           <SearchRounded
                             className="mr-3 text-gray-400 transition-colors group-focus-within:text-[#116A7F]"
-                            sx={{
-                              fontSize: 21,
-                            }}
+                            sx={{ fontSize: 21 }}
                           />
 
                           <input
                             autoFocus
                             value={searchValue}
-                            onChange={(event) =>
-                              setSearchValue(
-                                event.target
-                                  .value
-                              )
-                            }
+                            onChange={(event) => setSearchValue(event.target.value)}
                             type="search"
                             placeholder="Search destinations, places or experiences..."
                             className="h-12 flex-1 bg-transparent text-sm text-[#10213a] outline-none placeholder:text-gray-400"
@@ -863,53 +600,30 @@ const Navbar = ({ session }) => {
       {/* ==========================================================
           MOBILE DRAWER
       =========================================================== */}
-
       <AnimatePresence>
         {mobileOpen && (
           <>
             <motion.div
-              initial={{
-                opacity: 0,
-              }}
-              animate={{
-                opacity: 1,
-              }}
-              exit={{
-                opacity: 0,
-              }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
               onClick={closeMobile}
               className="fixed inset-0 z-[110] bg-[#071525]/60 backdrop-blur-sm"
             />
 
             <motion.aside
-              initial={{
-                x: "-100%",
-              }}
-              animate={{
-                x: 0,
-              }}
-              exit={{
-                x: "-100%",
-              }}
-              transition={{
-                duration: 0.45,
-                ease: EASE,
-              }}
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ duration: 0.45, ease: EASE }}
               className="fixed bottom-0 left-0 top-0 z-[120] flex w-[310px] max-w-[88vw] flex-col overflow-hidden bg-[#0b1824] text-white shadow-[20px_0_70px_rgba(0,0,0,.25)]"
             >
-              {/* decorative glow */}
-
               <div className="pointer-events-none absolute -right-32 top-20 h-64 w-64 rounded-full bg-[#2095AE]/10 blur-3xl" />
 
               <div className="relative flex h-full flex-col p-6">
                 {/* HEADER */}
-
                 <div className="flex items-center justify-between">
-                  <Link
-                    href="/"
-                    onClick={closeMobile}
-                    className="flex items-center gap-3"
-                  >
+                  <Link href="/" onClick={closeMobile} className="flex items-center gap-3">
                     <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white">
                       <Image
                         src={logo}
@@ -922,12 +636,8 @@ const Navbar = ({ session }) => {
 
                     <div>
                       <p className="text-sm font-bold">
-                        <span className="text-[#3ca6ba]">
-                          Go V
-                        </span>
-                        enture
+                        <span className="text-[#3ca6ba]">Go V</span>enture
                       </p>
-
                       <p className="mt-0.5 text-[7px] uppercase tracking-[0.3em] text-white/35">
                         Explore Beyond
                       </p>
@@ -945,18 +655,14 @@ const Navbar = ({ session }) => {
                 </div>
 
                 {/* USER */}
-
                 <div className="mt-8">
                   {user ? (
                     <div className="rounded-2xl border border-white/[.06] bg-white/[.045] p-4">
                       <div className="flex items-center gap-3">
-                        <UserAvatar size={44} />
+                        <UserAvatar name={userName} image={userImage} size={44} />
 
                         <div className="min-w-0">
-                          <p className="truncate text-sm font-semibold">
-                            {userName}
-                          </p>
-
+                          <p className="truncate text-sm font-semibold">{userName}</p>
                           <p className="mt-0.5 truncate text-[11px] text-white/35">
                             {userEmail}
                           </p>
@@ -970,11 +676,8 @@ const Navbar = ({ session }) => {
                       className="group flex items-center justify-between rounded-2xl bg-[#116A7F] px-4 py-3.5 text-sm font-semibold"
                     >
                       Login
-
                       <ArrowForwardRounded
-                        sx={{
-                          fontSize: 18,
-                        }}
+                        sx={{ fontSize: 18 }}
                         className="transition-transform duration-300 group-hover:translate-x-1"
                       />
                     </Link>
@@ -982,94 +685,68 @@ const Navbar = ({ session }) => {
                 </div>
 
                 {/* MAIN NAV */}
-
                 <div className="mt-8">
                   <p className="mb-3 px-1 text-[9px] font-semibold uppercase tracking-[0.28em] text-white/25">
                     Explore
                   </p>
 
                   <nav className="space-y-1">
-                    {NAV_ITEMS.map(
-                      (item, index) => {
-                        const active =
-                          isActive(item.href);
+                    {NAV_ITEMS.map((item, index) => {
+                      const active = isActive(item.href);
 
-                        return (
-                          <motion.div
-                            key={item.href}
-                            initial={{
-                              opacity: 0,
-                              x: -15,
-                            }}
-                            animate={{
-                              opacity: 1,
-                              x: 0,
-                            }}
-                            transition={{
-                              delay:
-                                index * 0.05,
-                              duration: 0.35,
-                              ease: EASE,
-                            }}
+                      return (
+                        <motion.div
+                          key={item.href}
+                          initial={{ opacity: 0, x: -15 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: index * 0.05, duration: 0.35, ease: EASE }}
+                        >
+                          <Link
+                            href={item.href}
+                            onClick={closeMobile}
+                            className={`group flex items-center justify-between rounded-2xl px-4 py-3.5 text-sm transition ${
+                              active
+                                ? "bg-[#116A7F] text-white"
+                                : "text-white/55 hover:bg-white/[.05] hover:text-white"
+                            }`}
                           >
-                            <Link
-                              href={item.href}
-                              onClick={
-                                closeMobile
-                              }
-                              className={`group flex items-center justify-between rounded-2xl px-4 py-3.5 text-sm transition ${
+                            <span>{item.label}</span>
+                            <ArrowForwardRounded
+                              sx={{ fontSize: 16 }}
+                              className={`transition-all duration-300 ${
                                 active
-                                  ? "bg-[#116A7F] text-white"
-                                  : "text-white/55 hover:bg-white/[.05] hover:text-white"
+                                  ? "opacity-100"
+                                  : "opacity-0 group-hover:translate-x-1 group-hover:opacity-60"
                               }`}
-                            >
-                              <span>
-                                {item.label}
-                              </span>
-
-                              <ArrowForwardRounded
-                                sx={{
-                                  fontSize: 16,
-                                }}
-                                className={`transition-all duration-300 ${
-                                  active
-                                    ? "opacity-100"
-                                    : "opacity-0 group-hover:translate-x-1 group-hover:opacity-60"
-                                }`}
-                              />
-                            </Link>
-                          </motion.div>
-                        );
-                      }
-                    )}
+                            />
+                          </Link>
+                        </motion.div>
+                      );
+                    })}
                   </nav>
                 </div>
 
                 {/* SECONDARY */}
-
                 <div className="mt-8 border-t border-white/[.07] pt-7">
                   <p className="mb-3 px-1 text-[9px] font-semibold uppercase tracking-[0.28em] text-white/25">
                     More
                   </p>
 
                   <nav className="space-y-1">
-                    {MOBILE_SECONDARY.map(
-                      (item) => (
-                        <Link
-                          key={item.label}
-                          href={item.href}
-                          onClick={closeMobile}
-                          className="block rounded-xl px-4 py-2.5 text-sm text-white/40 transition hover:bg-white/[.04] hover:text-white"
-                        >
-                          {item.label}
-                        </Link>
-                      )
-                    )}
+                    {MOBILE_SECONDARY.map((item) => (
+                      <Link
+                        key={item.label}
+                        href={item.href}
+                        onClick={closeMobile}
+                        className="block rounded-xl px-4 py-2.5 text-sm text-white/40 transition hover:bg-white/[.04] hover:text-white"
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
                   </nav>
                 </div>
 
                 {/* FOOTER */}
-
                 <div className="mt-auto">
                   {user && (
                     <button
@@ -1078,12 +755,7 @@ const Navbar = ({ session }) => {
                       className="flex w-full items-center justify-between rounded-2xl border border-red-400/10 bg-red-400/[.04] px-4 py-3.5 text-sm text-red-300 transition hover:bg-red-400/[.08]"
                     >
                       <span>Sign out</span>
-
-                      <LogoutRounded
-                        sx={{
-                          fontSize: 18,
-                        }}
-                      />
+                      <LogoutRounded sx={{ fontSize: 18 }} />
                     </button>
                   )}
 
@@ -1091,10 +763,7 @@ const Navbar = ({ session }) => {
                     <span className="text-[9px] uppercase tracking-[0.2em] text-white/20">
                       Go Venture
                     </span>
-
-                    <span className="text-[9px] text-white/20">
-                      Explore Beyond
-                    </span>
+                    <span className="text-[9px] text-white/20">Explore Beyond</span>
                   </div>
                 </div>
               </div>
