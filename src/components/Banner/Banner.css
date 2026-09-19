@@ -1,18 +1,596 @@
-/* Custom styles for Swiper navigation buttons */
-.swiper-button-next, .swiper-button-prev {
+/* ==========================================================================
+   Banner: "Doorways"
+   A row of arched doorways, one open onto a destination. Opening another
+   morphs the arch into a wide rounded frame and closes the previous one.
+   Colours and fonts come from the existing theme: teal #2095ae, navy
+   #10213a, the site's body font, and Tailwind's font-serif for the headline.
+   ========================================================================== */
 
-    color: white; 
-    font-size: 16px;
-    font: bold;
+.tb,
+.tb *,
+.tb *::before,
+.tb *::after {
+  box-sizing: border-box;
 }
 
-.swiper-button-next::after, .swiper-button-prev::after {
-    font-size: 24px; 
-    font: bold;
+.tb {
+  --tb-accent: #2095ae;
+  --tb-navy: #10213a;
+  --tb-deep: #071525;
+  --tb-scrim: 2, 11, 19; /* #020b13 as rgb */
+  --tb-pad: 0.75rem; /* frame around the stage */
+  --tb-gap: 0.5rem; /* gap between doorways */
+  --tb-nav-h: 4.8rem; /* your fixed navbar: h-[76px] + 1px border */
+  --tb-bottom-safe: 3rem; /* your search card's `bottom-12` overlap */
+  --tb-stage-w: calc(100vw - var(--tb-pad) * 2);
+  --tb-ease: cubic-bezier(0.76, 0, 0.18, 1);
+  --tb-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --tb-dur: 1000ms;
+
+  position: relative;
+  /* doorways start below the fixed navbar instead of sliding under it */
+  padding: calc(var(--tb-nav-h) + 0.5rem) var(--tb-pad) var(--tb-pad);
+  background: var(--tb-deep); /* keeps the white navbar text readable */
+  color: #fff;
 }
 
-.swiper-container .swiper-pagination {
-    text-align: center;
-    width: 100%;
-    bottom: 10px;
+.tb button {
+  font-family: inherit;
+}
+
+/* --------------------------------------------------------------------------
+   Stage + panels
+-------------------------------------------------------------------------- */
+
+.tb-stage {
+  display: flex;
+  gap: var(--tb-gap);
+  height: clamp(520px, calc(100vh - var(--tb-nav-h) - 6rem), 740px);
+  height: clamp(520px, calc(100svh - var(--tb-nav-h) - 6rem), 740px);
+  touch-action: pan-y;
+}
+
+.tb-panel {
+  position: relative;
+  flex: 1 1 0%;
+  min-width: 3.5rem;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--tb-deep);
+  /* closed: arch on top, soft corners below */
+  border-radius: 3.5rem 3.5rem 1.25rem 1.25rem;
+  transition:
+    flex-grow var(--tb-dur) var(--tb-ease),
+    border-radius var(--tb-dur) var(--tb-ease);
+}
+
+.tb-panel[data-active="true"] {
+  flex-grow: var(--tb-grow, 8);
+  border-radius: 2rem;
+}
+
+/* --------------------------------------------------------------------------
+   Photo, scrims
+-------------------------------------------------------------------------- */
+
+.tb-media {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  z-index: 0;
+  width: var(--tb-stage-w);
+  transform: translateX(-50%);
+}
+
+.tb-img {
+  object-fit: cover;
+  transform: scale(1.14);
+  transition: transform 2400ms var(--tb-ease-out);
+}
+
+.tb-panel[data-active="true"] .tb-img {
+  transform: scale(1);
+}
+
+.tb-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      to top,
+      rgba(var(--tb-scrim), 0.82) 0%,
+      rgba(var(--tb-scrim), 0.4) 36%,
+      rgba(var(--tb-scrim), 0) 64%
+    ),
+    linear-gradient(
+      to right,
+      rgba(var(--tb-scrim), 0.62) 0%,
+      rgba(var(--tb-scrim), 0.28) 45%,
+      rgba(var(--tb-scrim), 0) 80%
+    ),
+    linear-gradient(to bottom, rgba(var(--tb-scrim), 0.4) 0%, rgba(var(--tb-scrim), 0) 20%);
+}
+
+.tb-tint {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: rgba(var(--tb-scrim), 0.4);
+  opacity: 0;
+  transition: opacity 600ms ease;
+}
+
+.tb-panel[data-active="false"] .tb-tint {
+  opacity: 1;
+}
+
+.tb-panel[data-active="false"]:hover .tb-tint,
+.tb-panel[data-active="false"]:focus-within .tb-tint {
+  opacity: 0.3;
+}
+
+/* --------------------------------------------------------------------------
+   Closed doorway (tab)
+-------------------------------------------------------------------------- */
+
+.tb-tab {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0 0 calc(var(--tb-bottom-safe) + 1.25rem);
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.tb-tab:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: -6px;
+  border-radius: 3.5rem 3.5rem 1rem 1rem;
+}
+
+/* vertical-rl + 180deg = reads bottom to top, city sits at the foot */
+.tb-tab-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  white-space: nowrap;
+  font-size: 0.95rem;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+
+.tb-tab-city {
+  font-weight: 600;
+}
+
+.tb-tab-country {
+  font-weight: 400;
+  opacity: 0.65;
+}
+
+/* --------------------------------------------------------------------------
+   Open doorway (content)
+-------------------------------------------------------------------------- */
+
+.tb-content {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  visibility: hidden;
+  transition: visibility 0s linear 300ms;
+}
+
+.tb-panel[data-active="true"] .tb-content {
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+/* content fades in after the doorway has mostly opened */
+.tb-fade {
+  opacity: 0;
+  transition: opacity 250ms ease;
+}
+
+.tb-panel[data-active="true"] .tb-fade {
+  opacity: 1;
+  transition: opacity 700ms ease var(--d, 800ms);
+}
+
+/* prev / next */
+.tb-controls {
+  --d: 750ms;
+  position: absolute;
+  top: 1.25rem;
+  right: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tb-count {
+  margin-right: 0.5rem;
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.8;
+}
+
+.tb-arrow {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  transition:
+    background-color 300ms ease,
+    border-color 300ms ease;
+}
+
+.tb-arrow:hover {
+  border-color: var(--tb-accent);
+  background: var(--tb-accent);
+}
+
+.tb-arrow:focus-visible,
+.tb-cta:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+/* --------------------------------------------------------------------------
+   Location, headline, description, CTA
+   The block has a fixed width based on the viewport (not on the panel), so
+   the text never re-wraps while the doorway is opening.
+-------------------------------------------------------------------------- */
+
+.tb-body {
+  position: absolute;
+  left: 1.75rem;
+  bottom: calc(var(--tb-bottom-safe) + 1.25rem);
+  width: min(44rem, calc(var(--tb-stage-w) * 0.56));
+  container-type: inline-size;
+}
+
+/* location pill, sits above the title */
+.tb-loc {
+  --d: 550ms;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 1.5rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.35);
+  white-space: nowrap;
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
+}
+
+.tb-loc-pin {
+  display: inline-flex;
+  color: var(--tb-accent);
+  font-size: 1rem;
+}
+
+.tb-loc-city {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.tb-loc-sep {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.tb-loc-country {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.tb-title {
+  margin: 0;
+  font-size: clamp(2.5rem, 7vw, 5.25rem);
+  font-weight: 500;
+  line-height: 0.94;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
+}
+
+@supports (container-type: inline-size) {
+  .tb-title {
+    font-size: clamp(2.5rem, 12cqi, 5.25rem);
+  }
+}
+
+/* each word rises out of its own mask */
+.tb-word {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+}
+
+.tb-word > span {
+  display: inline-block;
+  transform: translateY(110%);
+  transition: transform 450ms var(--tb-ease-out);
+}
+
+.tb-panel[data-active="true"] .tb-word > span {
+  transform: none;
+  transition: transform 1100ms var(--tb-ease-out) calc(650ms + var(--i, 0) * 80ms);
+}
+
+.tb-desc {
+  --d: 900ms;
+  display: -webkit-box;
+  max-width: 34rem;
+  margin: 1.5rem 0 0;
+  overflow: hidden;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 0.9375rem;
+  line-height: 1.75;
+  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.4);
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.tb-cta-wrap {
+  --d: 1000ms;
+  margin-top: 1.75rem;
+}
+
+.tb-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.4rem 0.4rem 0.4rem 1.5rem;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--tb-navy);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    background-color 500ms ease,
+    color 500ms ease;
+}
+
+.tb-cta:hover {
+  background: var(--tb-accent);
+  color: #fff;
+}
+
+.tb-cta-icon {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--tb-navy);
+  color: #fff;
+  font-size: 1.25rem;
+  transition:
+    background-color 500ms ease,
+    color 500ms ease;
+}
+
+.tb-cta:hover .tb-cta-icon {
+  background: #fff;
+  color: var(--tb-accent);
+}
+
+/* the plane leaves on hover and comes back in from the corner */
+.tb-cta:hover .tb-cta-icon svg {
+  animation: tb-takeoff 650ms var(--tb-ease-out);
+}
+
+@keyframes tb-takeoff {
+  0% {
+    transform: translate(0, 0);
+  }
+  45% {
+    transform: translate(170%, -170%);
+  }
+  46% {
+    transform: translate(-170%, 170%);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Autoplay progress (top edge of the open doorway)
+-------------------------------------------------------------------------- */
+
+.tb-progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.tb-progress-bar {
+  display: block;
+  height: 100%;
+  background: var(--tb-accent);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+/* --------------------------------------------------------------------------
+   Loading skeleton
+-------------------------------------------------------------------------- */
+
+.tb-skel {
+  background: rgba(255, 255, 255, 0.06);
+  animation: tb-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes tb-pulse {
+  50% {
+    background: rgba(255, 255, 255, 0.11);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Card rail (mobile only)
+-------------------------------------------------------------------------- */
+
+.tb-rail {
+  display: none;
+}
+
+/* --------------------------------------------------------------------------
+   Mobile: the same mechanism, but closed doorways collapse to nothing, so
+   you get one full-width panel that you swipe or step through.
+-------------------------------------------------------------------------- */
+
+@media (max-width: 767px) {
+  .tb {
+    --tb-pad: 0.5rem;
+  }
+
+  .tb-stage {
+    gap: 0;
+    /* leaves room for the card rail above */
+    height: clamp(460px, calc(100vh - var(--tb-nav-h) - 7.5rem), 640px);
+    height: clamp(460px, calc(100svh - var(--tb-nav-h) - 7.5rem), 640px);
+  }
+
+  /* small doorway-shaped cards, tap to switch */
+  .tb-rail {
+    position: relative;
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    padding: 3px; /* room for the active ring */
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tb-rail::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tb-card {
+    position: relative;
+    flex: 0 0 6rem;
+    height: 4.5rem;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+    border-radius: 2rem 2rem 0.75rem 0.75rem;
+    background: var(--tb-navy);
+    color: #fff;
+    cursor: pointer;
+    scroll-snap-align: center;
+    opacity: 0.7;
+    transition:
+      opacity 300ms ease,
+      box-shadow 300ms ease;
+  }
+
+  .tb-card[data-active="true"] {
+    opacity: 1;
+    box-shadow: 0 0 0 2px var(--tb-accent);
+  }
+
+  .tb-card:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+  }
+
+  .tb-card-img {
+    object-fit: cover;
+  }
+
+  .tb-card-shade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(var(--tb-scrim), 0.85) 0%,
+      rgba(var(--tb-scrim), 0.15) 65%
+    );
+  }
+
+  .tb-card-label {
+    position: absolute;
+    right: 0.5rem;
+    bottom: 0.4rem;
+    left: 0.5rem;
+    overflow: hidden;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.2;
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .tb-panel[data-active="false"] {
+    flex-grow: 0;
+    min-width: 0;
+  }
+
+  .tb-panel[data-active="true"] {
+    border-radius: 1.75rem;
+  }
+
+  .tb-tab {
+    display: none;
+  }
+
+  /* the cards replace the arrows and counter */
+  .tb-controls {
+    display: none;
+  }
+
+  .tb-body {
+    left: 1.25rem;
+    right: 1.25rem;
+    width: auto;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Reduced motion
+-------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .tb,
+  .tb *,
+  .tb *::before,
+  .tb *::after {
+    animation: none !important;
+    transition-duration: 1ms !important;
+    transition-delay: 0s !important;
+  }
 }
