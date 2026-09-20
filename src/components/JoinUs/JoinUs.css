@@ -1,0 +1,82 @@
+/* ============================================================
+   Go-Venture — Join Us.  Everything visual is Tailwind in JoinUs.jsx.
+   This file only holds what utilities can't express: font stacks,
+   the film-grain texture and the keyframes.
+   ============================================================ */
+
+.jr {
+  --jr-display: "Bricolage Grotesque", "Archivo", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --jr-text: "Instrument Sans", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  font-family: var(--jr-text);
+}
+
+.jr-display {
+  font-family: var(--jr-display);
+}
+
+/* fine film grain, laid over the whole stage with mix-blend-overlay */
+.jr-grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* city name: each letter drops in like a departures-board flap */
+@keyframes jr-flip {
+  0% {
+    transform: rotateX(-92deg);
+    opacity: 0;
+  }
+  55% {
+    transform: rotateX(14deg);
+    opacity: 1;
+  }
+  100% {
+    transform: rotateX(0);
+  }
+}
+
+/* progress underline on the active route chip — its end advances the carousel */
+@keyframes jr-fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes jr-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* price line draws left to right */
+@keyframes jr-wipe {
+  from {
+    clip-path: inset(-12px 100% -12px 0);
+  }
+  to {
+    clip-path: inset(-12px 0 -12px 0);
+  }
+}
+
+/* little plane crossing the ticket */
+@keyframes jr-taxi {
+  from {
+    left: 0;
+  }
+  to {
+    left: calc(100% - 1rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jr *,
+  .jr *::before,
+  .jr *::after {
+    animation: none !important;
+  }
+}

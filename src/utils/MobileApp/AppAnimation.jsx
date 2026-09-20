@@ -15,7 +15,7 @@ const AppAnimation = () => {
   };
   return (
     <div>
-      <Lottie options={defaultOptions} height={400} width={400}/>
+      <Lottie options={defaultOptions} height={1000} width={1000}/>
     </div>
   );
 };

@@ -1,382 +1,280 @@
 "use client";
 
-import { Typography } from "@mui/material";
+import { useEffect, useRef } from "react";
+
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
-import {
-  ArrowOutwardRounded,
-  CheckRounded,
-  EastRounded,
-} from "@mui/icons-material";
+
+import EastRounded from "@mui/icons-material/EastRounded";
 
 import image1 from "@/assets/About-us/aboutUs1.jpg";
 import image3 from "@/assets/About-us/aboutUs2.jpg";
 import image2 from "@/assets/About-us/aboutUs3.jpg";
 import image4 from "@/assets/About-us/aboutUs4.jpg";
 
+import { InkFilter, Seal, Stamp } from "./AboutStamps";
 import AboutUsAnimation from "@/utils/AboutUs/AboutUsAnimation";
 
+/* -------------------------------------------------------------------------- */
+/*  "The Passport" — the photos are prints on a table that lean toward your    */
+/*  cursor, "10+ years" is a seal, and the eight reasons people choose you     */
+/*  are ink stamps that land on the page as it scrolls into view.              */
+/* -------------------------------------------------------------------------- */
+
+const EASE = [0.22, 1, 0.36, 1];
+
+const POINTS = [
+  { label: "Best Award", glyph: "award", rotate: -5 },
+  { label: "100% Authentic", glyph: "seal", rotate: 3 },
+  { label: "Multilingual Guides", glyph: "globe", rotate: -2 },
+  { label: "Local Experts", glyph: "pin", rotate: 6 },
+  { label: "Good Experience", glyph: "heart", rotate: 2 },
+  { label: "Best Safety", glyph: "shield", rotate: -6 },
+  { label: "Facilities & Services", glyph: "bell", rotate: 4 },
+  { label: "Value for Money", glyph: "tag", rotate: -3 },
+];
+
+/* the machine-readable line at the foot of a passport page, spelling out the brand */
+const mrz = (s) => s.padEnd(44, "<");
+const MRZ = [
+  mrz("P<GVT<<GOVENTURE<<TRAVEL<DIFFERENTLY"),
+  mrz("2015<<10<YEARS<OF<DISCOVERY"),
+];
+
+/** A layer of the collage. Moves with the pointer by `depth` px; deeper layers move more. */
+function Layer({ depth, rotate = 0, className = "", children }) {
+  return (
+    <div
+      className={`absolute transition-transform duration-500 ease-out motion-reduce:transition-none ${className}`}
+      style={{
+        transform: `translate3d(calc(var(--px, 0) * ${depth}px), calc(var(--py, 0) * ${depth * 0.7}px), 0) rotate(${rotate}deg)`,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+function Photo({
+  src,
+  alt,
+  sizes,
+  priority = false,
+  className = "",
+  delay = 0,
+  from = { opacity: 0, y: 30 },
+}) {
+  return (
+    <motion.div
+      initial={from}
+      whileInView={{ opacity: 1, x: 0, y: 0, scale: 1 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 1, delay, ease: EASE }}
+      className={`group relative h-full w-full overflow-hidden ${className}`}
+    >
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        priority={priority}
+        sizes={sizes}
+        className="object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.04]"
+      />
+    </motion.div>
+  );
+}
+
+const PRINT =
+  "border-[6px] border-[#F5F2EB] shadow-[0_24px_60px_-20px_rgba(17,24,39,0.35)]";
+
 const AboutUsPage = () => {
-  const items = [
-    "Best Award",
-    "100% Authentic",
-    "Multilingual Guides",
-    "Local Experts",
-    "Good Experience",
-    "Best Safety",
-    "Facilities & Services",
-    "Value for Money",
-  ];
+  const stageRef = useRef(null);
+  const canLean = useRef(false);
+
+  useEffect(() => {
+    canLean.current =
+      window.matchMedia("(hover: hover) and (pointer: fine)").matches &&
+      !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  }, []);
+
+  const onMove = (e) => {
+    const el = stageRef.current;
+    if (!canLean.current || !el) return;
+    const r = el.getBoundingClientRect();
+    el.style.setProperty(
+      "--px",
+      (((e.clientX - r.left) / r.width - 0.5) * 2).toFixed(3),
+    );
+    el.style.setProperty(
+      "--py",
+      (((e.clientY - r.top) / r.height - 0.5) * 2).toFixed(3),
+    );
+  };
+
+  const onLeave = () => {
+    const el = stageRef.current;
+    if (!el) return;
+    el.style.setProperty("--px", "0");
+    el.style.setProperty("--py", "0");
+  };
 
   return (
-    <section className="relative overflow-hidden bg-[#f7f8f6] py-24 sm:py-28 lg:py-36">
-      {/* =========================================================
-          BACKGROUND ART DIRECTION
-      ========================================================== */}
+    <section
+      aria-labelledby="about-title"
+      className="relative overflow-hidden py-24 bg-[#f7f8f6] sm:py-28 lg:py-36"
+    >
+      <InkFilter />
 
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 overflow-hidden"
-      >
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+        <div className="absolute -left-40 top-10 h-[460px] w-[460px] rounded-full bg-[#2095AE]/[0.07] blur-[130px]" />
+        <div className="absolute -right-40 bottom-20 h-[420px] w-[420px] rounded-full bg-[#ffb020]/[0.08] blur-[130px]" />
       </div>
 
       <div className="custom-container relative z-10">
-        <div className="grid items-center gap-16 lg:grid-cols-[0.95fr_1.05fr] lg:gap-24 xl:gap-32">
-          {/* =====================================================
-              LEFT — EDITORIAL IMAGE COMPOSITION
-          ====================================================== */}
-
-          <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{
-              duration: 0.9,
-              ease: [0.22, 1, 0.36, 1],
-            }}
-            className="relative min-h-[620px] sm:min-h-[700px]"
+        <div className="grid items-center gap-16 lg:grid-cols-[0.95fr_1.05fr] lg:gap-20 xl:gap-28">
+          {/* ------------------------------ collage ------------------------------ */}
+          <div
+            ref={stageRef}
+            onPointerMove={onMove}
+            onPointerLeave={onLeave}
+            className="relative mx-auto h-[34rem] w-full max-w-[34rem] sm:h-[42rem] lg:mx-0 lg:h-[44rem] lg:max-w-none"
           >
-            {/* Editorial index */}
-
-            <div className="absolute left-0 top-0 z-30 flex items-center gap-4">
-           
-
-              <span className="h-px w-10 bg-[#2095AE]/50" />
-
-              <span className="text-[10px] font-medium uppercase tracking-[0.24em] text-[#111827]/45">
-                About Go-Venture
-              </span>
-            </div>
-
-            {/* Main image */}
-
-            <motion.div
-              initial={{ opacity: 0, scale: 0.96 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, amount: 0.25 }}
-              transition={{
-                duration: 1.1,
-                delay: 0.1,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-              className="absolute left-0 top-14 h-[370px] w-[82%] overflow-hidden rounded-[2px] sm:h-[430px] lg:h-[460px]"
-            >
-              <Image
+            <Layer depth={6} className="left-0 top-0 h-[66%] w-[72%]">
+              <Photo
                 src={image1}
                 alt="Go-Venture travel experience"
-                fill
                 priority
-                sizes="(max-width: 1024px) 70vw, 40vw"
-                className="object-cover transition-transform duration-[1.4s] hover:scale-[1.035]"
+                sizes="(max-width: 1024px) 70vw, 36vw"
+                className="rounded-[2rem]"
+                from={{ opacity: 0, scale: 0.96 }}
               />
+            </Layer>
 
-              <div className="absolute inset-0 bg-gradient-to-tr from-black/25 via-transparent to-[#2095AE]/10" />
-
-              <div className="absolute bottom-6 left-6 flex items-center gap-3 text-white">
-                <span className="h-2 w-2 rounded-full bg-[#2095AE]" />
-                <span className="text-[10px] font-medium uppercase tracking-[0.25em]">
-                  Since 2015
-                </span>
-              </div>
-            </motion.div>
-
-            {/* Secondary landscape image */}
-
-            <motion.div
-              initial={{ opacity: 0, y: 35 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.25 }}
-              transition={{
-                duration: 0.9,
-                delay: 0.25,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-              className="absolute bottom-12 right-0 z-20 h-[210px] w-[67%] overflow-hidden border-[8px] border-[#f7f8f6] sm:h-[245px]"
+            <Layer
+              depth={16}
+              rotate={3}
+              className="right-0 top-[8%] z-10 h-[30%] w-[40%]"
             >
-              <Image
+              <Photo
                 src={image2}
                 alt="Go-Venture destination"
-                fill
-                sizes="(max-width: 1024px) 55vw, 32vw"
-                className="object-cover transition-transform duration-[1.2s] hover:scale-105"
+                sizes="(max-width: 1024px) 40vw, 20vw"
+                className={`rounded-2xl ${PRINT}`}
+                delay={0.2}
+                from={{ opacity: 0, x: 40 }}
               />
+            </Layer>
 
-              <div className="absolute inset-0 bg-black/10" />
-            </motion.div>
-
-            {/* Circular image */}
-
-            <motion.div
-              initial={{ opacity: 0, scale: 0.7, rotate: -8 }}
-              whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
-              viewport={{ once: true, amount: 0.25 }}
-              transition={{
-                duration: 1,
-                delay: 0.4,
-                type: "spring",
-                stiffness: 80,
-                damping: 16,
-              }}
-              className="absolute right-[8%] top-[46%] z-30 h-[145px] w-[145px] overflow-hidden rounded-full border-[7px] border-[#f7f8f6] shadow-[0_20px_60px_rgba(0,0,0,0.16)] sm:h-[175px] sm:w-[175px]"
+            <Layer
+              depth={12}
+              rotate={-3}
+              className="bottom-0 left-[3%] z-10 h-[32%] w-[50%]"
             >
-              <Image
-                src={image3}
-                alt="Travel adventure"
-                fill
-                sizes="175px"
-                className="object-cover transition-transform duration-1000 hover:scale-110"
-              />
-            </motion.div>
-
-            {/* Bottom image */}
-
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{
-                duration: 0.9,
-                delay: 0.35,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-              className="absolute bottom-0 left-[6%] z-10 h-[125px] w-[52%] overflow-hidden sm:h-[150px]"
-            >
-              <Image
+              <Photo
                 src={image4}
                 alt="Adventure experience"
-                fill
-                sizes="(max-width: 1024px) 45vw, 25vw"
-                className="object-cover transition-transform duration-[1.2s] hover:scale-105"
+                sizes="(max-width: 1024px) 50vw, 24vw"
+                className={`rounded-2xl ${PRINT}`}
+                delay={0.3}
               />
-            </motion.div>
+            </Layer>
 
-            {/* Floating stat */}
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.55 }}
-              className="absolute bottom-0 right-[2%] z-40 hidden bg-[#111827] px-7 py-6 text-white shadow-[0_25px_70px_rgba(0,0,0,0.18)] sm:block"
+            <Layer
+              depth={22}
+              className="bottom-[4%] right-[3%] z-20 aspect-square w-[34%]"
             >
-              <div className="flex items-end gap-3">
-                <span className="text-4xl font-semibold tracking-[-0.06em]">
-                  10+
-                </span>
+              <Photo
+                src={image3}
+                alt="Travel adventure"
+                sizes="(max-width: 1024px) 34vw, 16vw"
+                className={`rounded-full ${PRINT}`}
+                delay={0.4}
+                from={{ opacity: 0, scale: 0.7 }}
+              />
+            </Layer>
 
-                <span className="mb-1 text-[9px] uppercase leading-relaxed tracking-[0.2em] text-white/50">
-                  Years of
-                  <br />
-                  Discovery
-                </span>
-              </div>
-            </motion.div>
+            <Layer
+              depth={30}
+              rotate={-8}
+              className="left-[48%] top-[45%] z-30 w-[9rem] sm:w-[10.5rem] lg:w-[11.5rem]"
+            >
+              <motion.div
+                initial={{ opacity: 0, scale: 1.5, rotate: 14 }}
+                whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
+                viewport={{ once: true, amount: 0.4 }}
+                transition={{ duration: 0.7, delay: 0.6, ease: EASE }}
+              >
+                <Seal />
+              </motion.div>
+            </Layer>
+          </div>
 
-            {/* Decorative brand line */}
-
-            <div className="absolute bottom-[25%] left-0 hidden h-px w-16 bg-[#2095AE] sm:block" />
-          </motion.div>
-
-          {/* =====================================================
-              RIGHT — CONTENT / EDITORIAL STORY
-          ====================================================== */}
-
+          {/* ------------------------------- story ------------------------------- */}
           <motion.div
             initial={{ opacity: 0, y: 35 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{
-              duration: 0.9,
-              ease: [0.22, 1, 0.36, 1],
-            }}
-            className="relative"
+            viewport={{ once: true, amount: 0.15 }}
+            transition={{ duration: 0.9, ease: EASE }}
+            className="relative min-w-0"
           >
-            {/* Eyebrow */}
+            <p className="mb-6 flex items-center gap-3 text-sm text-[#111827]/55">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#2095AE]" />
+              About Go-Venture
+            </p>
 
-            <div className="mb-7 flex items-center gap-4">
-              <span className="h-px w-10 bg-[#2095AE]" />
-
-              <Typography
-                component="span"
-                className="!text-[10px] !font-semibold !uppercase !tracking-[0.3em] !text-[#2095AE]"
-              >
-                The Go-Venture Story
-              </Typography>
-            </div>
-
-            {/* Main heading */}
-
-            <Typography
-              component="h2"
-              className="!max-w-[850px] !text-[clamp(2.8rem,5.2vw,5.5rem)] !font-medium !leading-[0.94] !tracking-[-0.055em] !text-[#111827]"
+            <h2
+              id="about-title"
+              className="max-w-[850px] text-[clamp(2.6rem,5vw,5.25rem)] font-medium leading-[0.95] tracking-[-0.055em] text-[#111827]"
             >
-              We don&apos;t just
-              <br />
-              <span className="font-serif italic text-[#2095AE]">
-                plan journeys.
-              </span>
-              <br />
-              We create them.
-            </Typography>
+              <span className="text-[#111827]/35">Travel</span> beyond the{" "}
+              <span className="text-[#2095AE]"> ordinary.</span>
+            </h2>
 
-            {/* Accent divider */}
+            <h3 className="mb-5 mt-9 max-w-[650px] text-xl font-medium leading-[1.35] tracking-[-0.02em] text-[#111827] sm:text-2xl">
+              Journeys made to be remembered.
+            </h3>
 
-            <div className="my-9 flex items-center gap-4">
-              <div className="h-px w-20 bg-[#111827]/15" />
-              <div className="h-1.5 w-1.5 rounded-full bg-[#2095AE]" />
-              <div className="h-px w-8 bg-[#111827]/10" />
-            </div>
+            <p className="max-w-[650px] text-[15px] leading-[1.85] text-[#111827]/60">
+              We connect you with remarkable places, trusted local experiences,
+              and thoughtfully planned journeys — so you can simply enjoy the
+              adventure.
+            </p>
 
-            {/* Supporting heading */}
+            {/* The stamp page */}
+            <div className="mt-7 rounded-t-2xl border border-[#111827]/10 bg-white/55 p-4 [background-image:radial-gradient(circle_at_1px_1px,rgba(17,24,39,0.07)_1px,transparent_0)] [background-size:14px_14px] sm:p-5">
+              <div className="mb-4 flex items-center justify-between gap-3">
+                <h4 className="text-sm font-medium tracking-[-0.02em] text-[#111827]">
+                  Why Go-Venture
+                </h4>
 
-            <Typography
-              component="h3"
-              className="!mb-5 !max-w-[650px] !text-xl !font-medium !leading-[1.35] !tracking-[-0.02em] !text-[#111827] sm:!text-2xl"
-            >
-              A decade of turning destinations into meaningful experiences.
-            </Typography>
-
-            {/* Description */}
-
-            <Typography
-              component="p"
-              className="!mb-10 !max-w-[650px] !text-[15px] !font-normal !leading-[1.85] !text-[#111827]/60"
-            >
-              Celebrate the spirit of wanderlust with Go-Venture, where every
-              journey is designed to become an unforgettable adventure. From
-              pristine beaches to majestic mountains, we connect travelers
-              with remarkable destinations through trusted local expertise,
-              thoughtful planning, and experiences that stay with you long
-              after the journey ends.
-            </Typography>
-
-            {/* =================================================
-                TRUST / BENEFIT SYSTEM
-            ================================================== */}
-
-            <div className="relative border-y border-[#111827]/10 py-7">
-              <div className="mb-6 flex items-center justify-between">
-                <Typography
-                  component="span"
-                  className="!text-[10px] !font-semibold !uppercase !tracking-[0.25em] !text-[#111827]/40"
-                >
-                  Why travelers choose us
-                </Typography>
-
-                <span className="text-[10px] font-medium tracking-[0.15em] text-[#111827]/30">
-                  08 / 08
+                <span className="text-xs tabular-nums text-[#111827]/40">
+                  {POINTS.length} reasons
                 </span>
               </div>
 
-              <div className="grid grid-cols-1 gap-x-10 sm:grid-cols-2">
-                {items.map((item, index) => (
-                  <motion.div
-                    key={item}
-                    initial={{ opacity: 0, x: -15 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true, amount: 0.1 }}
-                    transition={{
-                      duration: 0.5,
-                      delay: index * 0.045,
-                    }}
-                    className="group flex items-center gap-4 border-b border-[#111827]/[0.07] py-3.5 last:border-b-0 sm:nth-[odd]:border-r sm:nth-[odd]:pr-6"
-                  >
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[#2095AE]/25 bg-[#2095AE]/[0.06] transition-all duration-300 group-hover:border-[#2095AE] group-hover:bg-[#2095AE]">
-                      <CheckRounded
-                        sx={{ fontSize: 14 }}
-                        className="text-[#2095AE] transition-colors duration-300 group-hover:text-white"
-                      />
-                    </span>
-
-                    <Typography
-                      component="span"
-                      className="!text-[13px] !font-medium !tracking-[-0.01em] !text-[#111827]/75 transition-colors duration-300 group-hover:text-[#2095AE]"
-                    >
-                      {item}
-                    </Typography>
-                  </motion.div>
+              <ul className="grid grid-cols-4 gap-2 sm:grid-cols-4">
+                {POINTS.map((p, i) => (
+                  <Stamp key={p.label} id={`gv-stamp-${i}`} index={i} {...p} />
                 ))}
-              </div>
+              </ul>
             </div>
 
-            {/* Bottom action area */}
-
-            <div className="mt-9 flex flex-col gap-7 sm:flex-row sm:items-center sm:justify-between">
-              {/* Brand statement */}
-
-              <div className="flex items-center gap-4">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#111827]">
-                  <ArrowOutwardRounded
-                    sx={{ fontSize: 17 }}
-                    className="text-white"
-                  />
-                </div>
-
-                <div>
-                  <Typography
-                    component="span"
-                    className="!block !text-[10px] !font-semibold !uppercase !tracking-[0.2em] !text-[#111827]/35"
-                  >
-                    Travel differently
-                  </Typography>
-
-                  <Typography
-                    component="span"
-                    className="!text-xs !font-medium !text-[#111827]/70"
-                  >
-                    Discover the Go-Venture way
-                  </Typography>
-                </div>
-              </div>
-
-              {/* CTA */}
-
-              <motion.a
-                href="/all-destinations"
-                whileHover={{ x: 4 }}
-                whileTap={{ scale: 0.97 }}
-                className="group inline-flex items-center gap-5 self-start text-sm font-semibold text-[#111827]"
-              >
-                <span className="relative">
-                  Explore our world
-                  <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-100 bg-[#2095AE] transition-transform duration-300 group-hover:scale-x-0" />
-                </span>
-
-                <span className="flex h-10 w-10 items-center justify-center rounded-full border border-[#111827]/15 transition-all duration-300 group-hover:border-[#2095AE] group-hover:bg-[#2095AE]">
-                  <EastRounded
-                    sx={{ fontSize: 17 }}
-                    className="text-[#111827] transition-colors duration-300 group-hover:text-white"
-                  />
-                </span>
-              </motion.a>
-            </div>
-
-            {/* Existing animation preserved */}
-
-            <div className="mt-10">
+            <div className="">
               <AboutUsAnimation />
             </div>
           </motion.div>
+        </div>
+
+        <div
+          aria-hidden="true"
+          className="mt-20 select-none overflow-hidden font-mono text-[11px] leading-5 tracking-[0.15em] text-[#111827]/[0.18] sm:text-xs sm:tracking-[0.35em]"
+        >
+          {MRZ.map((line) => (
+            <p key={line} className="whitespace-nowrap">
+              {line}
+            </p>
+          ))}
         </div>
       </div>
     </section>

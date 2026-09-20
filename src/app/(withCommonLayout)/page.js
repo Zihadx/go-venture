@@ -1,16 +1,16 @@
 import Banner from "@/components/Banner/Banner";
 import CountryPage from "@/components/Country/Country";
 import AboutUsPage from "@/components/AboutUs/AboutUs";
-import DestinationsPage from "@/components/Destinations/Destinations";
 import ServicesPage from "@/components/Services/Services";
 import JoinUsPage from "@/components/JoinUs/JoinUs";
-import BlogsPage from "@/components/Blogs/Blogs";
-import HotDeals from "@/components/Hot-Deals/HotDeals";
+
 import SpecialOffer from "@/components/SpecialOffer/SpecialOffer";
-import MobileApps from "@/components/MobileApps/MobileApps";
+
 import ClientReviewsSection from "@/components/ClientReview/ClientReviews";
+import DestinationsPage from "@/components/Destinations/Destinations";
+import MobileApps from "@/components/MobileApps/MobileApps";
 import SearchBar from "@/components/SearchBar/SearchBar";
-import ScrollToTop from "@/components/ScrollToTop/ScrollToTop";
+
 
 const HomePage = async () => {
   const [countriesRes, hotelsRes, destinationsRes, blogsRes, offerRes] = await Promise.all([
@@ -45,11 +45,9 @@ const HomePage = async () => {
         specialOfferData={specialOfferData}
         destinations={destinations}
       />
-      <MobileApps />
-      <HotDeals hotDealData={hotDealData} destinations={destinations} />
+      <MobileApps  />
+      {/* <HotDeals hotDealData={hotDealData} destinations={destinations} /> */}
       <ClientReviewsSection />
-      <BlogsPage blogs={blogs} />
-      <ScrollToTop/>
     </div>
   );
 };
